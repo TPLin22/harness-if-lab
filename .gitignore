@@ -1,0 +1,37 @@
+# Local environments and language tooling
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+node_modules/
+dist/
+build/
+.DS_Store
+
+# Credentials and machine-local configuration
+.env
+.env.*
+!.env.example
+
+# Runtime data must live outside the source repository. These anchored rules
+# also protect the repository if output_root is accidentally pointed here.
+/packs/
+/artifacts/
+/jobs/
+/trials/
+/runs/
+/workspaces/
+/normalized/
+/reports/
+/cache/
+/output/
+
+# Local logs and editor state
+*.log
+.idea/
+.vscode/
