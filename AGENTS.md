@@ -71,8 +71,12 @@ is an execution backend/reference, not the research data model.
 ## Change discipline
 
 - Read the relevant design document before changing a boundary or directory.
+- For the initial StepCLI implementation slice, follow
+  `docs/implementation-handoff.md`. It authorizes a narrow vertical slice but
+  does not replace the required review of permanent contracts.
 - Update documentation when a lifecycle, ownership boundary, or artifact
   contract changes.
 - Keep changes scoped. Do not revert unrelated work in neighboring repositories.
-- Before implementation begins, review and approve the future contracts for
-  `RuleSpec`, `TaskSpec`, `Item/Pair`, `Pack`, `Run`, and `Verdict`.
+- Before broad implementation or released benchmark curation begins, review and
+  approve the future contracts for `RuleSpec`, `TaskSpec`, `Item/Pair`, `Pack`,
+  `Run`, and `Verdict`.

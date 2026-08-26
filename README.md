@@ -56,10 +56,13 @@ belong under an external `output_root`; see [the repository layout](docs/reposit
 - [Repository and execution constraints](docs/constraints.md)
 - [Curation and experiment workflow](docs/workflow.md)
 - [Repository layout and output boundary](docs/repository-layout.md)
+- [Implementation handoff: first vertical slice](docs/implementation-handoff.md)
 - [Benchmark area](benchmark/README.md)
 - [Schemas area](schemas/README.md)
 
-The contributor and coding-agent contract is in [AGENTS.md](AGENTS.md).
+The contributor and coding-agent contract is in [AGENTS.md](AGENTS.md). For
+construction work, start with the temporary
+[implementation handoff](docs/implementation-handoff.md).
 
 ## Initial design decisions
 
