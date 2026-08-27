@@ -18,6 +18,27 @@ collect sources
 This mode primarily changes source definitions and review metadata. It may run
 small qualification trials, but those trials write to an external output root.
 
+The adopted Phase 0 source set is documented in the
+[source shortlist](source-shortlist.md). Intake keeps the generalization and
+harness-native calibration pools together for cleaning while retaining their
+pool labels. Source selection, contamination, and task opportunity are separate
+decisions: a source is not discarded merely because it is agent-specific or
+cannot yet be paired with a task.
+
+For external coding benchmarks, task intake has its own small path:
+
+```text
+pin upstream revision
+  -> freeze selection index (IDs, filters, seed, reserve)
+  -> write thin TaskSpec candidates
+  -> resolve model-visible text and evaluator-only references
+  -> review opportunity tags and eligibility
+```
+
+The first SWE-bench Multilingual pilot follows this path. It stores references
+and reviewed text in `benchmark/tasks/`; it does not generate Harbor task
+directories or workspaces during curation.
+
 ### Curation gates
 
 Before an Item can enter a release, check:
@@ -30,12 +51,16 @@ Before an Item can enter a release, check:
   explicitly labeled non-discriminating;
 - model-visible inputs do not contain evaluator secrets;
 - provenance, licensing, version, and hashes are present.
+- every rule binding has an explicit target surface and the target is supported
+  or intentionally marked as an unsupported experiment;
+- evaluator-only task data is not reachable from the model-visible workspace.
 
 ## Mode B: compile and run
 
 ```text
 select released Items/Pairs
   -> freeze experiment configuration
+  -> resolve TaskSpecs and evaluator cache
   -> compile backend Packs
   -> launch isolated trials
   -> capture intended/effective surfaces and native events
@@ -49,6 +74,11 @@ location. A Pack is immutable for the duration of the experiment.
 The runner should support independent baseline and intervention trials while
 keeping all unrelated variables fixed. Replicates and retries receive distinct
 run identities.
+
+The Pack compiler/materializer and the StepCLI adapter have separate jobs. The
+former builds the Harbor package; the latter maps each semantic surface and
+optional tool-set reference to real StepCLI inputs and snapshots what was
+actually effective.
 
 ## Mode C: verify and analyze
 

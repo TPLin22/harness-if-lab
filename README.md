@@ -55,19 +55,23 @@ belong under an external `output_root`; see [the repository layout](docs/reposit
 - [Overall design](docs/design.md)
 - [Repository and execution constraints](docs/constraints.md)
 - [Curation and experiment workflow](docs/workflow.md)
+- [Phase 0 source shortlist](docs/source-shortlist.md)
+- [Task sourcing and representation](docs/task-sourcing.md)
 - [Repository layout and output boundary](docs/repository-layout.md)
-- [Implementation handoff: first vertical slice](docs/implementation-handoff.md)
+- [Execution plans](docs/plans/README.md), currently
+  [methodology and construction plan](docs/plans/2026-08-26-methodology-and-construction-plan.md)
 - [Benchmark area](benchmark/README.md)
 - [Schemas area](schemas/README.md)
 
 The contributor and coding-agent contract is in [AGENTS.md](AGENTS.md). For
-construction work, start with the temporary
-[implementation handoff](docs/implementation-handoff.md).
+construction work, start with the active plan in [docs/plans](docs/plans/README.md).
 
 ## Initial design decisions
 
 - Rules and tasks are reusable assets; an Item is an experimental condition,
   not a permanent Cartesian-product expansion.
+- SWE-bench tasks are kept as thin, pinned `TaskSpec` references and selection
+  manifests. Complete Harbor task packages are generated only at run time.
 - Every intervention should have a comparable baseline, normally represented by
   a baseline/intervention pair.
 - A semantic Item is compiled into a backend-specific Pack. A Pack is an input

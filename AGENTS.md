@@ -17,7 +17,9 @@ is an execution backend/reference, not the research data model.
 ## Non-negotiable boundaries
 
 1. Keep semantic benchmark data independent from a particular runner. Rules,
-   tasks, and Items must not be authored directly as Harbor-only structures.
+   thin TaskSpecs, and Items must not be authored directly as Harbor-only
+   structures. A TaskSpec/index may reference an upstream dataset and an
+   evaluator cache, but does not become a Harbor task directory.
 2. Keep the intended surface separate from the effective surface. Record what
    the experiment tried to deliver and what the harness actually loaded or
    exposed.
@@ -68,12 +70,32 @@ is an execution backend/reference, not the research data model.
 - Analysis code reads external artifacts and produces external reports; it does
   not mutate source benchmark definitions.
 
+## Document storage
+
+Documents are separated by whether they are maintained or superseded.
+
+- `docs/` holds durable documents: overall design, constraints, workflow,
+  repository layout, source shortlist, and task-sourcing decisions. They
+  describe what is true about the project and are kept current.
+- `docs/plans/` holds execution plans: construction orders, adopted
+  methodologies, migration steps. They describe what someone intends to do, and
+  are superseded rather than maintained.
+- A plan file is named `YYYY-MM-DD-<slug>.md` and carries `title`,
+  `description`, and `status` frontmatter. When it is finished or abandoned, it
+  moves to `docs/plans/completed/` with its `status` updated. It is not deleted.
+- A plan is subordinate to this file and to `docs/`. It cannot create or relax a
+  boundary. Where its approach does not fit an existing boundary, it must state
+  the conflict and leave the edit to a review decision rather than silently
+  writing a narrower or wider rule of its own.
+- Do not put a durable contract in a plan, and do not put a dated construction
+  schedule in `docs/`.
+
 ## Change discipline
 
 - Read the relevant design document before changing a boundary or directory.
-- For the initial StepCLI implementation slice, follow
-  `docs/implementation-handoff.md`. It authorizes a narrow vertical slice but
-  does not replace the required review of permanent contracts.
+- For construction work, follow the active plan in `docs/plans/`. A plan records
+  an adopted approach and may draft data contracts, but it does not replace the
+  required review of those contracts.
 - Update documentation when a lifecycle, ownership boundary, or artifact
   contract changes.
 - Keep changes scoped. Do not revert unrelated work in neighboring repositories.

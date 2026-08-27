@@ -22,6 +22,10 @@ is a design contract, not a formal data schema.
   Harbor job directories, or experiment reports.
 - A repository-local output directory is considered accidental and is ignored by
   default; callers must configure an external `output_root`.
+- Reusable evaluator/compiler inputs (for example, a SWE-bench task cache) are
+  external to both Git and the model-visible workspace and are addressed by
+  immutable revision/content hash. A task cache and a per-experiment output
+  root are separate lifecycle concerns.
 - Large task snapshots and source archives are external, license-aware, and
   pinned by immutable revision or checksum.
 
@@ -48,6 +52,16 @@ is a design contract, not a formal data schema.
 - Task fixtures may be synthetic and small in the first phase. Larger codebases
   are referenced externally rather than duplicated in every Item.
 - Hidden oracle material must be inaccessible to the model-visible workspace.
+- Materializers must project upstream records through an explicit model-visible
+  allowlist; retaining patches or oracle fields in an intermediate raw record is
+  not evidence that they are hidden.
+- External benchmark tasks are represented by a pinned source/provider revision,
+  stable upstream ID, cleaned task text, and an evaluator-only reference. A
+  complete Harbor task directory is generated later and is not a canonical task
+  record.
+- A task selection is reproducible only when its final ordered IDs, population
+  filters, sampling method, seed, and source revision are recorded; a seed alone
+  is insufficient.
 
 ## Item and pairing constraints
 
@@ -59,6 +73,15 @@ is a design contract, not a formal data schema.
   possible.
 - An Item is not valid merely because its YAML or JSON parses. It also needs a
   verifier, an observable opportunity, and a supported rendering target.
+- An Item may bind multiple rules. Each binding carries its own role and target
+  surface; independent bindings must not be flattened before the harness adapter
+  receives them.
+- Authority/precedence is an explicit Item policy (with optional per-binding
+  authority class), not an incidental result of concatenating instruction text.
+- All requested surfaces and an optional tool set must be materialized before
+  the first model call, and the adapter must return a delivery manifest for
+  them. The Harbor hook/wrapper/API used to achieve this is an implementation
+  choice for the execution phase.
 - Exploratory combinations may be ephemeral. Released Items need stable IDs,
   version metadata, and content hashes.
 
@@ -74,6 +97,12 @@ is a design contract, not a formal data schema.
   the canonical data model.
 - Harness version, commit, runtime configuration, loaded instruction files,
   truncation/import behavior, and effective tool/prompt surface must be captured.
+- Unexpected ambient instructions from the process home or workspace must be
+  isolated, explicitly included as a declared factor, or reported before the
+  trial is scored; they must not silently contaminate a surface comparison.
+- An optional `tool_set_ref` is a backend-neutral experimental factor separate
+  from a rule's `tool_description` surface. It may later select a whole tool
+  registry/implementation/policy, but Item data must not name StepCLI internals.
 
 ## Execution and isolation constraints
 
