@@ -1,7 +1,8 @@
 # Curation and Experiment Workflow
 
-The project has three operational modes. The scaffold does not implement their
-commands yet; the boundaries below are the intended workflow.
+The project has three operational modes. Most command groups are still planned;
+the first StepCLI/Harbor compile path is available as Python modules for the
+smoke fixture. The boundaries below remain the intended workflow.
 
 ## Mode A: curate
 
@@ -84,9 +85,10 @@ keeping all unrelated variables fixed. Replicates and retries receive distinct
 run identities.
 
 The Pack compiler/materializer and the StepCLI adapter have separate jobs. The
-former builds the Harbor package; the latter maps each semantic surface and
-optional tool-set reference to real StepCLI inputs and snapshots what was
-actually effective.
+current compiler builds the Harbor package and the current adapter maps
+`user_message` and `project_file` to existing Harbor/StepCLI inputs. A live
+effective-surface snapshot, tool-set resolution, and the remaining surfaces are
+still future work. See [the first-stage delivery contract](first-stage-delivery.md).
 
 ## Mode C: verify and analyze
 

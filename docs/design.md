@@ -244,6 +244,13 @@ The Pack compiler translates a semantic Item into the format expected by the
 chosen backend. A Pack may contain task instructions, fixture/build material,
 public project files or skills, verifier entry points, and provenance metadata.
 
+The first Harbor compiler implementation is a deliberately narrow smoke path:
+it projects a cleaned TaskSpec into a generated task, invokes the StepCLI
+adapter for `user_message` and `project_file`, and emits a Harbor launch
+configuration under an external output root. The generated files are a Pack
+projection, not a replacement for the semantic Item or TaskSpec. See
+[First-Stage Delivery Contract](first-stage-delivery.md).
+
 Packs are generated inputs and should be immutable once referenced by a run.
 They are stored outside the source repository and identified by a hash.
 
@@ -259,8 +266,9 @@ mapping must not be duplicated in the semantic Item or Harbor compiler.
 The adapter needs a pre-run materialization boundary: for a fresh workspace, it
 prepares the requested surfaces and optional tool set before the StepCLI process
 starts or its first model call is made, then returns a delivery manifest. The
-implementation may use a Harbor setup hook, an agent wrapper, or a future
-StepCLI-native API; that choice is deferred to the execution phase.
+first implementation uses Harbor's existing `extra_instruction_paths` and
+agent-stage `upload_files` hook for the two supported surfaces. A live
+effective-surface snapshot and the remaining surfaces are still future work.
 
 Before the first model call, the adapter should emit an effective-surface
 snapshot for every binding, including intended surface, actual target, loaded

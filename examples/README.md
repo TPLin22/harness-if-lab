@@ -1,4 +1,6 @@
 # Examples
 
-The `smoke` area will eventually hold a tiny, reviewable end-to-end fixture for
-contract and adapter tests. It is not a benchmark release.
+The `smoke` area contains a tiny, reviewable fixture for the first delivery
+contract and adapter tests. It is not a benchmark release. See
+[`docs/first-stage-delivery.md`](../docs/first-stage-delivery.md) for the
+compile and verification path.

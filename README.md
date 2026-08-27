@@ -17,10 +17,12 @@ backend, while the benchmark data model remains owned by this repository.
 The repository contains the first pinned rule-source intake and an
 agent-reviewed draft canonical rule library. It also contains a 20-task,
 source-pinned SWE-bench Multilingual candidate panel and 20 multi-rule
-baseline/intervention Item pairs, each with a review ledger. Rules, tasks, and
-Items are still candidates: task-opportunity qualification, prior tendency,
-contamination, release policy, compilers, runners, verifiers, and analysis
-implementations remain unfinished.
+baseline/intervention Item pairs, each with a review ledger. A first smoke
+compiler and StepCLI delivery adapter now compile the `user_message` +
+`project_file` combination into an external Harbor Pack; details are in [the
+first-stage delivery contract](docs/first-stage-delivery.md). Rules, tasks, and
+Items are still candidates, and live runners, verifiers, analysis, and release
+qualification remain unfinished.
 
 ## Conceptual pipeline
 
@@ -58,6 +60,7 @@ belong under an external `output_root`; see [the repository layout](docs/reposit
 - [Overall design](docs/design.md)
 - [Repository and execution constraints](docs/constraints.md)
 - [Curation and experiment workflow](docs/workflow.md)
+- [First-stage delivery contract](docs/first-stage-delivery.md)
 - [Phase 0 source shortlist](docs/source-shortlist.md)
 - [Task sourcing and representation](docs/task-sourcing.md)
 - [Repository layout and output boundary](docs/repository-layout.md)

@@ -1,0 +1,32 @@
+format: hif.item_pair
+format_version: 0
+status: candidate
+pair_id: smoke-user-project-v1
+task_ref: smoke/user-project
+authority_policy:
+  id: no_intentional_conflict_v0
+  mode: no_intentional_conflict
+  precedence_held_constant_across_pair: true
+tool_set_ref: null
+baseline:
+  item_id: smoke-user-project-v1--baseline
+  kind: zero_injection
+  task_ref: smoke/user-project
+  rule_bindings: []
+intervention:
+  item_id: smoke-user-project-v1--intervention
+  kind: rule_injection
+  task_ref: smoke/user-project
+  rule_bindings:
+  - binding_id: rb-user-test
+    rule_ref: rule-canon-p0-027
+    role: scored
+    target_surface: user_message
+    authority_class: user_request
+    delivery_order: 1
+  - binding_id: rb-project-comments
+    rule_ref: rule-canon-p0-039
+    role: observed
+    target_surface: project_file
+    authority_class: project_context
+    delivery_order: 2

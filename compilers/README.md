@@ -1,7 +1,7 @@
 # Compilers
 
-Compilers will translate semantic benchmark definitions into backend-specific
-execution inputs. The first planned backend is Harbor.
+Compilers translate semantic benchmark definitions into backend-specific
+execution inputs. The first backend is Harbor.
 
 There are two distinct compilation boundaries:
 
@@ -10,11 +10,22 @@ There are two distinct compilation boundaries:
 2. The Harbor compiler/materializer turns that manifest and its `TaskSpec` into
    a complete Harbor task package under the external output root.
 
+The current implementation is [`harbor/compiler.py`](harbor/compiler.py). It
+copies a small task fixture or externally materialized task into an external
+Pack, projects the cleaned TaskSpec statement into `instruction.md`, invokes
+the StepCLI delivery adapter, and emits a Harbor `launch.yaml` plus provenance
+metadata. It uses Harbor's existing `extra_instruction_paths` and agent-stage
+`upload_files` interfaces; it does not import or modify Harbor.
+
 The Harbor compiler may resolve evaluator-only SWE-bench data from the external
-task cache. It must not make Harbor's `instruction.md` or `extra_instruction_paths`
-the canonical representation of independent instruction surfaces, and it must
-not encode StepCLI-specific config keys into Item data.
+task cache. It must not make Harbor's `instruction.md` or
+`extra_instruction_paths` the semantic source of independent instruction
+surfaces, and it must not encode StepCLI-specific config keys into Item data.
+The generated files are a Pack projection and are never the canonical
+benchmark representation.
 
 Keep compilation deterministic and record the source and renderer hashes in the
 generated Pack metadata. A generated Pack is an input package, not a live
-workspace. No compiler implementation is present yet.
+workspace. The first-stage scope and verification commands are recorded in
+[`docs/first-stage-delivery.md`](../docs/first-stage-delivery.md). Verifiers and
+the live runner are intentionally not part of this compiler milestone.

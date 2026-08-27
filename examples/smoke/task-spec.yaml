@@ -1,0 +1,25 @@
+format: hif.task_spec
+format_version: 0
+status: candidate
+task_id: smoke/user-project
+source:
+  provider: harness-if-lab
+  revision: smoke-v1
+  instance_id: smoke/user-project
+repository:
+  slug: harness-if-lab/smoke
+  base_commit: synthetic
+  language: python
+content:
+  problem_statement: |
+    Fix normalize_name in app.py so it returns the input name with surrounding
+    whitespace removed and preserves the original letter case. Add a focused
+    automated test for the changed behavior. Run the test before finishing.
+curation:
+  status: eligible_candidate
+  offers_opportunity:
+  - behavior_change
+  - test_authoring
+fixture_ref:
+  provider: repository_fixture
+  visibility: evaluator_only

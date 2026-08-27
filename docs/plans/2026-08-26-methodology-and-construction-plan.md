@@ -517,14 +517,16 @@ zero-injection baseline and a two-to-four-binding intervention. Static matching,
 reference, role, surface, and leakage checks pass. The panel deliberately keeps
 judge-backed rules as `observed` and records a warning because the current task
 pool has no reliable `must`-severity scored opportunity. This is a data-shape
-checkpoint only; no verifier, Pack compiler, Harbor change, or StepCLI adapter
-has been implemented.
+checkpoint only; no verifier or live runner has been implemented yet. The first
+smoke Pack compiler and StepCLI delivery adapter are now implemented separately
+under `compilers/harbor/` and `harnesses/stepcli/`; they do not change Harbor or
+StepCLI.
 
 Nothing in Phases 0–3 requires Harbor or StepCLI.
 
 ### Phase 4: execution layer
 
-Deferred until there is material to run. The following observations were
+The first delivery slice is implemented for the smoke fixture. The following observations were
 verified against the current sibling development trees and are carried over from
 the deleted handoff. They are implementation observations, not version
 guarantees; re-check them when either dependency moves.
@@ -560,6 +562,15 @@ guarantees; re-check them when either dependency moves.
   Harbor repository, not inside this one. Record the commit in the experiment
   lock.
 
+**Candidate checkpoint 2026-08-28:** `user_message` and `project_file` can be
+compiled together into an external Harbor Pack. Static validation confirms the
+Harbor `JobConfig`, task directory, agent-stage `upload_files` hook, and current
+StepCLI project-rule discovery shape. Docker is unavailable in the development
+environment, so a live model trial is deliberately not claimed. The next phase
+is a runner/preflight that captures effective instruction files and native
+events before invoking verification; only an interface gap there should lead to
+changes in Harbor or StepCLI.
+
 ## 10. Open decisions
 
 | Decision | Blocks | Notes |
@@ -569,7 +580,7 @@ guarantees; re-check them when either dependency moves.
 | SWE-bench sample revision/count/sampling policy | Phase 0B | See [`task-sourcing.md`](../task-sourcing.md); final IDs and revision must be frozen before specs are promoted. |
 | TaskSpec inline text versus external blob | Phase 1 | Inline cleaned text is recommended for the 20-task pilot; evaluator data remains external either way. |
 | Evaluator cache provider/location | Phase 1 | Must be external and addressable by revision/hash; never a repository-local runtime dependency. |
-| Rule binding surface cardinality and v1 vocabulary | Phase 1 | One surface per binding is recommended; adapter mapping remains deferred. |
+| Rule binding surface cardinality and v1 vocabulary | Phase 1 | One surface per binding is recommended; the first adapter maps only `user_message` and `project_file`. |
 | Authority/precedence policy vocabulary | Phase 1 | Keep policy explicit and separate from text ordering; conflict experiments get their own condition label. |
 | Ambient instruction isolation policy | Phase 4 | Unexpected global/project instructions must be detected and classified before a run is valid. |
 | `tool_set_ref` semantics and independence from rule surfaces | Phase 1 | Reserve the reference now; define complete tool-set capabilities only when StepCLI supports them. |

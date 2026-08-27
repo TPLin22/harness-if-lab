@@ -61,15 +61,15 @@ harness-if-lab/
 | `benchmark/splits` | Future split and release metadata. |
 | `schemas` | Future machine-readable validation schemas; no formal specs yet. |
 | `generators` | Cross-cutting candidate and dataset generation programs. |
-| `compilers/harbor` | Translation from semantic Items to Harbor input packages. |
-| `harnesses/stepcli` | StepCLI-specific surface delivery and evidence adapter. |
+| `compilers/harbor` | Translation from semantic Items to external Harbor input packages; the first smoke compiler is implemented. |
+| `harnesses/stepcli` | StepCLI-specific surface delivery and evidence adapter; the first `user_message`/`project_file` path is implemented. |
 | `verifiers` | Single-trial rule/task evidence checks. |
 | `analysis` | Cross-trial ingestion, normalization, statistics, and report code. |
 | `configs` | Future experiment and backend configuration templates. |
 | `docs` | Durable documents: design, constraints, workflow, and layout. |
 | `docs/plans` | Dated execution plans; superseded rather than maintained. See `AGENTS.md`. |
-| `examples/smoke` | Future tiny end-to-end examples for CI and adapter tests. |
-| `tests` | Tests for the eventual contracts and implementations. |
+| `examples/smoke` | Tiny, versioned fixture for the first delivery contract and adapter tests. |
+| `tests` | Tests for the contracts and current/future implementations. |
 
 `benchmark/tasks/indexes` is for selecting upstream task instances (for example,
 the 20-task SWE-bench pilot). `benchmark/splits` is reserved for released
