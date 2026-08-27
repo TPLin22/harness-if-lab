@@ -1,0 +1,175 @@
+format: hif.phase0.source_manifest
+format_version: 0
+status: intake_snapshot
+retrieved_at: '2026-08-27'
+retrieval_method: github_contents_api
+notes:
+  - These are immutable collection pins for the current candidate batch.
+  - A source commit or hash is not an approval of any extracted rule.
+  - C5 is pinned for the shortlist but held as reserve in this batch.
+sources:
+  - id: src-g1-pandas-codebase
+    source_pool: generalization
+    organization_cluster: pandas-dev
+    source_kind: human_project_guide
+    repository: pandas-dev/pandas
+    path: doc/source/development/contributing_codebase.rst
+    commit: 22c70ea02e8044d901c4ac1ad10960083ff476e3
+    git_blob_sha: 0625b6cca293a0e399cbe17af14b823bdaee9111
+    content_sha256: 1e77b704100d526e11474cde73df7cd733a1256730b9162bc3358dfbe4e74003
+    license: BSD-3-Clause
+    line_count: 960
+    byte_count: 38260
+    used_rule_count: 7
+    intake_status: sampled
+    api_url: https://api.github.com/repos/pandas-dev/pandas/contents/doc/source/development/contributing_codebase.rst?ref=22c70ea02e8044d901c4ac1ad10960083ff476e3
+  - id: src-g2-sklearn-developers
+    source_pool: generalization
+    organization_cluster: scikit-learn
+    source_kind: api_convention
+    repository: scikit-learn/scikit-learn
+    path: doc/developers/develop.rst
+    commit: ae50210b666257acef1e227f0f80000826c0e817
+    git_blob_sha: 3a77c3c28d96114ea53b5faf5df9936b8bed9a50
+    content_sha256: 19076765ea983041015138062726db856535742de8cee80dc14fe54e3bf9e271
+    license: BSD-3-Clause
+    line_count: 804
+    byte_count: 35685
+    used_rule_count: 6
+    intake_status: sampled
+    api_url: https://api.github.com/repos/scikit-learn/scikit-learn/contents/doc/developers/develop.rst?ref=ae50210b666257acef1e227f0f80000826c0e817
+  - id: src-g3-django-committing
+    source_pool: generalization
+    organization_cluster: django
+    source_kind: human_project_guide
+    repository: django/django
+    path: docs/internals/contributing/committing-code.txt
+    commit: 0b40210e4808937a7c0922e8b7502bff4752faa3
+    git_blob_sha: 2a41fe60cfe9e8552b6c5c7e19d800075538943c
+    content_sha256: 8aa89e128542509772c0d1f9f02e735111e2b78013029930ae44464ddde61095
+    license: BSD-3-Clause
+    line_count: 314
+    byte_count: 12601
+    used_rule_count: 5
+    intake_status: sampled
+    api_url: https://api.github.com/repos/django/django/contents/docs/internals/contributing/committing-code.txt?ref=0b40210e4808937a7c0922e8b7502bff4752faa3
+  - id: src-g4-rust-contributing
+    source_pool: generalization
+    organization_cluster: rust-lang
+    source_kind: human_project_guide
+    repository: rust-lang/rust
+    path: src/doc/rustc-dev-guide/src/contributing.md
+    commit: d9dd0703ba332dbdd19ae6c9bf7ab98ab7c933c7
+    git_blob_sha: ef6c98cb6d97891e4a70b0a0ed25a26f3be18480
+    content_sha256: 550529ddf4f96d40a9c648dfa07be619008e73404c5807633c9e9a5c743a9881
+    license: Apache-2.0-or-MIT
+    line_count: 545
+    byte_count: 26671
+    used_rule_count: 5
+    intake_status: sampled
+    api_url: https://api.github.com/repos/rust-lang/rust/contents/src/doc/rustc-dev-guide/src/contributing.md?ref=d9dd0703ba332dbdd19ae6c9bf7ab98ab7c933c7
+  - id: src-g5-node-pull-requests
+    source_pool: generalization
+    organization_cluster: nodejs
+    source_kind: human_project_guide
+    repository: nodejs/node
+    path: doc/contributing/pull-requests.md
+    commit: c66ae4f2cbf36eea1952ed491210b9fb3a5d7079
+    git_blob_sha: 77b9148213b76bf256674088b282136468fb24e8
+    content_sha256: df8937caa4eac2ab067a170dae9411855299b3105ddb889f9e1f2e5d30d78255
+    license: MIT
+    line_count: 631
+    byte_count: 27384
+    used_rule_count: 5
+    intake_status: sampled
+    api_url: https://api.github.com/repos/nodejs/node/contents/doc/contributing/pull-requests.md?ref=c66ae4f2cbf36eea1952ed491210b9fb3a5d7079
+  - id: src-g6-kubernetes-api-conventions
+    source_pool: generalization
+    organization_cluster: kubernetes
+    source_kind: api_convention
+    repository: kubernetes/community
+    path: contributors/devel/sig-architecture/api-conventions.md
+    commit: e3827c12086d91fc120a908390ac464b358edb33
+    git_blob_sha: 8ee6e2488c7040eeacdcf98d4fc3c0ed10c8243c
+    content_sha256: 5e67ed7ff2957b2a06b026308b28b7a4f2cd03e5f590964c1e4f5c0c69f782f1
+    license: Apache-2.0
+    line_count: 2231
+    byte_count: 115587
+    used_rule_count: 4
+    intake_status: sampled
+    api_url: https://api.github.com/repos/kubernetes/community/contents/contributors/devel/sig-architecture/api-conventions.md?ref=e3827c12086d91fc120a908390ac464b358edb33
+  - id: src-c1-kubernetes-agents
+    source_pool: harness_native_calibration
+    organization_cluster: kubernetes
+    source_kind: agent_instruction
+    repository: kubernetes/kubernetes
+    path: AGENTS.md
+    commit: 451fe361bf80a3e3b54e2fa53d23850c0d6267cf
+    git_blob_sha: 46a9402558f6dd02faa6a8d44e0e15c1e0c16caf
+    content_sha256: ca28500a4f6f358090c58b2d3ed06c2eaf41ca4f441cddb23cec84e71362096a
+    license: Apache-2.0
+    line_count: 38
+    byte_count: 1584
+    used_rule_count: 5
+    intake_status: sampled
+    api_url: https://api.github.com/repos/kubernetes/kubernetes/contents/AGENTS.md?ref=451fe361bf80a3e3b54e2fa53d23850c0d6267cf
+  - id: src-c2-airflow-agents
+    source_pool: harness_native_calibration
+    organization_cluster: apache-airflow
+    source_kind: agent_instruction
+    repository: apache/airflow
+    path: AGENTS.md
+    commit: f727ea8544d1b0b7759e78e5dfcb257dd8292957
+    git_blob_sha: c414057ac1fef074f2c0fea9a700b7d69a8afe0b
+    content_sha256: ed42557a0301deeaf2b1f9f854d25d34a3e7050b9296106add25d226a63ae1bd
+    license: Apache-2.0
+    line_count: 522
+    byte_count: 35849
+    used_rule_count: 2
+    intake_status: sampled
+    api_url: https://api.github.com/repos/apache/airflow/contents/AGENTS.md?ref=f727ea8544d1b0b7759e78e5dfcb257dd8292957
+  - id: src-c3-codex-agents
+    source_pool: harness_native_calibration
+    organization_cluster: openai-codex
+    source_kind: agent_instruction
+    repository: openai/codex
+    path: AGENTS.md
+    commit: d5caceccb1ee5bf94c081b995575ce4860e0912b
+    git_blob_sha: faa57cc0db48123e1011f1eb47692cd3bbbcfc3a
+    content_sha256: c3f80e8386eb170b00af1e21de40d770c4941e464915687e728e2d14a7e79480
+    license: Apache-2.0
+    line_count: 322
+    byte_count: 22519
+    used_rule_count: 4
+    intake_status: sampled
+    api_url: https://api.github.com/repos/openai/codex/contents/AGENTS.md?ref=d5caceccb1ee5bf94c081b995575ce4860e0912b
+  - id: src-c4-node-agents
+    source_pool: harness_native_calibration
+    organization_cluster: nodejs
+    source_kind: agent_instruction
+    repository: nodejs/node
+    path: AGENTS.md
+    commit: c66ae4f2cbf36eea1952ed491210b9fb3a5d7079
+    git_blob_sha: 79e1d1b688b811edf4722720137e3b402f7c5bd0
+    content_sha256: f8b64061263b506d4781effefe4b1658b29cdd8b2649c0d298be5a3e3184cc07
+    license: MIT
+    line_count: 64
+    byte_count: 3079
+    used_rule_count: 1
+    intake_status: sampled
+    api_url: https://api.github.com/repos/nodejs/node/contents/AGENTS.md?ref=c66ae4f2cbf36eea1952ed491210b9fb3a5d7079
+  - id: src-c5-rust-agents
+    source_pool: harness_native_calibration
+    organization_cluster: rust-lang
+    source_kind: agent_instruction
+    repository: rust-lang/rust
+    path: AGENTS.md
+    commit: d9dd0703ba332dbdd19ae6c9bf7ab98ab7c933c7
+    git_blob_sha: af1ad378bebddcadc8bde50ce54f9ccdba5a8c3a
+    content_sha256: 9001523dd6f1051f03a4c50f390cef5df9d62ba7347db3b222e2c9f72044231b
+    license: Apache-2.0-or-MIT
+    line_count: 243
+    byte_count: 12719
+    used_rule_count: 0
+    intake_status: reserve_only
+    api_url: https://api.github.com/repos/rust-lang/rust/contents/AGENTS.md?ref=d9dd0703ba332dbdd19ae6c9bf7ab98ab7c933c7

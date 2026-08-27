@@ -448,6 +448,20 @@ to find out which fields cannot be filled, which constraints cannot be
 expressed, and which distinctions collapse in practice. Designing the schema
 first and populating it afterwards produces fields nobody can fill.
 
+**Checkpoint 2026-08-27:** the initial intake snapshot is populated with 39 raw
+units and 44 provisional candidates from the pinned shortlist. See
+[`benchmark/sources/phase0-source-manifest.yaml`](../../benchmark/sources/phase0-source-manifest.yaml),
+[`benchmark/sources/phase0-raw-units.yaml`](../../benchmark/sources/phase0-raw-units.yaml),
+and [`benchmark/rules/candidates/phase0-candidates.yaml`](../../benchmark/rules/candidates/phase0-candidates.yaml).
+An agent review has now accepted all 44 candidates for draft canonicalization,
+splitting the bundled tests-and-docs candidate into two records (45 canonical
+drafts total). The review ledger is
+[`benchmark/rules/candidates/phase0-review.yaml`](../../benchmark/rules/candidates/phase0-review.yaml)
+and the draft library is
+[`benchmark/rules/canonical/phase0-canonical.yaml`](../../benchmark/rules/canonical/phase0-canonical.yaml).
+They remain unqualified and pending human spot-check; the next construction
+action is the Phase 0B task-reference pilot.
+
 ### Phase 0B: task-reference pilot, no runner
 
 In parallel with the source samples, pin the chosen SWE-bench Multilingual

@@ -14,10 +14,11 @@ backend, while the benchmark data model remains owned by this repository.
 
 ## Current status
 
-This commit is a repository scaffold only. It contains the project boundaries,
-working constraints, and architecture documents. It intentionally contains no
-rules, coding tasks, Item schema implementation, compiler, runner, verifier, or
-analysis implementation.
+The repository now contains the first pinned rule-source intake and an
+agent-reviewed draft canonical rule library. The rule records are still
+unqualified for task opportunities, prior tendency, contamination, and release;
+there are not yet any collected coding tasks, Items, compilers, runners,
+verifiers, or analysis implementations.
 
 ## Conceptual pipeline
 
@@ -60,7 +61,7 @@ belong under an external `output_root`; see [the repository layout](docs/reposit
 - [Repository layout and output boundary](docs/repository-layout.md)
 - [Execution plans](docs/plans/README.md), currently
   [methodology and construction plan](docs/plans/2026-08-26-methodology-and-construction-plan.md)
-- [Benchmark area](benchmark/README.md)
+- [Benchmark area](benchmark/README.md), including the current [rule candidates](benchmark/rules/candidates/README.md) and [canonical draft](benchmark/rules/canonical/README.md)
 - [Schemas area](schemas/README.md)
 
 The contributor and coding-agent contract is in [AGENTS.md](AGENTS.md). For

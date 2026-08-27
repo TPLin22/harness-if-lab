@@ -1,0 +1,362 @@
+format: hif.phase0.raw_units
+format_version: 0
+status: extracted_unreviewed
+created_at: '2026-08-27'
+notes:
+  - Raw units are bounded source paragraphs or bullets, not released rules.
+  - Excerpts are short working extraction cues retained for curation audit;
+    the pinned locator is authoritative and the cues may normalize markup.
+  - Candidate records may split one raw unit into several atomic rules.
+selection_flags:
+  generated_file: false
+  alias_or_import: false
+raw_units:
+  - id: raw-g1-01
+    source_ref: src-g1-pandas-codebase
+    section: Code standards
+    locator: 'lines 15-22'
+    excerpt: >-
+      During Continuous Integration testing, generating any warnings will cause
+      the test to fail. Thus, good style is a requirement for submitting code.
+    candidate_ids: [rule-p0-001]
+    extraction_status: decomposed
+  - id: raw-g1-02
+    source_ref: src-g1-pandas-codebase
+    section: Optional dependencies
+    locator: 'lines 87-89'
+    excerpt: >-
+      Optional dependencies should be imported with the private helper
+      pandas.compat._optional.import_optional_dependency.
+    candidate_ids: [rule-p0-002]
+    extraction_status: decomposed
+  - id: raw-g1-03
+    source_ref: src-g1-pandas-codebase
+    section: Optional dependencies
+    locator: 'lines 91-93'
+    excerpt: >-
+      All methods using an optional dependency should include a test asserting
+      that an ImportError is raised when the optional dependency is not found.
+    candidate_ids: [rule-p0-003]
+    extraction_status: decomposed
+  - id: raw-g1-04
+    source_ref: src-g1-pandas-codebase
+    section: Backwards compatibility
+    locator: 'lines 102-106'
+    excerpt: >-
+      Please try to maintain backward compatibility. If breakage is required,
+      clearly state why as part of the pull request, and add deprecation warnings
+      where needed.
+    candidate_ids: [rule-p0-004, rule-p0-005]
+    extraction_status: split_into_atomic_candidates
+  - id: raw-g1-05
+    source_ref: src-g1-pandas-codebase
+    section: Type hints / Style guidelines
+    locator: 'lines 154-161'
+    excerpt: >-
+      Type imports should follow the from typing import ... convention.
+    candidate_ids: [rule-p0-006]
+    extraction_status: decomposed
+  - id: raw-g1-06
+    source_ref: src-g1-pandas-codebase
+    section: Test-driven development
+    locator: 'lines 287-294'
+    excerpt: >-
+      Before actually writing any code, you should write your tests.
+    candidate_ids: [rule-p0-007]
+    extraction_status: decomposed
+  - id: raw-g2-01
+    source_ref: src-g2-sklearn-developers
+    section: Estimators
+    locator: 'lines 88-97'
+    excerpt: >-
+      All estimators implement the fit method, and fit is usually the method
+      contributors implement themselves.
+    candidate_ids: [rule-p0-008]
+    extraction_status: decomposed
+  - id: raw-g2-02
+    source_ref: src-g2-sklearn-developers
+    section: Instantiation
+    locator: 'lines 103-110'
+    excerpt: >-
+      The constructor should not take actual training data as an argument; this
+      is left to the fit method.
+    candidate_ids: [rule-p0-009]
+    extraction_status: decomposed
+  - id: raw-g2-03
+    source_ref: src-g2-sklearn-developers
+    section: Instantiation
+    locator: 'lines 112-117'
+    excerpt: >-
+      Arguments accepted by __init__ should ideally be keyword arguments with a
+      default value.
+    candidate_ids: [rule-p0-010]
+    extraction_status: decomposed
+  - id: raw-g2-04
+    source_ref: src-g2-sklearn-developers
+    section: Instantiation
+    locator: 'lines 126-139'
+    excerpt: >-
+      Every keyword argument accepted by __init__ should correspond to an
+      attribute on the instance; there should be no logic, not even input
+      validation, and parameters should not be changed.
+    candidate_ids: [rule-p0-011, rule-p0-012]
+    extraction_status: split_into_atomic_candidates
+  - id: raw-g2-05
+    source_ref: src-g2-sklearn-developers
+    section: Instantiation
+    locator: 'lines 155-157'
+    excerpt: >-
+      Parameters with trailing underscore are not to be set inside __init__.
+    candidate_ids: [rule-p0-013]
+    extraction_status: decomposed
+  - id: raw-g3-01
+    source_ref: src-g3-django-committing
+    section: Handling pull requests
+    locator: 'lines 92-96'
+    excerpt: >-
+      Tests should pass and docs should build after each commit. Neither tests
+      nor docs should emit warnings.
+    candidate_ids: [rule-p0-014]
+    extraction_status: decomposed
+  - id: raw-g3-02
+    source_ref: src-g3-django-committing
+    section: Committing guidelines
+    locator: 'lines 110-112'
+    excerpt: >-
+      Never change published repository history by force pushing; if absolutely
+      necessary, first discuss the situation with the team.
+    candidate_ids: [rule-p0-015]
+    extraction_status: decomposed
+  - id: raw-g3-03
+    source_ref: src-g3-django-committing
+    section: Committing guidelines
+    locator: 'lines 114-122'
+    excerpt: >-
+      For medium-to-big changes, bring the proposal up on the project forum
+      before making the change and wait for a response.
+    candidate_ids: [rule-p0-016]
+    extraction_status: decomposed
+  - id: raw-g3-04
+    source_ref: src-g3-django-committing
+    section: Committing guidelines
+    locator: 'lines 124-130'
+    excerpt: >-
+      Write detailed commit messages in the past tense, not present tense, and
+      end the subject line with a period.
+    candidate_ids: [rule-p0-017]
+    extraction_status: decomposed
+  - id: raw-g3-05
+    source_ref: src-g3-django-committing
+    section: Committing guidelines
+    locator: 'lines 132-139'
+    excerpt: >-
+      The commit message should be in lines of 72 chars maximum, and its body
+      should explain why the change was made.
+    candidate_ids: [rule-p0-018]
+    extraction_status: decomposed
+  - id: raw-g4-01
+    source_ref: src-g4-rust-contributing
+    section: Pull requests
+    locator: 'lines 131-137'
+    excerpt: >-
+      Before making large, complex, cross-cutting, or domain-specific changes,
+      contributors are strongly encouraged to discuss them with the relevant
+      team beforehand.
+    candidate_ids: [rule-p0-019]
+    extraction_status: decomposed
+  - id: raw-g4-02
+    source_ref: src-g4-rust-contributing
+    section: Pull requests
+    locator: 'lines 131-150'
+    excerpt: >-
+      Work with the team to break down a large potentially unreviewable pull
+      request into smaller, more individually reviewable pull requests.
+    candidate_ids: [rule-p0-020]
+    extraction_status: decomposed
+  - id: raw-g4-03
+    source_ref: src-g4-rust-contributing
+    section: Keeping your branch up-to-date
+    locator: 'lines 164-174'
+    excerpt: >-
+      Update your branch only when needed, such as for conflicts, broken CI, or
+      a maintainer request; avoid updating an already-green pull request unless
+      necessary.
+    candidate_ids: [rule-p0-021]
+    extraction_status: decomposed
+  - id: raw-g4-04
+    source_ref: src-g4-rust-contributing
+    section: r?
+    locator: 'lines 176-180'
+    excerpt: >-
+      All pull requests are reviewed by another person.
+    candidate_ids: [rule-p0-022]
+    extraction_status: decomposed
+  - id: raw-g4-05
+    source_ref: src-g4-rust-contributing
+    section: Opening a PR
+    locator: 'lines 308-312'
+    excerpt: >-
+      Rust follows a no merge-commit policy: when encountering merge conflicts,
+      contributors are expected to rebase instead of merging.
+    candidate_ids: [rule-p0-023]
+    extraction_status: decomposed
+  - id: raw-g5-01
+    source_ref: src-g5-node-pull-requests
+    section: 'Step 2: Branch'
+    locator: 'lines 100-106'
+    excerpt: >-
+      Create local branches directly off the upstream default branch.
+    candidate_ids: [rule-p0-024]
+    extraction_status: decomposed
+  - id: raw-g5-02
+    source_ref: src-g5-node-pull-requests
+    section: 'Step 3: Code'
+    locator: 'lines 120-122'
+    excerpt: >-
+      If modifying code, run make lint, or vcbuild.bat lint on Windows, to
+      ensure changes follow the project code style guide.
+    candidate_ids: [rule-p0-025]
+    extraction_status: decomposed
+  - id: raw-g5-03
+    source_ref: src-g5-node-pull-requests
+    section: 'Step 3: Code'
+    locator: 'lines 124-138'
+    excerpt: >-
+      If adding to or deprecating an API, add or change the appropriate YAML
+      documentation and use REPLACEME for the version number.
+    candidate_ids: [rule-p0-026]
+    extraction_status: decomposed
+  - id: raw-g5-04
+    source_ref: src-g5-node-pull-requests
+    section: 'Step 6: Test'
+    locator: 'lines 247-262'
+    excerpt: >-
+      Bug fixes and features should always come with tests; before submitting,
+      always run the full test suite.
+    candidate_ids: [rule-p0-027, rule-p0-028]
+    extraction_status: split_into_atomic_candidates
+  - id: raw-g6-01
+    source_ref: src-g6-kubernetes-api-conventions
+    section: Resources
+    locator: 'lines 84-88 and 217-221'
+    excerpt: >-
+      All JSON accepted and returned by the server has a schema identified by
+      kind and apiVersion; all JSON objects returned by an API must have those
+      fields.
+    candidate_ids: [rule-p0-029]
+    extraction_status: decomposed
+  - id: raw-g6-02
+    source_ref: src-g6-kubernetes-api-conventions
+    section: API Conventions (introductory naming paragraph)
+    locator: 'lines 123-124'
+    excerpt: >-
+      Resource collections should be all lowercase and plural, whereas kinds are
+      CamelCase and singular.
+    candidate_ids: [rule-p0-030, rule-p0-031]
+    extraction_status: split_into_atomic_candidates
+  - id: raw-g6-03
+    source_ref: src-g6-kubernetes-api-conventions
+    section: Spec and Status
+    locator: 'lines 282-298'
+    excerpt: >-
+      The API distinguishes the desired state of an object in spec from its
+      current state in status.
+    candidate_ids: [rule-p0-032]
+    extraction_status: decomposed
+  - id: raw-c1-01
+    source_ref: src-c1-kubernetes-agents
+    section: Constraints
+    locator: 'lines 11-11'
+    excerpt: >-
+      Generated files are read-only. Never hand-edit generated files; run make
+      update.
+    candidate_ids: [rule-p0-033]
+    extraction_status: decomposed
+  - id: raw-c1-02
+    source_ref: src-c1-kubernetes-agents
+    section: Constraints
+    locator: 'lines 12-12'
+    excerpt: >-
+      go.mod and go.work are generated; use the pin-dependency and update-vendor
+      scripts and never go mod tidy.
+    candidate_ids: [rule-p0-034]
+    extraction_status: decomposed
+  - id: raw-c1-03
+    source_ref: src-c1-kubernetes-agents
+    section: Constraints
+    locator: 'lines 13-13'
+    excerpt: >-
+      Staging is the source of truth for k8s.io packages; never import
+      k8s.io/kubernetes from staging.
+    candidate_ids: [rule-p0-035, rule-p0-036]
+    extraction_status: split_into_atomic_candidates
+  - id: raw-c1-04
+    source_ref: src-c1-kubernetes-agents
+    section: Constraints
+    locator: 'lines 14-14'
+    excerpt: >-
+      Every Go file needs the license header from the boilerplate template.
+    candidate_ids: [rule-p0-037]
+    extraction_status: decomposed
+  - id: raw-c2-01
+    source_ref: src-c2-airflow-agents
+    section: Environment Setup
+    locator: 'lines 21-27'
+    excerpt: >-
+      Never run pytest, python, or airflow commands directly on the host; always
+      use breeze.
+    candidate_ids: [rule-p0-038]
+    extraction_status: decomposed
+  - id: raw-c2-02
+    source_ref: src-c2-airflow-agents
+    section: Coding Standards
+    locator: 'lines 135-137'
+    excerpt: >-
+      Comment sparingly: code says what, comments say why; do not write narrating
+      comments that restate the next line.
+    candidate_ids: [rule-p0-039]
+    extraction_status: decomposed
+  - id: raw-c3-01
+    source_ref: src-c3-codex-agents
+    section: Rust/codex-rs
+    locator: 'lines 14-20'
+    excerpt: >-
+      Avoid bool or ambiguous Option parameters; prefer enums, named methods,
+      newtypes, or explicit argument comments when positional literals remain.
+    candidate_ids: [rule-p0-040]
+    extraction_status: decomposed
+  - id: raw-c3-02
+    source_ref: src-c3-codex-agents
+    section: Rust/codex-rs
+    locator: 'lines 21-22'
+    excerpt: >-
+      When possible, make match statements exhaustive and avoid wildcard arms.
+    candidate_ids: [rule-p0-041]
+    extraction_status: decomposed
+  - id: raw-c3-03
+    source_ref: src-c3-codex-agents
+    section: Model visible context
+    locator: 'lines 93-100'
+    excerpt: >-
+      Model-visible context must be built incrementally, have bounded items and
+      hard caps, and contain no item larger than 10K tokens.
+    candidate_ids: [rule-p0-042]
+    extraction_status: decomposed
+  - id: raw-c3-04
+    source_ref: src-c3-codex-agents
+    section: Test authoring guidance
+    locator: 'lines 112-120'
+    excerpt: >-
+      For agent changes, prefer integration tests; features that change agent
+      logic must add an integration test.
+    candidate_ids: [rule-p0-043]
+    extraction_status: decomposed
+  - id: raw-c4-01
+    source_ref: src-c4-node-agents
+    section: Code Contributions
+    locator: 'lines 13-17'
+    excerpt: >-
+      Automated pull requests require ongoing human oversight; the agent is not
+      permitted to create or push changes without that oversight.
+    candidate_ids: [rule-p0-044]
+    extraction_status: decomposed

@@ -1,14 +1,15 @@
 # Phase 0 Source Shortlist
 
-**Status:** adopted shortlist; source intake has not started. Reviewed 2026-08-26.
+**Status:** adopted shortlist; first intake snapshot collected 2026-08-27.
+Reviewed 2026-08-26; intake state updated 2026-08-27.
 
 This document records the initial source pool for rule curation. It is a source
 selection decision, not a rule catalog, a formal schema, or an execution plan.
 It is an internal curation record and is not the public provenance tier of a
 released rule, so it may name the repositories being considered.
-The files below are discovery links to the current default branches. Before an
-intake record is created, resolve each branch to an immutable repository commit
-and retain the source file content hash.
+The files below are discovery links to the current default branches. For each
+intake record, resolve the branch to an immutable repository commit and retain
+the source file content hash.
 
 ## Decision
 
@@ -31,6 +32,19 @@ This is deliberately larger than the 10--15 candidates that Phase 0 asks us to
 fully annotate. The remaining units are a reserve for finding specification
 gaps, not a released benchmark.
 
+### Intake snapshot
+
+The first batch collected 39 raw units and 44 provisional atomic candidates.
+The source pins and working excerpts are recorded in
+[`benchmark/sources/phase0-source-manifest.yaml`](../benchmark/sources/phase0-source-manifest.yaml)
+and [`benchmark/sources/phase0-raw-units.yaml`](../benchmark/sources/phase0-raw-units.yaml);
+the candidate records are in
+[`benchmark/rules/candidates/phase0-candidates.yaml`](../benchmark/rules/candidates/phase0-candidates.yaml).
+The extraction snapshot retains `candidate_unreviewed` status. An agent review
+ledger now records the disposition of all 44 candidates; 45 draft canonical
+records were produced, but they have not been task-qualified, contamination-
+reviewed, or released.
+
 ## Generalization pool
 
 | ID | Source and license | Target raw units | Primary signal and evidence | Main risk |
@@ -42,7 +56,8 @@ gaps, not a released benchmark.
 | G5 | [Node.js `pull-requests.md`](https://github.com/nodejs/node/blob/main/doc/contributing/pull-requests.md) (MIT) | 3--4 | Lint, documentation YAML, commit messages, sign-off, and tests; AST/Git/test evidence | Some requirements only make sense in a PR workflow |
 | G6 | [Kubernetes API Conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md) (Apache-2.0) | 3--4 | `kind`/`apiVersion`, naming, metadata, `spec`/`status`, and numeric types; schema/API evidence | Large, domain-specific document; select bounded static sections |
 
-The generalization pool contributes 20--26 raw units. Canonical renderings must
+The shortlist quotas are targets rather than a release requirement. The first
+snapshot contributes 28 generalization raw units. Canonical renderings must
 remove repository names and paths unless the experiment explicitly tests a
 product-specific rule; the original source pointer remains in private
 provenance.
@@ -57,7 +72,8 @@ provenance.
 | C4 | [Node.js `AGENTS.md`](https://github.com/nodejs/node/blob/main/AGENTS.md) (MIT) | 3--4 | Human oversight, no autonomous push, sign-off, AI disclosure, and test responsibility; authority/event evidence | Governance rules need an explicit actor and opportunity |
 | C5 | [Rust `AGENTS.md`](https://github.com/rust-lang/rust/blob/main/AGENTS.md) (Apache-2.0/MIT) | 2--3 | Stop/reviewer gates, test-before-implementation, tool restrictions, and module-size guidance; event/diff evidence | Keep LLM policy and prohibited-text material out of the first coding sample |
 
-The calibration pool contributes 16--21 raw units. Its rules enter the same
+The first snapshot contributes 11 calibration raw units; the remainder of this
+pool stays available for a later intake extension. Its rules enter the same
 candidate cleaning path, but `source_pool` must remain available for later
 stratification and contamination analysis.
 
@@ -67,6 +83,11 @@ The following Git blob IDs were observed for the files above on 2026-08-26.
 They identify the content read during this review; they are not repository
 commit IDs and do not replace the commit pin required by the eventual source
 manifest.
+
+The current intake snapshot was fetched on 2026-08-27 and may have moved past
+these discovery blobs. Use
+[`benchmark/sources/phase0-source-manifest.yaml`](../benchmark/sources/phase0-source-manifest.yaml)
+as the authoritative pin for the candidate records in this batch.
 
 ```text
 G1 pandas/doc/source/development/contributing_codebase.rst 0625b6cca293a0e399cbe17af14b823bdaee9111
@@ -110,10 +131,12 @@ harness surface later.
 Use the following order after the shortlist is accepted:
 
 1. Collect raw units from both pools without deciding yet whether they are
-   release-eligible, contaminated, or task-compatible.
-2. Select 12--15 units for complete candidate records. Deliberately include a
-   bundled requirement, a style-only recommendation, an unclear-scope rule,
-   and a rule with no obvious verifier.
+   release-eligible, contaminated, or task-compatible. The first snapshot is
+   complete; future intake may extend it without changing existing source pins.
+2. Select a review subset (the initial snapshot provisionally records all 39
+   units) for complete candidate review. Deliberately include a bundled
+   requirement, a style-only recommendation, an unclear-scope rule, and a rule
+   with no obvious verifier.
 3. Preserve a parent link when a bundled unit is split into multiple atomic
    candidates. Do not silently rewrite `should`, `prefer`, or exceptions into a
    hard requirement.

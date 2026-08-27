@@ -1,0 +1,1852 @@
+---
+format: hif.phase0.canonical_rules
+format_version: 0
+status: reviewed_draft
+created_at: '2026-08-27'
+review_basis: agent_semantic_review_pending_human_spot_check
+record_count: 45
+notes:
+- These records are canonicalized semantic drafts, not a released benchmark.
+- Task opportunity, prior tendency, contamination, and verifier qualification remain
+  unassessed.
+- source_pool is retained so calibration material cannot be silently mixed into the
+  generalization track.
+records:
+- id: rule-canon-p0-001
+  candidate_ref: rule-p0-001
+  title: Style checks produce no warnings
+  statement: Before submitting a change, the configured style checks must complete
+    without warnings.
+  source_ref: src-g1-pandas-codebase
+  source_pool: generalization
+  raw_unit_ref: raw-g1-01
+  family: code-style
+  modality: require
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: command-output
+  scope: changed source and its configured style checks
+  exceptions: none stated
+  requires_opportunity:
+  - run_style_checks
+  expected_evidence:
+  - command_exit_status
+  - warning_count
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G1 lines 15-22
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-002
+  candidate_ref: rule-p0-002
+  title: Use the optional-dependency helper
+  statement: When importing an optional dependency, use the project's designated optional-dependency
+    helper so missing-dependency errors are consistent.
+  source_ref: src-g1-pandas-codebase
+  source_pool: generalization
+  raw_unit_ref: raw-g1-02
+  family: tool-use
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: ast
+  scope: imports of dependencies that are optional for the project
+  exceptions: none stated
+  requires_opportunity:
+  - optional_dependency_import
+  expected_evidence:
+  - ast_import_check
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G1 lines 87-89
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-003
+  candidate_ref: rule-p0-003
+  title: Test the missing optional dependency path
+  statement: A method that uses an optional dependency should include a test asserting
+    an ImportError when that dependency is unavailable.
+  source_ref: src-g1-pandas-codebase
+  source_pool: generalization
+  raw_unit_ref: raw-g1-03
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: hybrid
+  scope: tests for code paths that import optional dependencies
+  exceptions: The missing-dependency test may be skipped when the library is present.
+  requires_opportunity:
+  - optional_dependency_import
+  - test_authoring
+  expected_evidence:
+  - test_file
+  - test_result
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G1 lines 91-93
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-004
+  candidate_ref: rule-p0-004
+  title: Preserve backward compatibility
+  statement: Try to preserve backward compatibility for public interfaces; if a break
+    is required, explain why.
+  source_ref: src-g1-pandas-codebase
+  source_pool: generalization
+  raw_unit_ref: raw-g1-04
+  family: code-style
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: rubric
+  universality: cross-coding
+  scoring_method: hybrid
+  scope: public APIs and behavior used by existing callers
+  exceptions: If breakage is required, the change proposal should explain why.
+  requires_opportunity:
+  - public_api_change
+  - compatibility_test
+  expected_evidence:
+  - regression_test
+  - api_diff
+  - change_record
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G1 lines 102-104
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Restated the source's request and exception without turning a preference
+      into a hard requirement.
+- id: rule-canon-p0-005
+  candidate_ref: rule-p0-005
+  title: Add a deprecation warning for necessary breaks
+  statement: When a public interface must break, add a deprecation warning where a
+    deprecation path is applicable.
+  source_ref: src-g1-pandas-codebase
+  source_pool: generalization
+  raw_unit_ref: raw-g1-04
+  family: workflow
+  modality: conditional-require
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: hybrid
+  scope: changed public functions, methods, or arguments
+  exceptions: The rule applies only when a deprecation path is applicable.
+  requires_opportunity:
+  - public_api_change
+  - warning_assertion
+  expected_evidence:
+  - warning_test
+  - deprecation_marker
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G1 lines 104-106
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Kept the conditional scope and the source's should-level modality.
+- id: rule-canon-p0-006
+  candidate_ref: rule-p0-006
+  title: Use the from-typing import form
+  statement: Type imports should use the project's from typing import form when that
+    convention applies.
+  source_ref: src-g1-pandas-codebase
+  source_pool: generalization
+  raw_unit_ref: raw-g1-05
+  family: code-style
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: ast
+  scope: Python imports used only for type annotations
+  exceptions: Automated checks may rewrite equivalent modern forms.
+  requires_opportunity:
+  - typed_python_edit
+  expected_evidence:
+  - ast_import_check
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G1 lines 154-161
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-007
+  candidate_ref: rule-p0-007
+  title: Write tests before implementation
+  statement: For a new behavior, write an automated test before implementing the production
+    code.
+  source_ref: src-g1-pandas-codebase
+  source_pool: generalization
+  raw_unit_ref: raw-g1-06
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: rubric
+  universality: cross-coding
+  scoring_method: hybrid
+  scope: development of a new behavior or function
+  exceptions: none stated
+  requires_opportunity:
+  - new_behavior_change
+  - test_authoring
+  - git_history
+  expected_evidence:
+  - test_diff
+  - test_result
+  - temporal_evidence_if_available
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G1 lines 287-294
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Removed the unsupported requirement that the test initially fail and made
+      temporal evidence optional.
+- id: rule-canon-p0-008
+  candidate_ref: rule-p0-008
+  title: Estimators expose fit
+  statement: An estimator implementation must expose a fit method that accepts its
+    training data.
+  source_ref: src-g2-sklearn-developers
+  source_pool: generalization
+  raw_unit_ref: raw-g2-01
+  family: workflow
+  modality: require
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: ast
+  scope: objects intended to implement the estimator interface
+  exceptions: none stated
+  requires_opportunity:
+  - estimator_implementation
+  expected_evidence:
+  - api_introspection
+  - ast_signature
+  surface_fit:
+    system_prompt: high
+    managed_instruction: medium
+    global_instruction: low
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G2 lines 88-97
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-009
+  candidate_ref: rule-p0-009
+  title: Keep training data out of the constructor
+  statement: An estimator constructor should not accept actual training data; training
+    data belongs in fit.
+  source_ref: src-g2-sklearn-developers
+  source_pool: generalization
+  raw_unit_ref: raw-g2-02
+  family: code-style
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: ast
+  scope: estimator __init__ signatures
+  exceptions: none stated
+  requires_opportunity:
+  - estimator_constructor_edit
+  expected_evidence:
+  - ast_signature
+  surface_fit:
+    system_prompt: high
+    managed_instruction: medium
+    global_instruction: low
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G2 lines 103-110
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-010
+  candidate_ref: rule-p0-010
+  title: Prefer keyword constructor parameters with defaults
+  statement: Estimator constructor parameters should be keyword arguments with defaults
+    whenever a sensible default exists.
+  source_ref: src-g2-sklearn-developers
+  source_pool: generalization
+  raw_unit_ref: raw-g2-03
+  family: code-style
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: rubric
+  universality: specific
+  scoring_method: ast
+  scope: estimator __init__ parameters
+  exceptions: A parameter without a sensible default may remain required.
+  requires_opportunity:
+  - estimator_constructor_edit
+  expected_evidence:
+  - ast_signature
+  - api_introspection
+  surface_fit:
+    system_prompt: high
+    managed_instruction: medium
+    global_instruction: low
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G2 lines 112-117
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-011
+  candidate_ref: rule-p0-011
+  title: Store constructor parameters under the same names
+  statement: Every keyword argument accepted by an estimator constructor should be
+    stored on the instance under the same parameter name.
+  source_ref: src-g2-sklearn-developers
+  source_pool: generalization
+  raw_unit_ref: raw-g2-04
+  family: code-style
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: ast
+  scope: estimator constructor parameter attributes
+  exceptions: none stated
+  requires_opportunity:
+  - estimator_constructor_edit
+  expected_evidence:
+  - signature_to_attribute_check
+  surface_fit:
+    system_prompt: high
+    managed_instruction: medium
+    global_instruction: low
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G2 lines 126-135
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-012
+  candidate_ref: rule-p0-012
+  title: Keep constructor logic and validation out of init
+  statement: An estimator constructor should not perform logic or input validation;
+    put parameter-dependent logic where the parameters are used, typically in fit.
+  source_ref: src-g2-sklearn-developers
+  source_pool: generalization
+  raw_unit_ref: raw-g2-04
+  family: code-style
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: ast
+  scope: estimator __init__ bodies
+  exceptions: none stated
+  requires_opportunity:
+  - estimator_constructor_edit
+  expected_evidence:
+  - ast_constructor_body
+  surface_fit:
+    system_prompt: high
+    managed_instruction: medium
+    global_instruction: low
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G2 lines 136-153
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-013
+  candidate_ref: rule-p0-013
+  title: Name learned public attributes with a trailing underscore
+  statement: Public attributes learned from data should use trailing-underscore names
+    and should not be initialized in the constructor.
+  source_ref: src-g2-sklearn-developers
+  source_pool: generalization
+  raw_unit_ref: raw-g2-05
+  family: code-style
+  modality: require
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: ast
+  scope: public estimator attributes created during fitting
+  exceptions: Private learned attributes may use a leading underscore instead.
+  requires_opportunity:
+  - estimator_fit_implementation
+  expected_evidence:
+  - ast_attribute_names
+  - api_introspection
+  surface_fit:
+    system_prompt: high
+    managed_instruction: medium
+    global_instruction: low
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G2 lines 155-157 and 225-235
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Made the estimator convention explicit while retaining its source-specific
+      scope.
+- id: rule-canon-p0-014-tests
+  candidate_ref: rule-p0-014
+  title: Tests pass after each commit
+  statement: After each commit, the project's tests should pass without warnings.
+  source_ref: src-g3-django-committing
+  source_pool: generalization
+  raw_unit_ref: raw-g3-01
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: command-output
+  scope: each commit in a change series
+  exceptions: none stated
+  requires_opportunity:
+  - commit_sequence
+  - test_run
+  expected_evidence:
+  - commit_status
+  - test_result
+  - warning_count
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G3 lines 92-96
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: split_into_atomic_rules
+    note: Split from the bundled tests-and-docs candidate.
+- id: rule-canon-p0-014-docs
+  candidate_ref: rule-p0-014
+  title: Documentation builds after each commit
+  statement: After each commit, the project's documentation should build without warnings.
+  source_ref: src-g3-django-committing
+  source_pool: generalization
+  raw_unit_ref: raw-g3-01
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: command-output
+  scope: each commit in a change series
+  exceptions: none stated
+  requires_opportunity:
+  - commit_sequence
+  - documentation_build
+  expected_evidence:
+  - commit_status
+  - documentation_build
+  - warning_count
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G3 lines 92-96
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: split_into_atomic_rules
+    note: Split from the bundled tests-and-docs candidate.
+- id: rule-canon-p0-015
+  candidate_ref: rule-p0-015
+  title: Do not force-push published history
+  statement: Do not force-push published repository history.
+  source_ref: src-g3-django-committing
+  source_pool: generalization
+  raw_unit_ref: raw-g3-02
+  family: workflow
+  modality: forbid
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: command-output
+  scope: published branches and their remote history
+  exceptions: An exceptional security case should be discussed with the team first.
+  requires_opportunity:
+  - git_push_event
+  expected_evidence:
+  - git_event_log
+  - remote_ref_history
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G3 lines 110-112
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-016
+  candidate_ref: rule-p0-016
+  title: Discuss medium-to-large changes before implementation
+  statement: Before making a medium-to-large change, present the proposal to the project
+    community and wait for a response.
+  source_ref: src-g3-django-committing
+  source_pool: generalization
+  raw_unit_ref: raw-g3-03
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: deep
+  verifiability: rubric
+  universality: cross-coding
+  scoring_method: llm-judge
+  scope: changes judged medium-to-large by the project
+  exceptions: Silence from the community is not itself approval.
+  requires_opportunity:
+  - community_discussion
+  - change_size_judgment
+  expected_evidence:
+  - discussion_event
+  - timing_relation
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G3 lines 114-122
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Generalized the source's forum wording and retained the wait-for-response
+      condition.
+- id: rule-canon-p0-017
+  candidate_ref: rule-p0-017
+  title: Use past tense and a period in commit subjects
+  statement: Commit subjects should use past tense and end with a period.
+  source_ref: src-g3-django-committing
+  source_pool: generalization
+  raw_unit_ref: raw-g3-04
+  family: output-control
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: surface
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: regex
+  scope: the subject line of each commit message
+  exceptions: none stated
+  requires_opportunity:
+  - commit_creation
+  expected_evidence:
+  - commit_subject_text
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G3 lines 124-130
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-018
+  candidate_ref: rule-p0-018
+  title: Keep commit message lines within 72 characters
+  statement: Commit message lines should be no longer than 72 characters.
+  source_ref: src-g3-django-committing
+  source_pool: generalization
+  raw_unit_ref: raw-g3-05
+  family: output-control
+  modality: limit-max
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: surface
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: regex
+  scope: subject and body lines of a commit message
+  exceptions: The source describes the line limits as soft.
+  requires_opportunity:
+  - commit_creation
+  expected_evidence:
+  - line_length_measurement
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G3 lines 132-139
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-019
+  candidate_ref: rule-p0-019
+  title: Discuss large cross-cutting changes with the relevant team
+  statement: Before making a large, complex, cross-cutting, or domain-specific change,
+    discuss it with the relevant team.
+  source_ref: src-g4-rust-contributing
+  source_pool: generalization
+  raw_unit_ref: raw-g4-01
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: deep
+  verifiability: rubric
+  universality: cross-coding
+  scoring_method: llm-judge
+  scope: changes with broad complexity or domain impact
+  exceptions: none stated
+  requires_opportunity:
+  - team_discussion
+  - change_scope_judgment
+  expected_evidence:
+  - discussion_event
+  - timing_relation
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G4 lines 131-137
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Restated the source's strongly encouraged guidance without hardening it.
+- id: rule-canon-p0-020
+  candidate_ref: rule-p0-020
+  title: Split unreviewable changes into smaller pull requests
+  statement: Break a potentially unreviewable pull request into smaller, individually
+    reviewable pull requests.
+  source_ref: src-g4-rust-contributing
+  source_pool: generalization
+  raw_unit_ref: raw-g4-02
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: deep
+  verifiability: rubric
+  universality: cross-coding
+  scoring_method: llm-judge
+  scope: large changes submitted for review
+  exceptions: none stated
+  requires_opportunity:
+  - pull_request_creation
+  - reviewability_judgment
+  expected_evidence:
+  - pull_request_graph
+  - change_scope_record
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G4 lines 131-150
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-021
+  candidate_ref: rule-p0-021
+  title: Update a branch only when needed
+  statement: Update a feature branch only when needed for conflicts, broken CI, or
+    a maintainer request; avoid updating an already-green review unnecessarily.
+  source_ref: src-g4-rust-contributing
+  source_pool: generalization
+  raw_unit_ref: raw-g4-03
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: rubric
+  universality: cross-coding
+  scoring_method: command-output
+  scope: branch updates while a change is under review
+  exceptions: Conflicts, broken CI, or a maintainer request justify an update.
+  requires_opportunity:
+  - git_history
+  - ci_status
+  - review_event
+  expected_evidence:
+  - git_event_log
+  - ci_status
+  - review_record
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G4 lines 164-174
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-022
+  candidate_ref: rule-p0-022
+  title: Require review by another person
+  statement: Every pull request must receive review from another person.
+  source_ref: src-g4-rust-contributing
+  source_pool: generalization
+  raw_unit_ref: raw-g4-04
+  family: workflow
+  modality: require
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: deep
+  verifiability: rubric
+  universality: cross-coding
+  scoring_method: command-output
+  scope: pull requests before merge
+  exceptions: none stated
+  requires_opportunity:
+  - pull_request_review
+  expected_evidence:
+  - review_event
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G4 lines 176-180
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-023
+  candidate_ref: rule-p0-023
+  title: Rebase instead of creating merge commits
+  statement: When incorporating changes from the main branch, rebase instead of creating
+    a merge commit.
+  source_ref: src-g4-rust-contributing
+  source_pool: generalization
+  raw_unit_ref: raw-g4-05
+  family: workflow
+  modality: require
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: command-output
+  scope: feature branch history before pull request submission
+  exceptions: none stated
+  requires_opportunity:
+  - git_rebase
+  - branch_update
+  expected_evidence:
+  - commit_graph
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G4 lines 308-312
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-024
+  candidate_ref: rule-p0-024
+  title: Branch from the upstream default branch
+  statement: Create development branches directly from the upstream default branch.
+  source_ref: src-g5-node-pull-requests
+  source_pool: generalization
+  raw_unit_ref: raw-g5-01
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: command-output
+  scope: creation of a feature branch
+  exceptions: none stated
+  requires_opportunity:
+  - branch_creation
+  expected_evidence:
+  - commit_graph
+  - branch_tracking_config
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G5 lines 100-106
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-025
+  candidate_ref: rule-p0-025
+  title: Run lint after modifying code
+  statement: When modifying code, run the project's lint command before submitting
+    the change.
+  source_ref: src-g5-node-pull-requests
+  source_pool: generalization
+  raw_unit_ref: raw-g5-02
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: command-output
+  scope: code changes before pull request submission
+  exceptions: The command may vary by operating system.
+  requires_opportunity:
+  - code_edit
+  - lint_run
+  expected_evidence:
+  - lint_exit_status
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G5 lines 120-122
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-026
+  candidate_ref: rule-p0-026
+  title: Update YAML API documentation for API changes
+  statement: When adding or deprecating an API, update its corresponding API documentation
+    using the required version placeholder.
+  source_ref: src-g5-node-pull-requests
+  source_pool: generalization
+  raw_unit_ref: raw-g5-03
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: cross-file
+  scope: additions or deprecations of documented APIs
+  exceptions: The rule applies only to an API addition or deprecation.
+  requires_opportunity:
+  - api_change
+  - documentation_edit
+  expected_evidence:
+  - yaml_documentation_diff
+  - placeholder_check
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G5 lines 124-138
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Removed the Node-specific YAML filename while preserving the documentation
+      and placeholder requirements.
+- id: rule-canon-p0-027
+  candidate_ref: rule-p0-027
+  title: Include tests with bug fixes and features
+  statement: A bug fix or feature should include a test that exercises the changed
+    behavior.
+  source_ref: src-g5-node-pull-requests
+  source_pool: generalization
+  raw_unit_ref: raw-g5-04
+  family: workflow
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: cross-file
+  scope: pull requests containing a bug fix or feature
+  exceptions: none stated
+  requires_opportunity:
+  - behavior_change
+  - test_authoring
+  expected_evidence:
+  - test_diff
+  - test_result
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G5 lines 247-250
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-028
+  candidate_ref: rule-p0-028
+  title: Run the full test suite before submission
+  statement: Before submitting a change, run the project's full test suite.
+  source_ref: src-g5-node-pull-requests
+  source_pool: generalization
+  raw_unit_ref: raw-g5-04
+  family: workflow
+  modality: require
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: command-output
+  scope: changes submitted in a pull request
+  exceptions: none stated
+  requires_opportunity:
+  - full_test_run
+  - pull_request_submission
+  expected_evidence:
+  - test_command
+  - test_exit_status
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G5 lines 257-262
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-029
+  candidate_ref: rule-p0-029
+  title: Include kind and apiVersion in API JSON objects
+  statement: Every JSON object returned by an API must include kind and apiVersion
+    fields that identify its schema and version.
+  source_ref: src-g6-kubernetes-api-conventions
+  source_pool: generalization
+  raw_unit_ref: raw-g6-01
+  family: code-style
+  modality: require
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: regex
+  scope: JSON API response objects
+  exceptions: none stated
+  requires_opportunity:
+  - api_object_definition
+  expected_evidence:
+  - schema_validation
+  - response_fixture
+  surface_fit:
+    system_prompt: high
+    managed_instruction: medium
+    global_instruction: low
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G6 lines 217-225
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-030
+  candidate_ref: rule-p0-030
+  title: Use lowercase plural resource collection names
+  statement: Resource collection names should be lowercase and plural.
+  source_ref: src-g6-kubernetes-api-conventions
+  source_pool: generalization
+  raw_unit_ref: raw-g6-02
+  family: code-style
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: regex
+  scope: names of API resource collections
+  exceptions: none stated
+  requires_opportunity:
+  - api_resource_definition
+  expected_evidence:
+  - route_or_schema_name
+  surface_fit:
+    system_prompt: high
+    managed_instruction: medium
+    global_instruction: low
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G6 lines 123-124
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-031
+  candidate_ref: rule-p0-031
+  title: Use CamelCase singular kind names
+  statement: API kind names should be CamelCase and singular.
+  source_ref: src-g6-kubernetes-api-conventions
+  source_pool: generalization
+  raw_unit_ref: raw-g6-02
+  family: code-style
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: regex
+  scope: names of API kinds
+  exceptions: none stated
+  requires_opportunity:
+  - api_kind_definition
+  expected_evidence:
+  - schema_kind_name
+  surface_fit:
+    system_prompt: high
+    managed_instruction: medium
+    global_instruction: low
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G6 lines 123-124
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-032
+  candidate_ref: rule-p0-032
+  title: Separate desired state from observed status
+  statement: Represent an object's desired state in spec and its current observed
+    state in status.
+  source_ref: src-g6-kubernetes-api-conventions
+  source_pool: generalization
+  raw_unit_ref: raw-g6-03
+  family: conditional-logic
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: rubric
+  universality: specific
+  scoring_method: cross-file
+  scope: API objects that expose desired and observed state
+  exceptions: Simple objects without both concepts may not need both fields.
+  requires_opportunity:
+  - api_object_definition
+  - controller_state_update
+  expected_evidence:
+  - schema_review
+  - controller_diff
+  surface_fit:
+    system_prompt: high
+    managed_instruction: medium
+    global_instruction: low
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: G6 lines 282-299
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-033
+  candidate_ref: rule-p0-033
+  title: Treat generated files as read-only
+  statement: Do not hand-edit generated files; regenerate them through the repository-prescribed
+    update command.
+  source_ref: src-c1-kubernetes-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c1-01
+  family: workflow
+  modality: forbid
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: cross-file
+  scope: generated source files in the repository
+  exceptions: The repository's update command is the permitted regeneration path.
+  requires_opportunity:
+  - generated_file_edit
+  expected_evidence:
+  - file_metadata
+  - generator_invocation
+  - diff
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: C1 lines 11-11
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Kept the prohibition and its explicitly permitted regeneration path as one
+      operational rule.
+- id: rule-canon-p0-034
+  candidate_ref: rule-p0-034
+  title: Do not run go mod tidy on generated module files
+  statement: Do not run go mod tidy on generated module files; use the repository-prescribed
+    dependency update scripts.
+  source_ref: src-c1-kubernetes-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c1-02
+  family: tool-use
+  modality: forbid
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: deterministic
+  universality: specific
+  scoring_method: command-output
+  scope: changes involving go.mod or go.work
+  exceptions: Use the repository-prescribed dependency scripts.
+  requires_opportunity:
+  - go_dependency_update
+  expected_evidence:
+  - command_event
+  - module_diff
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: medium
+    skill: high
+  source_locator: C1 lines 12-12
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Retained the calibration-only tool restriction and the permitted alternative.
+- id: rule-canon-p0-035
+  candidate_ref: rule-p0-035
+  title: Use the staging tree as the package source of truth
+  statement: For k8s.io packages, treat the staging tree as the source of truth.
+  source_ref: src-c1-kubernetes-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c1-03
+  family: workflow
+  modality: require
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: cross-file
+  scope: imports and edits involving k8s.io packages
+  exceptions: none stated
+  requires_opportunity:
+  - package_import_or_edit
+  expected_evidence:
+  - import_graph
+  - file_path
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: C1 lines 13-13
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-036
+  candidate_ref: rule-p0-036
+  title: Do not import the main Kubernetes package from staging
+  statement: Do not import k8s.io/kubernetes from the staging tree.
+  source_ref: src-c1-kubernetes-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c1-03
+  family: tool-use
+  modality: forbid
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: ast
+  scope: Go imports in code that uses staged k8s.io packages
+  exceptions: none stated
+  requires_opportunity:
+  - go_import_edit
+  expected_evidence:
+  - ast_import_check
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: C1 lines 13-13
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-037
+  candidate_ref: rule-p0-037
+  title: Add the required boilerplate header to Go files
+  statement: Every new Go file must include the license header from hack/boilerplate/boilerplate.go.txt.
+  source_ref: src-c1-kubernetes-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c1-04
+  family: code-style
+  modality: require
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: regex
+  scope: newly created Go source files
+  exceptions: none stated
+  requires_opportunity:
+  - go_file_creation
+  expected_evidence:
+  - header_match
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: C1 lines 14-14
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-038
+  candidate_ref: rule-p0-038
+  title: Run Airflow commands through the project environment
+  statement: Do not run pytest, python, or airflow commands directly on the host;
+    run them through breeze.
+  source_ref: src-c2-airflow-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c2-01
+  family: tool-use
+  modality: forbid
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: behavioral
+  verifiability: deterministic
+  universality: specific
+  scoring_method: command-output
+  scope: test, script, and project CLI invocations
+  exceptions: The source-prescribed environment wrapper is the permitted route.
+  requires_opportunity:
+  - test_or_cli_invocation
+  expected_evidence:
+  - process_command_line
+  - environment_marker
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: medium
+    skill: high
+  source_locator: C2 lines 21-27
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-039
+  candidate_ref: rule-p0-039
+  title: Make comments explain why
+  statement: Add comments only to explain non-obvious reasoning; do not restate what
+    the code already says.
+  source_ref: src-c2-airflow-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c2-02
+  family: professional-writing
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: surface
+  verifiability: subjective
+  universality: cross-coding
+  scoring_method: llm-judge
+  scope: comments added near implementation code
+  exceptions: Longer explanations are reserved for genuinely complex reasoning.
+  requires_opportunity:
+  - code_comment_edit
+  expected_evidence:
+  - diff_context
+  - rubric_judgment
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: C2 lines 135-137
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Combined the source's what/why distinction into one observable comment policy.
+- id: rule-canon-p0-040
+  candidate_ref: rule-p0-040
+  title: Avoid ambiguous boolean and option parameters
+  statement: Avoid boolean or ambiguous option parameters when they make call sites
+    unclear; prefer a self-documenting enum, named method, or newtype.
+  source_ref: src-c3-codex-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c3-01
+  family: code-style
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: rubric
+  universality: specific
+  scoring_method: llm-judge
+  scope: public Rust API parameters and their call sites
+  exceptions: If a positional literal remains necessary, use the prescribed argument
+    comment convention.
+  requires_opportunity:
+  - rust_api_edit
+  expected_evidence:
+  - api_signature
+  - callsite_diff
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: C3 lines 14-20
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Preserved the alternatives while making the trigger (unclear call sites)
+      explicit.
+- id: rule-canon-p0-041
+  candidate_ref: rule-p0-041
+  title: Prefer exhaustive match statements
+  statement: When possible, make match statements exhaustive and avoid wildcard arms.
+  source_ref: src-c3-codex-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c3-02
+  family: code-style
+  modality: prefer
+  severity: should
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: cross-coding
+  scoring_method: ast
+  scope: Rust match expressions in changed code
+  exceptions: The source qualifies the preference with when possible.
+  requires_opportunity:
+  - rust_match_edit
+  expected_evidence:
+  - compiler_diagnostic
+  - ast_match_arm_check
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: medium
+  source_locator: C3 lines 21-22
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-042
+  candidate_ref: rule-p0-042
+  title: Bound model-visible context items
+  statement: Every model-visible context item must have a hard size cap, and no item
+    may exceed 10,000 tokens.
+  source_ref: src-c3-codex-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c3-03
+  family: quantitative
+  modality: limit-max
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: command-output
+  scope: fragments added to inference context
+  exceptions: The source also sets a separate 10K-token per-item ceiling.
+  requires_opportunity:
+  - context_injection
+  expected_evidence:
+  - token_count
+  - context_manifest
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: medium
+    user_message: high
+    tool_description: medium
+    skill: high
+  source_locator: C3 lines 93-100
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Retained the concrete 10K per-item ceiling from the source; incremental
+      construction is a separate future candidate.
+- id: rule-canon-p0-043
+  candidate_ref: rule-p0-043
+  title: Add integration tests for agent logic changes
+  statement: A feature that changes agent logic must add an integration test.
+  source_ref: src-c3-codex-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c3-04
+  family: workflow
+  modality: require
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: structural
+  verifiability: deterministic
+  universality: specific
+  scoring_method: cross-file
+  scope: changes to agent behavior
+  exceptions: Unit tests may still be added when needed, but do not replace the required
+    integration test.
+  requires_opportunity:
+  - agent_logic_change
+  - test_authoring
+  expected_evidence:
+  - integration_test_diff
+  - test_result
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: medium
+    tool_description: low
+    skill: high
+  source_locator: C3 lines 112-120
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_unchanged
+    note: Atomic enough for the draft library; source modality, scope, and exception
+      retained.
+- id: rule-canon-p0-044
+  candidate_ref: rule-p0-044
+  title: Keep automation under ongoing human oversight
+  statement: Automated repository changes require active human oversight, including
+    a human maintainer who reviews and responds before changes are created or pushed.
+  source_ref: src-c4-node-agents
+  source_pool: harness_native_calibration
+  raw_unit_ref: raw-c4-01
+  family: workflow
+  modality: require
+  severity: must
+  prior: 
+  prior_lineage: unknown
+  observability: deep
+  verifiability: subjective
+  universality: specific
+  scoring_method: llm-judge
+  scope: automated pull requests and repository actions
+  exceptions: none stated
+  requires_opportunity:
+  - automation_event
+  - human_review_event
+  expected_evidence:
+  - actor_event_log
+  - review_record
+  surface_fit:
+    system_prompt: high
+    managed_instruction: high
+    global_instruction: medium
+    project_file: high
+    user_message: high
+    tool_description: low
+    skill: medium
+  source_locator: C4 lines 13-17
+  extraction_method: llm_assisted_restatement
+  review_state: reviewed_by_agent
+  qualification: pending_task_matching
+  contamination_status: not_assessed
+  review:
+    decision: accept_with_restatement
+    note: Restored the source's actor and pre-push oversight condition.
+

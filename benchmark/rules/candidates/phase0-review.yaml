@@ -1,0 +1,346 @@
+---
+format: hif.phase0.rule_review
+format_version: 0
+status: completed_by_agent_pending_human_spot_check
+reviewed_at: '2026-08-27'
+reviewer: codex
+candidate_count: 44
+accepted_candidate_count: 44
+split_candidate_count: 1
+canonical_record_count: 45
+held_candidate_count: 0
+criteria:
+- one observable constraint per canonical record
+- source modality and exceptions remain faithful
+- scope, actor, and object are explicit enough for later matching
+- source_pool and provenance are retained
+- qualification is separate from semantic canonicalization
+notes:
+- This is an agent review for pipeline bring-up, not final human release approval.
+- No prior, contamination, or task-opportunity claim is made by this review.
+- The original candidate snapshot remains the extraction record; this ledger records
+  the promotion decision.
+records:
+- candidate_ref: rule-p0-001
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-001
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-002
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-002
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-003
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-003
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-004
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-004
+  changed_fields:
+  - statement
+  note: Restated the source's request and exception without turning a preference into
+    a hard requirement.
+- candidate_ref: rule-p0-005
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-005
+  changed_fields:
+  - statement
+  note: Kept the conditional scope and the source's should-level modality.
+- candidate_ref: rule-p0-006
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-006
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-007
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-007
+  changed_fields:
+  - statement
+  - expected_evidence
+  note: Removed the unsupported requirement that the test initially fail and made
+    temporal evidence optional.
+- candidate_ref: rule-p0-008
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-008
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-009
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-009
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-010
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-010
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-011
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-011
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-012
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-012
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-013
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-013
+  changed_fields:
+  - statement
+  note: Made the estimator convention explicit while retaining its source-specific
+    scope.
+- candidate_ref: rule-p0-014
+  decision: split_into_atomic_rules
+  canonical_refs:
+  - rule-canon-p0-014-tests
+  - rule-canon-p0-014-docs
+  changed_fields:
+  - title
+  - statement
+  - requires_opportunity
+  - expected_evidence
+  note: The source unit contains two independently observable requirements; it is
+    represented by two canonical records.
+- candidate_ref: rule-p0-015
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-015
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-016
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-016
+  changed_fields:
+  - statement
+  note: Generalized the source's forum wording and retained the wait-for-response
+    condition.
+- candidate_ref: rule-p0-017
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-017
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-018
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-018
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-019
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-019
+  changed_fields:
+  - statement
+  note: Restated the source's strongly encouraged guidance without hardening it.
+- candidate_ref: rule-p0-020
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-020
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-021
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-021
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-022
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-022
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-023
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-023
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-024
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-024
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-025
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-025
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-026
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-026
+  changed_fields:
+  - statement
+  note: Removed the Node-specific YAML filename while preserving the documentation
+    and placeholder requirements.
+- candidate_ref: rule-p0-027
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-027
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-028
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-028
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-029
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-029
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-030
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-030
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-031
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-031
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-032
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-032
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-033
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-033
+  changed_fields:
+  - statement
+  note: Kept the prohibition and its explicitly permitted regeneration path as one
+    operational rule.
+- candidate_ref: rule-p0-034
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-034
+  changed_fields:
+  - statement
+  note: Retained the calibration-only tool restriction and the permitted alternative.
+- candidate_ref: rule-p0-035
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-035
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-036
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-036
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-037
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-037
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-038
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-038
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-039
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-039
+  changed_fields:
+  - statement
+  note: Combined the source's what/why distinction into one observable comment policy.
+- candidate_ref: rule-p0-040
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-040
+  changed_fields:
+  - statement
+  note: Preserved the alternatives while making the trigger (unclear call sites) explicit.
+- candidate_ref: rule-p0-041
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-041
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-042
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-042
+  changed_fields:
+  - statement
+  note: Retained the concrete 10K per-item ceiling from the source; incremental construction
+    is a separate future candidate.
+- candidate_ref: rule-p0-043
+  decision: accept_unchanged
+  canonical_refs:
+  - rule-canon-p0-043
+  changed_fields: []
+  note: Atomic enough for the draft library; source modality, scope, and exception
+    retained.
+- candidate_ref: rule-p0-044
+  decision: accept_with_restatement
+  canonical_refs:
+  - rule-canon-p0-044
+  changed_fields:
+  - statement
+  note: Restored the source's actor and pre-push oversight condition.
+
+
