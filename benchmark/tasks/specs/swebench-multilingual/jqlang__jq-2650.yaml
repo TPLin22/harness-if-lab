@@ -1,0 +1,103 @@
+format: hif.task_spec
+format_version: 0
+status: candidate
+created_at: '2026-08-27'
+task_id: swebench-multilingual/jqlang__jq-2650
+source:
+  dataset: SWE-bench/SWE-bench_Multilingual
+  config: default
+  split: test
+  revision: e5c585e008e2cb5eecc7c64192d855c53279d788
+  instance_id: jqlang__jq-2650
+  parquet_sha256: 28b7f874e48496399077d276f9f2b163a077ddf0a70dc507c148d58da826baa9
+  row_sha256: 0eb2bfe3735fc05261b71154f86aa99a57891d150b2dd76fccfe823f583f71ab
+  retrieved_at: '2026-08-27'
+repository:
+  slug: jqlang/jq
+  base_commit: d8072564c28d38d29aa0a7c416621f02c19f7f44
+  upstream_version: '2650'
+  language: c
+  difficulty: hard
+  difficulty_derivation: harbor_adapter_default
+content:
+  problem_statement: "Can't chain generic object indexes\n\n**Describe the bug**\nWhen selecting subfields\
+    \ (e.g. `.foo.bar`), using the generic notation (e.g. `.[\"foo\"].[\"bar\"]`) throws a syntax error.\n\
+    \n**To Reproduce**\nGiven the input (sample.json):\n```json\n{\n  \"title\": \"Title 1\",\n  \"media:content\"\
+    : {\n    \"media:credits\": \"media:content.media:credits 1\"\n  }\n}\n```\nI want to pull .media-content.media:credits\
+    \ to the top level  and relabel the field to \"credits\" like this:\n```sh\n$ cat sample.json | jq\
+    \ '{title, credits: .[\"media:content\"].[\"media:credits\"]}'\n\n```\n\n*Expected output*\n```json\n\
+    {\n  \"title\": \"Title 1\",\n  \"credits\": \"media:content.media:credits 1\"\n}\n```\n\n*Actual\
+    \ output*\n```\njq: error: syntax error, unexpected '[', expecting FORMAT or QQSTRING_START (Unix\
+    \ shell quoting issues?) at <top-level>, line 1:\n{title, credits: .[\"media:content\"].[\"media:credits\"\
+    ]}\njq: 1 compile error\n```\n\n```json\n{\n  \"title\": \"Title 1\",\n  \"content\": {\n    \"credits\"\
+    : \"content.credits 1\",\n  },\n}\n```\n```sh\n$ cat sample2.json | jq '{title, credits: .content.credits}'\n\
+    ```\n```json\n{\n  \"title\": \"Title 1\",\n  \"credits\": \"content.credits 1\"\n}\n```\n```sh\n\
+    $ cat sample2.json | jq '{title, credits: .[\"content\"].[\"credits\"]}'  # Error\n$ cat sample2.json\
+    \ | jq '{title, credits: .content.[\"credits\"]}'      # Error\n$ cat sample2.json | jq '{title, credits:\
+    \ .[\"content\"].credits}'      # Works\n```\n*Addendum:*\nWhile writing this, I did finally discover\
+    \ a workaround using the pipe operator:\n```sh\n$ cat sample2.json | jq '{title, credits: .[\"content\"\
+    ] | .[\"credits\"]}'.            # Works\n$ cat sample.json | jq '{title, credits: .[\"media:content\"\
+    ] | .[\"media:credits\"]}'. # Works\n```\nBut I'm filing the bug report anyways because, according\
+    \ to the docs,  `.foo.bar` *should* be equivalent to `.[\"foo\"].[\"bar\"]`.\n(and likewise, `.[\"\
+    foo\"].[\"bar\"]` should be equivalent to `.[\"foo'] | .[\"bar\"]`\n\nThanks for the tool!"
+  hints_policy: omitted
+  normalization:
+    operations:
+    - normalize_line_endings
+    - remove_ansi_sequences
+    - remove_html_comments
+    - remove_canary_lines
+    - remove_issue_template_checkboxes
+    - remove_submission_boilerplate_lines
+    - remove_environment_and_metadata_sections
+    - collapse_repeated_blank_lines
+    raw_text_sha256: 47c024c7e8b0840fb236e42f8c53f707b47840fd8c55e2b3bc52d07e37f83a34
+    cleaned_text_sha256: f4cd99cebd83ccb941658cb2d2a2f65bdd95bb059d9be56cf1e65ba2ce74ff83
+curation:
+  status: eligible_candidate
+  offers_opportunity:
+  - behavior_change
+  - source_edit
+  - test_authoring
+  - multi_file_change
+  - api_object_definition
+  - behavior_test_change
+  opportunity_derivation:
+    method: evaluator_patch_shape_v1
+    evaluator_only: true
+    note: Tags are matching hints, not assertions about a particular run.
+  screening:
+    problem_statement_present: true
+    base_commit_present: true
+    language_known: true
+    harbor_materialization_present: true
+    hidden_oracle_model_visible: false
+    quality_flags: []
+fixture_ref:
+  provider: swebench_multilingual
+  cache_key: swebench-multilingual/e5c585e008e2cb5eecc7c64192d855c53279d788/jqlang__jq-2650
+  visibility: evaluator_only
+evaluator_ref:
+  visibility: evaluator_only
+  provider: swebench_multilingual
+  source_row_sha256: 0eb2bfe3735fc05261b71154f86aa99a57891d150b2dd76fccfe823f583f71ab
+  oracle_fields:
+  - patch
+  - test_patch
+  - FAIL_TO_PASS
+  - PASS_TO_PASS
+  materializer:
+    repository: harbor
+    adapter: adapters/swebench_multilingual
+    adapter_commit: c1769aaba90d88ac1bd19206c1fc8485a420b980
+    generated_task_dir_pattern: <external-harbor-root>/<instance_id>
+visibility:
+  model_visible:
+  - content.problem_statement
+  compiler_metadata:
+  - source
+  - repository
+  - curation.offers_opportunity
+  evaluator_only:
+  - fixture_ref
+  - evaluator_ref

@@ -1,0 +1,90 @@
+format: hif.task_spec
+format_version: 0
+status: candidate
+created_at: '2026-08-27'
+task_id: swebench-multilingual/php-cs-fixer__php-cs-fixer-8256
+source:
+  dataset: SWE-bench/SWE-bench_Multilingual
+  config: default
+  split: test
+  revision: e5c585e008e2cb5eecc7c64192d855c53279d788
+  instance_id: php-cs-fixer__php-cs-fixer-8256
+  parquet_sha256: 28b7f874e48496399077d276f9f2b163a077ddf0a70dc507c148d58da826baa9
+  row_sha256: 12f06970c9e1d7edad3ea0c60cf2bc721c1efe060c638eb791e67605f514605c
+  retrieved_at: '2026-08-27'
+repository:
+  slug: php-cs-fixer/php-cs-fixer
+  base_commit: 27dde9afa3d4db851f8aaffc820f697a5dbe747f
+  upstream_version: '8256'
+  language: php
+  difficulty: hard
+  difficulty_derivation: harbor_adapter_default
+content:
+  problem_statement: "Unable to add a line after PHP tag\n### Problem description\n\nI am trying to add\
+    \ a space after the opening PHP tag for PSR12 compliance. Setting the rule to `@PSR12` does not seem\
+    \ to accomplish this. I've also tried to enable the options below by setting these to`true` in the\
+    \ `.php-cs-fixer.php` file as well\n`blank_line_after_opening_tag`\n`linebreak_after_opening_tag`\n\
+    \n### Minimal reproducer\n\ncommand line\n`vendor/bin/php-cs-fixer fix test.php --rules=@PSR12`\n\n\
+    Sample file\n```\n<?php\n/**\n * Testing..\n *\n * @copyright 2024\n * @license Proprietary\n */\n\
+    \ ```\n Expected\n ```\n <?php\n\n/**\n * Testing..\n *\n * @copyright 2024\n * @license Proprietary\n\
+    \ */\n ````\n Actual\n ````\n <?php\n/*\n * Testing..\n *\n * @copyright 2024\n * @license Proprietary\n\
+    \ */\n ````"
+  hints_policy: omitted
+  normalization:
+    operations:
+    - normalize_line_endings
+    - remove_ansi_sequences
+    - remove_html_comments
+    - remove_canary_lines
+    - remove_issue_template_checkboxes
+    - remove_submission_boilerplate_lines
+    - remove_environment_and_metadata_sections
+    - collapse_repeated_blank_lines
+    raw_text_sha256: c9b593482bbd1c1b9794b30fc29c23ccff96440d6f000197bf47deb0367c0988
+    cleaned_text_sha256: 95f7d560a1bd9aea40c17e1a03ea819eb76824976e511dc3a1f7f02f383c9680
+curation:
+  status: eligible_candidate
+  offers_opportunity:
+  - behavior_change
+  - source_edit
+  - test_authoring
+  - behavior_test_change
+  opportunity_derivation:
+    method: evaluator_patch_shape_v1
+    evaluator_only: true
+    note: Tags are matching hints, not assertions about a particular run.
+  screening:
+    problem_statement_present: true
+    base_commit_present: true
+    language_known: true
+    harbor_materialization_present: true
+    hidden_oracle_model_visible: false
+    quality_flags: []
+fixture_ref:
+  provider: swebench_multilingual
+  cache_key: swebench-multilingual/e5c585e008e2cb5eecc7c64192d855c53279d788/php-cs-fixer__php-cs-fixer-8256
+  visibility: evaluator_only
+evaluator_ref:
+  visibility: evaluator_only
+  provider: swebench_multilingual
+  source_row_sha256: 12f06970c9e1d7edad3ea0c60cf2bc721c1efe060c638eb791e67605f514605c
+  oracle_fields:
+  - patch
+  - test_patch
+  - FAIL_TO_PASS
+  - PASS_TO_PASS
+  materializer:
+    repository: harbor
+    adapter: adapters/swebench_multilingual
+    adapter_commit: c1769aaba90d88ac1bd19206c1fc8485a420b980
+    generated_task_dir_pattern: <external-harbor-root>/<instance_id>
+visibility:
+  model_visible:
+  - content.problem_statement
+  compiler_metadata:
+  - source
+  - repository
+  - curation.offers_opportunity
+  evaluator_only:
+  - fixture_ref
+  - evaluator_ref

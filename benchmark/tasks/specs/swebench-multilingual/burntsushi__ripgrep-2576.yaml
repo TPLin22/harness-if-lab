@@ -1,0 +1,105 @@
+format: hif.task_spec
+format_version: 0
+status: candidate
+created_at: '2026-08-27'
+task_id: swebench-multilingual/burntsushi__ripgrep-2576
+source:
+  dataset: SWE-bench/SWE-bench_Multilingual
+  config: default
+  split: test
+  revision: e5c585e008e2cb5eecc7c64192d855c53279d788
+  instance_id: burntsushi__ripgrep-2576
+  parquet_sha256: 28b7f874e48496399077d276f9f2b163a077ddf0a70dc507c148d58da826baa9
+  row_sha256: bf403041d3edeb9da677750d858729453336261164aa82c441680c9308c83322
+  retrieved_at: '2026-08-27'
+repository:
+  slug: burntsushi/ripgrep
+  base_commit: fed4fea217abbc502f2e823465de903c8f2b623d
+  upstream_version: '2576'
+  language: rust
+  difficulty: hard
+  difficulty_derivation: harbor_adapter_default
+content:
+  problem_statement: "Incomplete matches when using the `--word-regexp` flag\n#### How did you install\
+    \ ripgrep?\n`wget https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep-13.0.0-x86_64-unknown-linux-musl.tar.gz`\n\
+    \n#### What operating system are you using ripgrep on?\nMac and Linux\n\n#### Describe your bug.\n\
+    According to the manual:\n```\n-w, --word-regexp\n            Only show matches surrounded by word\
+    \ boundaries. This is roughly equivalent to\n            putting \\b before and after all of the search\
+    \ patterns.\n```\n\nI'm using this text as a sample file:\n```\nsome.domain.com\nsome.domain.com/x\n\
+    some.domain.com\n```\n\nAnd here is some very naive regex that searches for \"domains\" (not really,\
+    \ but it is enough to show the problem):\n`\"([\\w]+[.])*domain[.](\\w)+`\n\nRunning this regex with\
+    \ the `-w` flag (`rg -w \"([\\w]+[.])*domain[.](\\w)+\"`) matches the first and third strings properly\
+    \ (`some.domain.com`), but for the second one **starts capturing from the second char onwards**, meaning\
+    \ it matches `ome.domain.com`.\n\nIf I change the execution, remove the `-w` flag and wrap the regex\
+    \ with `\\b` (`rg \"\\b([\\w]+[.])*domain[.](\\w)+\\b\"`), then all lines are matched properly (`some.domain.com`\
+    \ is matched).\n\n#### What are the steps to reproduce the behavior?\nExplained above.\n\n#### What\
+    \ is the actual behavior?\nhttps://gist.github.com/ilia-cy/396f43f57057e42723d4a3dc87d4e994\nThe matches\
+    \ aren't shown here because they are highlighted in the terminal, so i'm adding a screenshot:\n\n\
+    <img width=\"270\" alt=\"image\" src=\"https://github.com/BurntSushi/ripgrep/assets/60312091/04a73a38-4829-4c16-8497-9f53a5219ac5\"\
+    >\n\n#### What is the expected behavior?\nI would expect that the flag usage would work similarly\
+    \ as wrapping the pattern with `\\b` (as the manual indicates), so that all the `some.domain.com`\
+    \ instances will be matched."
+  hints_policy: omitted
+  normalization:
+    operations:
+    - normalize_line_endings
+    - remove_ansi_sequences
+    - remove_html_comments
+    - remove_canary_lines
+    - remove_issue_template_checkboxes
+    - remove_submission_boilerplate_lines
+    - remove_environment_and_metadata_sections
+    - collapse_repeated_blank_lines
+    raw_text_sha256: feeb09f27dd278a6194f4417f77152185c02fea5f8057be2f0086c5582f3515c
+    cleaned_text_sha256: c84903c7f6e0308e7a573a6850a93b2a5262c0fec8ec578ed32f296c930fc157
+curation:
+  status: eligible_candidate
+  offers_opportunity:
+  - behavior_change
+  - source_edit
+  - test_authoring
+  - multi_file_change
+  - documentation_edit
+  - rust_api_edit
+  - rust_match_edit
+  - code_comment_edit
+  - behavior_test_change
+  opportunity_derivation:
+    method: evaluator_patch_shape_v1
+    evaluator_only: true
+    note: Tags are matching hints, not assertions about a particular run.
+  screening:
+    problem_statement_present: true
+    base_commit_present: true
+    language_known: true
+    harbor_materialization_present: true
+    hidden_oracle_model_visible: false
+    quality_flags: []
+fixture_ref:
+  provider: swebench_multilingual
+  cache_key: swebench-multilingual/e5c585e008e2cb5eecc7c64192d855c53279d788/burntsushi__ripgrep-2576
+  visibility: evaluator_only
+evaluator_ref:
+  visibility: evaluator_only
+  provider: swebench_multilingual
+  source_row_sha256: bf403041d3edeb9da677750d858729453336261164aa82c441680c9308c83322
+  oracle_fields:
+  - patch
+  - test_patch
+  - FAIL_TO_PASS
+  - PASS_TO_PASS
+  materializer:
+    repository: harbor
+    adapter: adapters/swebench_multilingual
+    adapter_commit: c1769aaba90d88ac1bd19206c1fc8485a420b980
+    generated_task_dir_pattern: <external-harbor-root>/<instance_id>
+visibility:
+  model_visible:
+  - content.problem_statement
+  compiler_metadata:
+  - source
+  - repository
+  - curation.offers_opportunity
+  evaluator_only:
+  - fixture_ref
+  - evaluator_ref

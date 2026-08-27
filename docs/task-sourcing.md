@@ -1,7 +1,7 @@
 # Task Sourcing and Representation
 
-**Status:** design decision for review; no task records or runtime packages have
-been collected yet.
+**Status:** candidate task panel collected and agent-reviewed on 2026-08-27;
+not a released benchmark and not a runtime package.
 
 This document defines how the first coding-task pool is selected and represented
 in Harness-IF Lab. It deliberately describes a thin semantic task record rather
@@ -45,13 +45,13 @@ the model-visible context.
 
 ## 2. First task pool: SWE-bench Multilingual
 
-The initial pilot should use the `test` split of
+The initial pilot uses the `test` split of
 `SWE-bench/SWE-bench_Multilingual`. The local Harbor checkout currently contains
 300 generated tasks and the local Hugging Face cache resolves the dataset
 `main` ref to revision
-`e5c585e008e2cb5eecc7c64192d855c53279d788`. The revision observed during this
-review is a proposed pin, not an automatic release decision; the actual intake
-manifest must record the revision used at collection time.
+`e5c585e008e2cb5eecc7c64192d855c53279d788`. That revision and the parquet
+content hash are recorded in the checked-in panel index; they are a candidate
+pin, not an automatic release decision.
 
 The pilot target is approximately 20 instances. The selection must be a fixed
 manifest, not a command that samples afresh each run. At minimum, the manifest
@@ -89,6 +89,31 @@ Either policy should keep a reserve list generated from the same pinned
 population. A replacement may be used only before a release is frozen and must
 be recorded in the index; after release, the selected list is immutable.
 
+### 2.1.1 Collected pilot snapshot
+
+The current candidate panel applies the deterministic filters above to a
+300-row population, leaving 279 eligible rows. It selects 20 rows with one task
+per repository and the following language allocation:
+
+```text
+c 2 | cpp 2 | go 3 | java 3 | javascript 3 | php 2 | ruby 2 | rust 3
+```
+
+The selection seed is `260827`; eight reserve IDs (one per language) are kept
+in the index but do not yet have TaskSpecs. Exclusions are recorded with their
+IDs and reasons. The exact ordered IDs, repository/language counts, source
+parquet SHA-256 (`28b7f874e48496399077d276f9f2b163a077ddf0a70dc507c148d58da826baa9`),
+and collection-program SHA-256 are in
+[`benchmark/tasks/indexes/swebench-multilingual-pilot-20.yaml`](../benchmark/tasks/indexes/swebench-multilingual-pilot-20.yaml).
+
+The 20 specs were checked against the pinned parquet snapshot by recomputing
+each full source-row hash. The agent review is recorded in
+[`swebench-multilingual-pilot-20-review.yaml`](../benchmark/tasks/indexes/swebench-multilingual-pilot-20-review.yaml).
+That ledger accepts the records as candidates for pipeline work while flagging
+solution/workaround wording, issue-template residue, and unusually detailed
+diagnostics for a later release decision. It does not promote any record to a
+released benchmark.
+
 ### 2.2 Task-level eligibility screening
 
 Selection and eligibility are separate operations. The intake pass may mark a
@@ -123,7 +148,8 @@ until records are reviewed):
 ```text
 benchmark/tasks/
 |-- indexes/
-|   `-- swebench-multilingual-pilot-20.yaml
+|   |-- swebench-multilingual-pilot-20.yaml
+|   `-- swebench-multilingual-pilot-20-review.yaml
 |-- specs/
 |   `-- swebench-multilingual/
 |       |-- <instance-id>.yaml
@@ -133,7 +159,8 @@ benchmark/tasks/
 `-- generators/
 ```
 
-`indexes/` answers **which tasks belong to a named panel**. `specs/` answers
+`indexes/` answers **which tasks belong to a named panel** and stores panel-level
+review ledgers. `specs/` answers
 **what one selected task is and where its source/evaluator data comes from**.
 `fixtures/` is only for small synthetic repositories that are intentionally
 versioned with this project; it is not a place to copy SWE-bench repositories.
@@ -187,7 +214,9 @@ status: candidate
 ```
 
 The actual field names, status vocabulary, and hash algorithm remain subject to
-the Phase 1 contract review.
+the Phase 1 contract review. The pilot records below are a concrete intake
+snapshot that exercises the proposed shape; they do not freeze the formal
+schema.
 
 ## 4. Thin `TaskSpec` content
 

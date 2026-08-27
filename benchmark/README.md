@@ -15,10 +15,16 @@ the review ledger is next to the candidate snapshot and the canonical records
 are in [`rules/canonical/`](rules/canonical/). They remain unqualified and are
 not a released benchmark.
 
-The planned SWE-bench Multilingual pilot representation is documented in
-[Task sourcing and representation](../docs/task-sourcing.md). It uses a fixed
-selection index plus one thin task spec per selected upstream instance; it does
-not copy Harbor task directories into this repository.
+The first SWE-bench Multilingual pilot representation is documented in
+[Task sourcing and representation](../docs/task-sourcing.md). The candidate
+panel has a fixed selection index, 20 thin task specs, and 8 reserve IDs. The
+agent review ledger is next to the index. It does not copy Harbor task
+directories into this repository.
+
+The task records are intentionally still candidates. Several upstream issue
+statements retain diagnostic detail or proposed workarounds and need an
+explicit release decision; see the task review ledger before using them for a
+scored split.
 
 The repository intentionally has no released benchmark records yet. Use the
 subdirectories according to

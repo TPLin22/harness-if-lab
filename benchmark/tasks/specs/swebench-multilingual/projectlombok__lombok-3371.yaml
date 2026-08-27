@@ -1,0 +1,97 @@
+format: hif.task_spec
+format_version: 0
+status: candidate
+created_at: '2026-08-27'
+task_id: swebench-multilingual/projectlombok__lombok-3371
+source:
+  dataset: SWE-bench/SWE-bench_Multilingual
+  config: default
+  split: test
+  revision: e5c585e008e2cb5eecc7c64192d855c53279d788
+  instance_id: projectlombok__lombok-3371
+  parquet_sha256: 28b7f874e48496399077d276f9f2b163a077ddf0a70dc507c148d58da826baa9
+  row_sha256: b73605f8af1858e0096ddf700aa4043274469f71d20ec509e0fa19025afe6c75
+  retrieved_at: '2026-08-27'
+repository:
+  slug: projectlombok/lombok
+  base_commit: 13642eb896ae6dbbaebab6df3c3758296102ead8
+  upstream_version: '3371'
+  language: java
+  difficulty: hard
+  difficulty_derivation: harbor_adapter_default
+content:
+  problem_statement: "@NonNull on a primitive array field on a record isn't working\n**Describe the bug**\n\
+    @ NonNull on a primitive array field on a record isn't working\n\n**To Reproduce**\nNamedByteArray.java\n\
+    ```\npublic record NamedByteArray(\n        @NonNull String name,\n        byte @NonNull[] bytes)\
+    \ {\n}\n```\n\nNamedByteArrayTest.java\n```\nclass NamedByteArrayTest {\n\n    @Test void testConstructorDoesNotAcceptNulls()\
+    \ {\n        assertThrows(NullPointerException.class, () -> new NamedByteArray(null, new byte[0]));\n\
+    \        // THIS ONE IS NOT WORKING!!!! NullPointerException is not thrown.\n        assertThrows(NullPointerException.class,\
+    \ () -> new NamedByteArray(\"name\", null));\n    }\n\n}\n```\n\n**Expected behavior**\n@NonNull should\
+    \ throws NPE on primitive array field on a record if it is null.\n\n**Additional information:**\n\
+    If you decompile the NamedByteArray.class:\n```\npublic record NamedByteArray(@NonNull String name,\
+    \ byte @NonNull [] bytes) {\n    public NamedByteArray(@NonNull String name, byte @NonNull [] bytes)\
+    \ {\n        if (name == null) {\n            throw new NullPointerException(\"name is marked non-null\
+    \ but is null\");\n        } else {\n            this.name = name;\n            this.bytes = bytes;\n\
+    \        }\n    }\n\n.\n.\n.\n\n```"
+  hints_policy: omitted
+  normalization:
+    operations:
+    - normalize_line_endings
+    - remove_ansi_sequences
+    - remove_html_comments
+    - remove_canary_lines
+    - remove_issue_template_checkboxes
+    - remove_submission_boilerplate_lines
+    - remove_environment_and_metadata_sections
+    - collapse_repeated_blank_lines
+    raw_text_sha256: b82d64a65c978fa18576e6e112024d7f84f3a80ef1f32250ebbb1911273e69a6
+    cleaned_text_sha256: ac06d756b248d45044dcc4267e93546b45f71d576d473b4c4fb6f7620ebd17cc
+curation:
+  status: eligible_candidate
+  offers_opportunity:
+  - behavior_change
+  - source_edit
+  - test_authoring
+  - multi_file_change
+  - api_object_definition
+  - warning_assertion
+  - behavior_test_change
+  opportunity_derivation:
+    method: evaluator_patch_shape_v1
+    evaluator_only: true
+    note: Tags are matching hints, not assertions about a particular run.
+  screening:
+    problem_statement_present: true
+    base_commit_present: true
+    language_known: true
+    harbor_materialization_present: true
+    hidden_oracle_model_visible: false
+    quality_flags: []
+fixture_ref:
+  provider: swebench_multilingual
+  cache_key: swebench-multilingual/e5c585e008e2cb5eecc7c64192d855c53279d788/projectlombok__lombok-3371
+  visibility: evaluator_only
+evaluator_ref:
+  visibility: evaluator_only
+  provider: swebench_multilingual
+  source_row_sha256: b73605f8af1858e0096ddf700aa4043274469f71d20ec509e0fa19025afe6c75
+  oracle_fields:
+  - patch
+  - test_patch
+  - FAIL_TO_PASS
+  - PASS_TO_PASS
+  materializer:
+    repository: harbor
+    adapter: adapters/swebench_multilingual
+    adapter_commit: c1769aaba90d88ac1bd19206c1fc8485a420b980
+    generated_task_dir_pattern: <external-harbor-root>/<instance_id>
+visibility:
+  model_visible:
+  - content.problem_statement
+  compiler_metadata:
+  - source
+  - repository
+  - curation.offers_opportunity
+  evaluator_only:
+  - fixture_ref
+  - evaluator_ref

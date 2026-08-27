@@ -473,6 +473,18 @@ patches, and test/oracle records in an external cache. This phase validates the
 task representation and selection metadata; it does not require Harbor or
 StepCLI.
 
+**Checkpoint 2026-08-27:** the pilot is collected and agent-reviewed. The index
+[`benchmark/tasks/indexes/swebench-multilingual-pilot-20.yaml`](../../benchmark/tasks/indexes/swebench-multilingual-pilot-20.yaml)
+pins the `SWE-bench/SWE-bench_Multilingual` test revision
+`e5c585e008e2cb5eecc7c64192d855c53279d788`, a 20-task language-stratified
+sample, and 8 reserve IDs. The 20 thin specs are under
+[`benchmark/tasks/specs/swebench-multilingual/`](../../benchmark/tasks/specs/swebench-multilingual/)
+and the deterministic/semantic review is recorded in
+[`swebench-multilingual-pilot-20-review.yaml`](../../benchmark/tasks/indexes/swebench-multilingual-pilot-20-review.yaml).
+The panel remains `candidate_panel`; no task is promoted to a released split.
+The next construction action is Phase 1 contract review followed by candidate
+Item assembly. No Harbor or StepCLI source change is part of this checkpoint.
+
 ### Phase 1: contracts, reviewed
 
 Derive the rule, scenario, and item contracts from what Phase 0 exposed. Settle

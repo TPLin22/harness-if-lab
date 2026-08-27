@@ -1,0 +1,99 @@
+format: hif.task_spec
+format_version: 0
+status: candidate
+created_at: '2026-08-27'
+task_id: swebench-multilingual/facebook__docusaurus-9183
+source:
+  dataset: SWE-bench/SWE-bench_Multilingual
+  config: default
+  split: test
+  revision: e5c585e008e2cb5eecc7c64192d855c53279d788
+  instance_id: facebook__docusaurus-9183
+  parquet_sha256: 28b7f874e48496399077d276f9f2b163a077ddf0a70dc507c148d58da826baa9
+  row_sha256: c3bd69551ae54bb97045c1a2139aa5fff0518bc5618a829615b188a28fb20a53
+  retrieved_at: '2026-08-27'
+repository:
+  slug: facebook/docusaurus
+  base_commit: b96004e77ebfb23e7349fa495d2177008186bd42
+  upstream_version: '9183'
+  language: javascript
+  difficulty: hard
+  difficulty_derivation: harbor_adapter_default
+content:
+  problem_statement: "Allow case-insensitivity for code block language\n\n### Description\n\nHey, I tried\
+    \ to add PHP for code highlighting in the code blocks and according to the doc for this PHP needs\
+    \ to be added in the prism array.\nAfter running the command:\n> npm run swizzle @docusaurus/theme-classic\
+    \ prism-include-languages\n\nAnd adding 'PHP' to the array, it didn't work; I still had no code highlighting.\n\
+    After a few minutes troubleshooting, I wrote PHP in lower case (because out of habit I write it in\
+    \ upper case) and it worked.\n\nI'm unsure this is a bug or not. In Markdown, it functions correctly,\
+    \ and no distinction is made as to whether the programming language is written in upper case or lower\
+    \ case (as shown below). If it's not a bug, I believe it's worth mentioning in the documentation to\
+    \ avoid confusion for future users.\n\n```js\nconst prismIncludeLanguages = (Prism) => {\n  // ...\n\
+    \n  additionalLanguages.forEach((lang) => {\n    require(`prismjs/components/prism-${lang}`);\n  });\n\
+    \n  require('/path/to/your/prism-language-definition');\n\n  // ...\n};\n```\n\n```JS\nconst prismIncludeLanguages\
+    \ = (Prism) => {\n  // ...\n\n  additionalLanguages.forEach((lang) => {\n    require(`prismjs/components/prism-${lang}`);\n\
+    \  });\n\n  require('/path/to/your/prism-language-definition');\n\n  // ...\n};\n```\n\n### Self-service"
+  hints_policy: omitted
+  normalization:
+    operations:
+    - normalize_line_endings
+    - remove_ansi_sequences
+    - remove_html_comments
+    - remove_canary_lines
+    - remove_issue_template_checkboxes
+    - remove_submission_boilerplate_lines
+    - remove_environment_and_metadata_sections
+    - collapse_repeated_blank_lines
+    raw_text_sha256: 5ae094114bb56ec746e39eed5ee529cd6b60b5bffa4a0e1b1f9985d324c09f1c
+    cleaned_text_sha256: 5abd1445d16784f1645e91ecdf2b3cff7c51724b9104c08de514ad4c9f5f3ee8
+curation:
+  status: eligible_candidate
+  offers_opportunity:
+  - behavior_change
+  - source_edit
+  - test_authoring
+  - multi_file_change
+  - public_api_change
+  - api_change
+  - api_object_definition
+  - code_comment_edit
+  - behavior_test_change
+  opportunity_derivation:
+    method: evaluator_patch_shape_v1
+    evaluator_only: true
+    note: Tags are matching hints, not assertions about a particular run.
+  screening:
+    problem_statement_present: true
+    base_commit_present: true
+    language_known: true
+    harbor_materialization_present: true
+    hidden_oracle_model_visible: false
+    quality_flags: []
+fixture_ref:
+  provider: swebench_multilingual
+  cache_key: swebench-multilingual/e5c585e008e2cb5eecc7c64192d855c53279d788/facebook__docusaurus-9183
+  visibility: evaluator_only
+evaluator_ref:
+  visibility: evaluator_only
+  provider: swebench_multilingual
+  source_row_sha256: c3bd69551ae54bb97045c1a2139aa5fff0518bc5618a829615b188a28fb20a53
+  oracle_fields:
+  - patch
+  - test_patch
+  - FAIL_TO_PASS
+  - PASS_TO_PASS
+  materializer:
+    repository: harbor
+    adapter: adapters/swebench_multilingual
+    adapter_commit: c1769aaba90d88ac1bd19206c1fc8485a420b980
+    generated_task_dir_pattern: <external-harbor-root>/<instance_id>
+visibility:
+  model_visible:
+  - content.problem_statement
+  compiler_metadata:
+  - source
+  - repository
+  - curation.offers_opportunity
+  evaluator_only:
+  - fixture_ref
+  - evaluator_ref

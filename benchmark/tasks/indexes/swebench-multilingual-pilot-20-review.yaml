@@ -1,0 +1,143 @@
+format: hif.task_review
+format_version: 0
+status: completed_by_agent_pending_human_spot_check
+reviewed_at: '2026-08-27'
+reviewer: codex
+panel_ref: benchmark/tasks/indexes/swebench-multilingual-pilot-20.yaml
+panel_sha256: df063bc8421a6cdc0195c4dea31b7aba7995adcd347cf09958cbec6315a88c35
+task_spec_count: 20
+decision_summary:
+  retained_candidate_count: 20
+  held_count: 0
+  release_status: none_released
+  flags_are_nonblocking_for_prototype: true
+criteria:
+  - index and spec IDs are one-to-one
+  - spec file hashes match the panel index
+  - source revision and parquet hash are consistent across records
+  - source row hashes are reproducible from the pinned parquet snapshot
+  - repository, base commit, language, and upstream version are present
+  - model-visible projection is limited to content.problem_statement
+  - patch, test_patch, FAIL_TO_PASS, and PASS_TO_PASS are evaluator-only references
+  - cleaned statements are nonempty and within the intake length limit
+  - no selected spec has a nonempty intake quality_flags list
+  - evaluator materialization metadata is present without copying a task directory
+review_method:
+  deterministic_checks:
+    - yaml_parse
+    - duplicate_key_scan
+    - index_spec_hash_check
+    - dataset_row_hash_check
+    - visibility_allowlist_check
+    - oracle_token_scan
+    - language_and_repository_count_check
+  semantic_pass:
+    - read each cleaned statement for task clarity and accidental evaluator leakage
+    - inspect high-risk template, workaround, diagnostic, and environment residue
+    - treat opportunity tags as matching hints rather than runtime claims
+notes:
+  - This is an agent review for data-pipeline bring-up, not final human release approval.
+  - The upstream issue statements sometimes contain diagnoses, workarounds, or proposed fixes;
+    those are recorded as review flags and must be reconsidered before a released benchmark split.
+  - The evaluator-only row and Harbor materialization cache remain outside this repository.
+records:
+  - task_id: swebench-multilingual/redis__redis-13338
+    spec_sha256: 6e479dd87bd485e53357603f4f94a60c74af22360a8214756a1a154cddc2b90e
+    decision: retain_candidate
+    flags: [long_reproduction_log, environment_metadata_retained]
+    note: Clear reproduction and expected behavior; the statement is close to the intake length cap and contains extensive command output.
+  - task_id: swebench-multilingual/jqlang__jq-2650
+    spec_sha256: 41d3f1308ffd4627af571182060fa2950feb3d93c6332a7712b0b40e8f137954
+    decision: retain_candidate
+    flags: [workaround_in_statement]
+    note: The addendum gives a working pipe workaround; retain for the candidate panel but spot-check whether it should be removed before release.
+  - task_id: swebench-multilingual/fmtlib__fmt-3729
+    spec_sha256: d4d3f220770e4429fad79f9935468f4ae3e943a0d27575daa477dcef7b09275c
+    decision: retain_candidate
+    flags: []
+    note: Short, focused feature request with a concrete cross-platform example.
+  - task_id: swebench-multilingual/nlohmann__json-4237
+    spec_sha256: 329cbeffea22128fedb2010b4d166094be7edcb2ec0b022888eca76e12f50d35
+    decision: retain_candidate
+    flags: [diagnostic_error_output]
+    note: Error output documents the observable failure; no oracle field or gold patch is embedded.
+  - task_id: swebench-multilingual/prometheus__prometheus-15142
+    spec_sha256: ad53670e44393b6b5d478792e1430f891690baf48cffc4a1fbf326b77d535454
+    decision: retain_candidate
+    flags: [race_trace_retained]
+    note: The race trace is task-relevant evidence; empty issue-template responses were removed.
+  - task_id: swebench-multilingual/caddyserver__caddy-6370
+    spec_sha256: a78574aab73222d0da1f25b8ab1e7633d9af0aacea8d4f1372e98e4dae2d242f
+    decision: retain_candidate
+    flags: [external_issue_link]
+    note: Concise report; the linked upstream issue is provenance/context rather than evaluator data.
+  - task_id: swebench-multilingual/hashicorp__terraform-34900
+    spec_sha256: 47c77c60c7e1fcf83c176246ed8b1a3fbce497fdcdaee32dc3670946dec91a13
+    decision: retain_candidate
+    flags: [debug_output_reference, provider_fixture_link]
+    note: Reproduction is concrete but includes provider and state details that should be reviewed for task-neutrality.
+  - task_id: swebench-multilingual/google__gson-2061
+    spec_sha256: 1420f88d6619982ffa4895ef9ed07a9bed7a9bc89a9c4f3148468e1d618d8b08
+    decision: retain_candidate
+    flags: []
+    note: Minimal, unambiguous bug statement; the evaluator reference is external.
+  - task_id: swebench-multilingual/projectlombok__lombok-3371
+    spec_sha256: aa42dfbfece9e582a868b01baeceeec10b4542c65f9e8462dc9dfd4668fa67e6
+    decision: retain_candidate
+    flags: [decompiler_output_in_statement]
+    note: Decompiler output reveals implementation context; verify that it is acceptable for the intended task track.
+  - task_id: swebench-multilingual/apache__druid-14136
+    spec_sha256: 023205f0f8cc81cb73e2e4bcbced46ba05b1ac210c8d17823a8a8057b6255ff6
+    decision: retain_candidate
+    flags: []
+    note: Focused bug report with a self-contained query reproduction.
+  - task_id: swebench-multilingual/babel__babel-16130
+    spec_sha256: 896802aa1972fa20d093ddf993aeedb7e9ee44d5c55ef5dafe8175aef6f02191
+    decision: retain_candidate
+    flags: [possible_solution_section, external_repl_links]
+    note: The possible-solution section names a helper-renaming fix; candidate only pending release review.
+  - task_id: swebench-multilingual/facebook__docusaurus-9183
+    spec_sha256: 67dcf6b8ba2f65259e1de1db78ef741c54a2872e969ac12fe2ff5f9c7cec53f4
+    decision: retain_candidate
+    flags: [issue_template_heading_residue]
+    note: The empty self-service template heading remains after deterministic cleanup; it does not add model-visible content.
+  - task_id: swebench-multilingual/preactjs__preact-4182
+    spec_sha256: c8519dd9874055b8a4d397167f0aacbc81574dccf21972f537e8e1765dae3b65
+    decision: retain_candidate
+    flags: [external_repl_link]
+    note: Reproduction is complete in the statement; the external playground link is contextual.
+  - task_id: swebench-multilingual/briannesbitt__carbon-2762
+    spec_sha256: 13aaf3a7257a5d27915ba2c2bbc3330ec01f3b7d44d850b5d0686b652764f713
+    decision: retain_candidate
+    flags: [environment_versions_retained]
+    note: Version information helps reproduce the numeric behavior; verify whether it belongs in a neutral panel.
+  - task_id: swebench-multilingual/php-cs-fixer__php-cs-fixer-8256
+    spec_sha256: 09b22956502aac0b77e960994ef59e41cd09f00c3806a6edf23ab39c86b58e97
+    decision: retain_candidate
+    flags: [expected_output_example]
+    note: Expected and actual formatter output are useful behavioral evidence and do not contain hidden oracle fields.
+  - task_id: swebench-multilingual/jekyll__jekyll-8167
+    spec_sha256: da22687a7fc844db86134ecfc09e9118eb109310cb35ec69225f7eff843cebf0
+    decision: retain_candidate
+    flags: [suggested_fix_in_statement, checklist_residue]
+    note: The statement includes a suggested regex fix and an issue-template checklist; release cleanup should decide whether to strip both.
+  - task_id: swebench-multilingual/rubocop__rubocop-13627
+    spec_sha256: 47801a3ad50d77a3772cf92f998e44efb3f0afeb588afcbe66b2ef4427ee098f
+    decision: retain_candidate
+    flags: [tool_version_metadata, new_file_opportunity_heuristic]
+    note: Tool versions are contextual; the new-file tag comes from evaluator patch shape and is only a matching hint.
+  - task_id: swebench-multilingual/uutils__coreutils-6377
+    spec_sha256: 6f89fad74fd1e0bdcf559af1cdc8e68fb283f28808c63fc456b326eeddf4a49a
+    decision: retain_candidate
+    flags: []
+    note: Short option request; model-visible content is limited to the user statement.
+  - task_id: swebench-multilingual/tokio-rs__tokio-6551
+    spec_sha256: 14fb334543e29fc179277655e199afba79c2190bfe0d926a42fcb4fab26ac1ca
+    decision: retain_candidate
+    flags: [environment_metadata_retained]
+    note: Runtime and platform details explain the observation; no evaluator-only fields are visible.
+  - task_id: swebench-multilingual/burntsushi__ripgrep-2576
+    spec_sha256: 306c7015fe1f8f7e965cc413d39cbfb42efa03d251f76271d16493612f7f3588
+    decision: retain_candidate
+    flags: [environment_sections_retained, screenshot_link]
+    note: Installation and OS sections plus a screenshot link are contextual; review before a release split.

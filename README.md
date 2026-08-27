@@ -14,11 +14,12 @@ backend, while the benchmark data model remains owned by this repository.
 
 ## Current status
 
-The repository now contains the first pinned rule-source intake and an
-agent-reviewed draft canonical rule library. The rule records are still
-unqualified for task opportunities, prior tendency, contamination, and release;
-there are not yet any collected coding tasks, Items, compilers, runners,
-verifiers, or analysis implementations.
+The repository contains the first pinned rule-source intake and an
+agent-reviewed draft canonical rule library. It also contains a 20-task,
+source-pinned SWE-bench Multilingual candidate panel with an agent review
+ledger. Rules and tasks are still candidates: task-opportunity qualification,
+prior tendency, contamination, release policy, Items, compilers, runners,
+verifiers, and analysis implementations remain unfinished.
 
 ## Conceptual pipeline
 
@@ -61,7 +62,7 @@ belong under an external `output_root`; see [the repository layout](docs/reposit
 - [Repository layout and output boundary](docs/repository-layout.md)
 - [Execution plans](docs/plans/README.md), currently
   [methodology and construction plan](docs/plans/2026-08-26-methodology-and-construction-plan.md)
-- [Benchmark area](benchmark/README.md), including the current [rule candidates](benchmark/rules/candidates/README.md) and [canonical draft](benchmark/rules/canonical/README.md)
+- [Benchmark area](benchmark/README.md), including the current [rule candidates](benchmark/rules/candidates/README.md), [canonical draft](benchmark/rules/canonical/README.md), and [task panel](benchmark/tasks/README.md)
 - [Schemas area](schemas/README.md)
 
 The contributor and coding-agent contract is in [AGENTS.md](AGENTS.md). For

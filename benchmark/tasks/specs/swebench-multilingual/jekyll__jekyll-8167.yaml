@@ -1,0 +1,96 @@
+format: hif.task_spec
+format_version: 0
+status: candidate
+created_at: '2026-08-27'
+task_id: swebench-multilingual/jekyll__jekyll-8167
+source:
+  dataset: SWE-bench/SWE-bench_Multilingual
+  config: default
+  split: test
+  revision: e5c585e008e2cb5eecc7c64192d855c53279d788
+  instance_id: jekyll__jekyll-8167
+  parquet_sha256: 28b7f874e48496399077d276f9f2b163a077ddf0a70dc507c148d58da826baa9
+  row_sha256: d64750b5a9ffe2a87f75da56dca61cbce0bc322e23c8c09d2213a2d6166203a9
+  retrieved_at: '2026-08-27'
+repository:
+  slug: jekyll/jekyll
+  base_commit: 11dd8934166d0947055bc01017426bad01277bc1
+  upstream_version: '8167'
+  language: ruby
+  difficulty: hard
+  difficulty_derivation: harbor_adapter_default
+content:
+  problem_statement: "slugify replaces Tamil vowel marks with hyphen\n  - I updated to the latest `github-pages`\n\
+    \  - I ran `bundle exec jekyll doctor` to check my configuration\n  - I read the contributing document\
+    \ at https://jekyllrb.com/docs/contributing/\n\n## Expected Behaviour\n\nI had a post with a Unicode\
+    \ Tamil file-name (`மல்லிப்பூ வகைகள்.md`). I expected the generated permalink to include all the letters\
+    \ and combining marks, while converting spaces to hyphens. Specifically, I expected the generated\
+    \ file-name to be `மல்லிப்பூ-வகைகள்.html`.\n\n## Current Behaviour\n\nInstead, it generated something\
+    \ like `மல-லிப-பூ-வகைகள.html`, breaking up words in unexpected places.\n\nI looked at the code, and\
+    \ in `jekyll-3.8.5/lib/jekyll/utils.rb`, I found `replace_character_sequence_with_hyphen` which replaces\
+    \ `/[^[:alnum:]._~!$&'()+,;=@]+/` with `-`. The problem is that there many Unicode letter/mark codepoints\
+    \ that don't match `alnum`: in my specific case, `U+0BCD`. It turns out that the *Alphabetic* Unicode\
+    \ property only applies to some of what we'd want to consider Letters/Marks.\n\nInstead, the recommendation\
+    \ I got on [SO](https://stackoverflow.com/questions/59707795/why-do-some-unicode-combining-markers-like-u0bcd-not-match-alpha-in-ruby)\
+    \ was to use Unicode categories. My suggested fix would be to change the Regex to match `/[^\\p{M}\\\
+    p{L}\\p{Nd}._~!$&'()+,;=@]+/`."
+  hints_policy: omitted
+  normalization:
+    operations:
+    - normalize_line_endings
+    - remove_ansi_sequences
+    - remove_html_comments
+    - remove_canary_lines
+    - remove_issue_template_checkboxes
+    - remove_submission_boilerplate_lines
+    - remove_environment_and_metadata_sections
+    - collapse_repeated_blank_lines
+    raw_text_sha256: ba71a4df1fec9ba6f27088ba2bf9741d9e3b849677c8d1ad6124679ed1e56ec9
+    cleaned_text_sha256: c9cb141be8d6dafd4d7e3ca7aa360341401d1d4631ac5905ff0e7eab535edd08
+curation:
+  status: eligible_candidate
+  offers_opportunity:
+  - behavior_change
+  - source_edit
+  - test_authoring
+  - generated_file_edit
+  - behavior_test_change
+  opportunity_derivation:
+    method: evaluator_patch_shape_v1
+    evaluator_only: true
+    note: Tags are matching hints, not assertions about a particular run.
+  screening:
+    problem_statement_present: true
+    base_commit_present: true
+    language_known: true
+    harbor_materialization_present: true
+    hidden_oracle_model_visible: false
+    quality_flags: []
+fixture_ref:
+  provider: swebench_multilingual
+  cache_key: swebench-multilingual/e5c585e008e2cb5eecc7c64192d855c53279d788/jekyll__jekyll-8167
+  visibility: evaluator_only
+evaluator_ref:
+  visibility: evaluator_only
+  provider: swebench_multilingual
+  source_row_sha256: d64750b5a9ffe2a87f75da56dca61cbce0bc322e23c8c09d2213a2d6166203a9
+  oracle_fields:
+  - patch
+  - test_patch
+  - FAIL_TO_PASS
+  - PASS_TO_PASS
+  materializer:
+    repository: harbor
+    adapter: adapters/swebench_multilingual
+    adapter_commit: c1769aaba90d88ac1bd19206c1fc8485a420b980
+    generated_task_dir_pattern: <external-harbor-root>/<instance_id>
+visibility:
+  model_visible:
+  - content.problem_statement
+  compiler_metadata:
+  - source
+  - repository
+  - curation.offers_opportunity
+  evaluator_only:
+  - fixture_ref
+  - evaluator_ref

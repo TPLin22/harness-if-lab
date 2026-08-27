@@ -1,0 +1,97 @@
+format: hif.task_spec
+format_version: 0
+status: candidate
+created_at: '2026-08-27'
+task_id: swebench-multilingual/briannesbitt__carbon-2762
+source:
+  dataset: SWE-bench/SWE-bench_Multilingual
+  config: default
+  split: test
+  revision: e5c585e008e2cb5eecc7c64192d855c53279d788
+  instance_id: briannesbitt__carbon-2762
+  parquet_sha256: 28b7f874e48496399077d276f9f2b163a077ddf0a70dc507c148d58da826baa9
+  row_sha256: 8e9f36c65733838158de204a816359c5359d6ad6053caab4832344420ae00fca
+  retrieved_at: '2026-08-27'
+repository:
+  slug: briannesbitt/carbon
+  base_commit: 077657bce453df6992607e5aaa538d957068ae40
+  upstream_version: '2762'
+  language: php
+  difficulty: hard
+  difficulty_derivation: harbor_adapter_default
+content:
+  problem_statement: "Round breaks custom cascade factors\n\nHi\n\nI can not get custom cascade factors\
+    \ working together with rounding. In the example I want the largest cascade factor to be hours. Without\
+    \ rounding everything works as expected. As soon as as rounding is introduced the custom cascade factors\
+    \ seem to be ignored and I can not get an output with hours larger than 24 anymore (instead they have\
+    \ been converted to days internally). But even totalHours does not work anymore to convert them back\
+    \ to hours afterwards.\n\nIt is unexpected that rounding the minutes should have any effect on the\
+    \ hours.\n\n```php\nuse Carbon\\CarbonInterval;\n\nCarbonInterval::setCascadeFactors([\n\t\t\t'millisecond'\
+    \ => [1000, 'microseconds'],\n\t\t\t'second'      => [1000, 'milliseconds'],\n\t\t\t'minute'     \
+    \ => [60, 'seconds'],\n\t\t\t'hour'        => [60, 'minutes'],\n\t\t]);\n\n// as expected\necho CarbonInterval::make('43h3m6s')->hours\
+    \ . \"\\n\";\necho CarbonInterval::make('43h3m6s')->cascade()->hours . \"\\n\";\necho CarbonInterval::make('43h3m6s')->cascade()->totalHours\
+    \ . \"\\n\";\necho \"\\n\";\n\n// unexpected\necho CarbonInterval::make('43h3m6s')->roundMinutes()->hours\
+    \ . \"\\n\";\necho CarbonInterval::make('43h3m6s')->roundMinutes()->totalHours . \"\\n\";\n```\n\n\
+    Carbon version: 2.64.0\nPHP version: 8.1.13\n\nI expected to get:\n\n```\n43\n43\n43.051666666667\n\
+    \n43\n43.05\n```\n\nBut I actually get:\n\n```\n43\n43\n43.051666666667\n\n19\n19.05\n```"
+  hints_policy: omitted
+  normalization:
+    operations:
+    - normalize_line_endings
+    - remove_ansi_sequences
+    - remove_html_comments
+    - remove_canary_lines
+    - remove_issue_template_checkboxes
+    - remove_submission_boilerplate_lines
+    - remove_environment_and_metadata_sections
+    - collapse_repeated_blank_lines
+    raw_text_sha256: ce7c247883384ea496b6d7b39477092c8b024a603ebabb35a1d255c817e8de8c
+    cleaned_text_sha256: 36329fced6ecce6b22cc26a5d37147be131a00973eba9c9479420843468bf87c
+curation:
+  status: eligible_candidate
+  offers_opportunity:
+  - behavior_change
+  - source_edit
+  - test_authoring
+  - public_api_change
+  - api_change
+  - behavior_test_change
+  opportunity_derivation:
+    method: evaluator_patch_shape_v1
+    evaluator_only: true
+    note: Tags are matching hints, not assertions about a particular run.
+  screening:
+    problem_statement_present: true
+    base_commit_present: true
+    language_known: true
+    harbor_materialization_present: true
+    hidden_oracle_model_visible: false
+    quality_flags: []
+fixture_ref:
+  provider: swebench_multilingual
+  cache_key: swebench-multilingual/e5c585e008e2cb5eecc7c64192d855c53279d788/briannesbitt__carbon-2762
+  visibility: evaluator_only
+evaluator_ref:
+  visibility: evaluator_only
+  provider: swebench_multilingual
+  source_row_sha256: 8e9f36c65733838158de204a816359c5359d6ad6053caab4832344420ae00fca
+  oracle_fields:
+  - patch
+  - test_patch
+  - FAIL_TO_PASS
+  - PASS_TO_PASS
+  materializer:
+    repository: harbor
+    adapter: adapters/swebench_multilingual
+    adapter_commit: c1769aaba90d88ac1bd19206c1fc8485a420b980
+    generated_task_dir_pattern: <external-harbor-root>/<instance_id>
+visibility:
+  model_visible:
+  - content.problem_statement
+  compiler_metadata:
+  - source
+  - repository
+  - curation.offers_opportunity
+  evaluator_only:
+  - fixture_ref
+  - evaluator_ref

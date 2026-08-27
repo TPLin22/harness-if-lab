@@ -1,0 +1,112 @@
+format: hif.task_spec
+format_version: 0
+status: candidate
+created_at: '2026-08-27'
+task_id: swebench-multilingual/fmtlib__fmt-3729
+source:
+  dataset: SWE-bench/SWE-bench_Multilingual
+  config: default
+  split: test
+  revision: e5c585e008e2cb5eecc7c64192d855c53279d788
+  instance_id: fmtlib__fmt-3729
+  parquet_sha256: 28b7f874e48496399077d276f9f2b163a077ddf0a70dc507c148d58da826baa9
+  row_sha256: 78ea2746de244263540fefc5463747477d8f4ab215c0ebc1c725c2778e12d237
+  retrieved_at: '2026-08-27'
+repository:
+  slug: fmtlib/fmt
+  base_commit: 5cfd28d476c6859617878f951931b8ce7d36b9df
+  upstream_version: '3729'
+  language: cpp
+  difficulty: hard
+  difficulty_derivation: harbor_adapter_default
+content:
+  problem_statement: 'Support both generic and native format of std::filesystem::path
+
+    Why
+
+    -----
+
+    Need a way to include the paths with only slashes rather than backslashes in the output in a cross-platform
+    manner. This can be done by introducing  _`type`_ in format-spec for `path`.
+
+
+    How to use the proposed feature
+
+    -------------
+
+    On Windows,
+
+
+    ```cpp
+
+    std::filesystem::path filename = R"(C:\Users\zhihaoy\.cache)";
+
+    print("|{}|", filename);  // prints |C:\Users\zhihaoy\.cache|
+
+    print("|{:n}|", filename);  // prints `.native()` |C:\Users\zhihaoy\.cache|
+
+    print("|{:g}|", filename);  // prints `.generic_wstring()` |C:/Users/zhihaoy/.cache|
+
+    ```
+
+    On POSIX, the last line prints `.generic_string()`.'
+  hints_policy: omitted
+  normalization:
+    operations:
+    - normalize_line_endings
+    - remove_ansi_sequences
+    - remove_html_comments
+    - remove_canary_lines
+    - remove_issue_template_checkboxes
+    - remove_submission_boilerplate_lines
+    - remove_environment_and_metadata_sections
+    - collapse_repeated_blank_lines
+    raw_text_sha256: eccc7b7be11b08b5ef27b595507eba74783cd64de1c538cfddb3d199360f20f4
+    cleaned_text_sha256: bcbb40fda2d7d7959a5a48eeb3a11b4daa9e2998276cfc484c3b4321d6cb54b0
+curation:
+  status: eligible_candidate
+  offers_opportunity:
+  - behavior_change
+  - source_edit
+  - test_authoring
+  - code_comment_edit
+  - behavior_test_change
+  opportunity_derivation:
+    method: evaluator_patch_shape_v1
+    evaluator_only: true
+    note: Tags are matching hints, not assertions about a particular run.
+  screening:
+    problem_statement_present: true
+    base_commit_present: true
+    language_known: true
+    harbor_materialization_present: true
+    hidden_oracle_model_visible: false
+    quality_flags: []
+fixture_ref:
+  provider: swebench_multilingual
+  cache_key: swebench-multilingual/e5c585e008e2cb5eecc7c64192d855c53279d788/fmtlib__fmt-3729
+  visibility: evaluator_only
+evaluator_ref:
+  visibility: evaluator_only
+  provider: swebench_multilingual
+  source_row_sha256: 78ea2746de244263540fefc5463747477d8f4ab215c0ebc1c725c2778e12d237
+  oracle_fields:
+  - patch
+  - test_patch
+  - FAIL_TO_PASS
+  - PASS_TO_PASS
+  materializer:
+    repository: harbor
+    adapter: adapters/swebench_multilingual
+    adapter_commit: c1769aaba90d88ac1bd19206c1fc8485a420b980
+    generated_task_dir_pattern: <external-harbor-root>/<instance_id>
+visibility:
+  model_visible:
+  - content.problem_statement
+  compiler_metadata:
+  - source
+  - repository
+  - curation.offers_opportunity
+  evaluator_only:
+  - fixture_ref
+  - evaluator_ref

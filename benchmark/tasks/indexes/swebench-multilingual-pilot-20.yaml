@@ -1,0 +1,240 @@
+format: hif.task_index
+format_version: 0
+status: candidate_panel
+created_at: '2026-08-27'
+dataset:
+  name: SWE-bench/SWE-bench_Multilingual
+  config: default
+  split: test
+  revision: e5c585e008e2cb5eecc7c64192d855c53279d788
+  parquet_sha256: 28b7f874e48496399077d276f9f2b163a077ddf0a70dc507c148d58da826baa9
+  row_count: 300
+population:
+  size_before_filters: 300
+  size_after_filters: 279
+  excluded_counts:
+    known_upstream_verifier_issue: 1
+    long_statement: 12
+    template_residue: 8
+  excluded_ids:
+    apache__druid-13704: template_residue
+    axios__axios-5316: template_residue
+    briannesbitt__carbon-3073: known seasonal verifier issue in local adapter
+    fastlane__fastlane-19207: long_statement
+    fastlane__fastlane-19304: long_statement
+    fastlane__fastlane-19765: long_statement
+    fastlane__fastlane-20642: long_statement
+    fastlane__fastlane-20975: long_statement
+    fastlane__fastlane-21857: long_statement
+    fluent__fluentd-3608: long_statement
+    fluent__fluentd-3616: template_residue
+    fluent__fluentd-4598: template_residue
+    fluent__fluentd-4655: template_residue
+    preactjs__preact-3739: long_statement
+    projectlombok__lombok-3326: long_statement
+    prometheus__prometheus-11859: long_statement
+    redis__redis-13115: long_statement
+    rubocop__rubocop-13479: template_residue
+    rubocop__rubocop-13653: template_residue
+    tokio-rs__tokio-6724: template_residue
+    valkey-io__valkey-928: long_statement
+  filters:
+  - known_repository_language
+  - nonempty_problem_statement
+  - nonempty_patch_and_test_patch_for_evaluator_reference
+  - harbor_task.toml_instruction_and_test_materialization_present
+  - exclude_known_local_verifier_issue
+  - reject_possible_oracle_leak_after_cleanup
+  - cleaned_problem_statement_at_most_6000_characters
+  - reject_residual_issue_template_boilerplate
+sampling:
+  method: language_stratified_random_without_replacement
+  seed: 260827
+  language_allocation:
+    c: 2
+    cpp: 2
+    go: 3
+    java: 3
+    javascript: 3
+    php: 2
+    ruby: 2
+    rust: 3
+  selected_repo_cap: 1
+  reserve_per_language: 1
+  reserve_repo_cap: 2
+  algorithm: sort_by_instance_id_then_shuffle_each_language_with_seed_plus_offset
+  implementation:
+    path: benchmark/tasks/generators/collect_swebench_multilingual.py
+    version: '0'
+    sha256: 16370961804f7c18c04f74bf311ca17774c4a3915a81c61b6f38e786b66be613
+selected_ids:
+- redis__redis-13338
+- jqlang__jq-2650
+- fmtlib__fmt-3729
+- nlohmann__json-4237
+- prometheus__prometheus-15142
+- caddyserver__caddy-6370
+- hashicorp__terraform-34900
+- google__gson-2061
+- projectlombok__lombok-3371
+- apache__druid-14136
+- babel__babel-16130
+- facebook__docusaurus-9183
+- preactjs__preact-4182
+- briannesbitt__carbon-2762
+- php-cs-fixer__php-cs-fixer-8256
+- jekyll__jekyll-8167
+- rubocop__rubocop-13627
+- uutils__coreutils-6377
+- tokio-rs__tokio-6551
+- burntsushi__ripgrep-2576
+reserve_ids:
+- redis__redis-11279
+- fmtlib__fmt-3158
+- prometheus__prometheus-10633
+- projectlombok__lombok-3312
+- preactjs__preact-3763
+- php-cs-fixer__php-cs-fixer-8367
+- jekyll__jekyll-8761
+- uutils__coreutils-6682
+selection_stats:
+  language_counts:
+    c: 2
+    cpp: 2
+    go: 3
+    java: 3
+    javascript: 3
+    php: 2
+    ruby: 2
+    rust: 3
+  repository_counts:
+    apache/druid: 1
+    babel/babel: 1
+    briannesbitt/carbon: 1
+    burntsushi/ripgrep: 1
+    caddyserver/caddy: 1
+    facebook/docusaurus: 1
+    fmtlib/fmt: 1
+    google/gson: 1
+    hashicorp/terraform: 1
+    jekyll/jekyll: 1
+    jqlang/jq: 1
+    nlohmann/json: 1
+    php-cs-fixer/php-cs-fixer: 1
+    preactjs/preact: 1
+    projectlombok/lombok: 1
+    prometheus/prometheus: 1
+    redis/redis: 1
+    rubocop/rubocop: 1
+    tokio-rs/tokio: 1
+    uutils/coreutils: 1
+task_specs:
+- task_id: swebench-multilingual/redis__redis-13338
+  path: benchmark/tasks/specs/swebench-multilingual/redis__redis-13338.yaml
+  sha256: 6e479dd87bd485e53357603f4f94a60c74af22360a8214756a1a154cddc2b90e
+  language: c
+  repository: redis/redis
+- task_id: swebench-multilingual/jqlang__jq-2650
+  path: benchmark/tasks/specs/swebench-multilingual/jqlang__jq-2650.yaml
+  sha256: 41d3f1308ffd4627af571182060fa2950feb3d93c6332a7712b0b40e8f137954
+  language: c
+  repository: jqlang/jq
+- task_id: swebench-multilingual/fmtlib__fmt-3729
+  path: benchmark/tasks/specs/swebench-multilingual/fmtlib__fmt-3729.yaml
+  sha256: d4d3f220770e4429fad79f9935468f4ae3e943a0d27575daa477dcef7b09275c
+  language: cpp
+  repository: fmtlib/fmt
+- task_id: swebench-multilingual/nlohmann__json-4237
+  path: benchmark/tasks/specs/swebench-multilingual/nlohmann__json-4237.yaml
+  sha256: 329cbeffea22128fedb2010b4d166094be7edcb2ec0b022888eca76e12f50d35
+  language: cpp
+  repository: nlohmann/json
+- task_id: swebench-multilingual/prometheus__prometheus-15142
+  path: benchmark/tasks/specs/swebench-multilingual/prometheus__prometheus-15142.yaml
+  sha256: ad53670e44393b6b5d478792e1430f891690baf48cffc4a1fbf326b77d535454
+  language: go
+  repository: prometheus/prometheus
+- task_id: swebench-multilingual/caddyserver__caddy-6370
+  path: benchmark/tasks/specs/swebench-multilingual/caddyserver__caddy-6370.yaml
+  sha256: a78574aab73222d0da1f25b8ab1e7633d9af0aacea8d4f1372e98e4dae2d242f
+  language: go
+  repository: caddyserver/caddy
+- task_id: swebench-multilingual/hashicorp__terraform-34900
+  path: benchmark/tasks/specs/swebench-multilingual/hashicorp__terraform-34900.yaml
+  sha256: 47c77c60c7e1fcf83c176246ed8b1a3fbce497fdcdaee32dc3670946dec91a13
+  language: go
+  repository: hashicorp/terraform
+- task_id: swebench-multilingual/google__gson-2061
+  path: benchmark/tasks/specs/swebench-multilingual/google__gson-2061.yaml
+  sha256: 1420f88d6619982ffa4895ef9ed07a9bed7a9bc89a9c4f3148468e1d618d8b08
+  language: java
+  repository: google/gson
+- task_id: swebench-multilingual/projectlombok__lombok-3371
+  path: benchmark/tasks/specs/swebench-multilingual/projectlombok__lombok-3371.yaml
+  sha256: aa42dfbfece9e582a868b01baeceeec10b4542c65f9e8462dc9dfd4668fa67e6
+  language: java
+  repository: projectlombok/lombok
+- task_id: swebench-multilingual/apache__druid-14136
+  path: benchmark/tasks/specs/swebench-multilingual/apache__druid-14136.yaml
+  sha256: 023205f0f8cc81cb73e2e4bcbced46ba05b1ac210c8d17823a8a8057b6255ff6
+  language: java
+  repository: apache/druid
+- task_id: swebench-multilingual/babel__babel-16130
+  path: benchmark/tasks/specs/swebench-multilingual/babel__babel-16130.yaml
+  sha256: 896802aa1972fa20d093ddf993aeedb7e9ee44d5c55ef5dafe8175aef6f02191
+  language: javascript
+  repository: babel/babel
+- task_id: swebench-multilingual/facebook__docusaurus-9183
+  path: benchmark/tasks/specs/swebench-multilingual/facebook__docusaurus-9183.yaml
+  sha256: 67dcf6b8ba2f65259e1de1db78ef741c54a2872e969ac12fe2ff5f9c7cec53f4
+  language: javascript
+  repository: facebook/docusaurus
+- task_id: swebench-multilingual/preactjs__preact-4182
+  path: benchmark/tasks/specs/swebench-multilingual/preactjs__preact-4182.yaml
+  sha256: c8519dd9874055b8a4d397167f0aacbc81574dccf21972f537e8e1765dae3b65
+  language: javascript
+  repository: preactjs/preact
+- task_id: swebench-multilingual/briannesbitt__carbon-2762
+  path: benchmark/tasks/specs/swebench-multilingual/briannesbitt__carbon-2762.yaml
+  sha256: 13aaf3a7257a5d27915ba2c2bbc3330ec01f3b7d44d850b5d0686b652764f713
+  language: php
+  repository: briannesbitt/carbon
+- task_id: swebench-multilingual/php-cs-fixer__php-cs-fixer-8256
+  path: benchmark/tasks/specs/swebench-multilingual/php-cs-fixer__php-cs-fixer-8256.yaml
+  sha256: 09b22956502aac0b77e960994ef59e41cd09f00c3806a6edf23ab39c86b58e97
+  language: php
+  repository: php-cs-fixer/php-cs-fixer
+- task_id: swebench-multilingual/jekyll__jekyll-8167
+  path: benchmark/tasks/specs/swebench-multilingual/jekyll__jekyll-8167.yaml
+  sha256: da22687a7fc844db86134ecfc09e9118eb109310cb35ec69225f7eff843cebf0
+  language: ruby
+  repository: jekyll/jekyll
+- task_id: swebench-multilingual/rubocop__rubocop-13627
+  path: benchmark/tasks/specs/swebench-multilingual/rubocop__rubocop-13627.yaml
+  sha256: 47801a3ad50d77a3772cf92f998e44efb3f0afeb588afcbe66b2ef4427ee098f
+  language: ruby
+  repository: rubocop/rubocop
+- task_id: swebench-multilingual/uutils__coreutils-6377
+  path: benchmark/tasks/specs/swebench-multilingual/uutils__coreutils-6377.yaml
+  sha256: 6f89fad74fd1e0bdcf559af1cdc8e68fb283f28808c63fc456b326eeddf4a49a
+  language: rust
+  repository: uutils/coreutils
+- task_id: swebench-multilingual/tokio-rs__tokio-6551
+  path: benchmark/tasks/specs/swebench-multilingual/tokio-rs__tokio-6551.yaml
+  sha256: 14fb334543e29fc179277655e199afba79c2190bfe0d926a42fcb4fab26ac1ca
+  language: rust
+  repository: tokio-rs/tokio
+- task_id: swebench-multilingual/burntsushi__ripgrep-2576
+  path: benchmark/tasks/specs/swebench-multilingual/burntsushi__ripgrep-2576.yaml
+  sha256: 306c7015fe1f8f7e965cc413d39cbfb42efa03d251f76271d16493612f7f3588
+  language: rust
+  repository: burntsushi/ripgrep
+external_inputs:
+  task_cache: <HIF_TASK_CACHE>/swebench-multilingual/<revision>/<instance-id>
+  harbor_materialization: <external-harbor-root>/<instance-id>
+  model_visible_projection:
+  - content.problem_statement
+notes:
+- This is a fixed candidate panel, not a released benchmark split.
+- Reserve IDs are not represented by TaskSpecs until substituted before a release freeze.
+- Patches, tests, full repositories, and Harbor task directories remain external.
