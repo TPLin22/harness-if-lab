@@ -510,6 +510,16 @@ rule's target surface as an independent binding and validate any optional
 `tool_set_ref` against the selected backend capability declaration; do not map
 it to StepCLI config in this phase.
 
+**Candidate checkpoint 2026-08-27:** a deterministic utility now emits 20
+`hif.item_pair` candidates, one for each selected task, under
+`benchmark/items/pairs/swebench-multilingual/`. Each pair contains a
+zero-injection baseline and a two-to-four-binding intervention. Static matching,
+reference, role, surface, and leakage checks pass. The panel deliberately keeps
+judge-backed rules as `observed` and records a warning because the current task
+pool has no reliable `must`-severity scored opportunity. This is a data-shape
+checkpoint only; no verifier, Pack compiler, Harbor change, or StepCLI adapter
+has been implemented.
+
 Nothing in Phases 0–3 requires Harbor or StepCLI.
 
 ### Phase 4: execution layer

@@ -1,0 +1,176 @@
+format: hif.item_index
+format_version: 0
+status: candidate_panel
+created_at: '2026-08-27'
+task_panel_ref: benchmark/tasks/indexes/swebench-multilingual-pilot-20.yaml
+task_panel_sha256: df063bc8421a6cdc0195c4dea31b7aba7995adcd347cf09958cbec6315a88c35
+task_review_ref: benchmark/tasks/indexes/swebench-multilingual-pilot-20-review.yaml
+task_review_sha256: b889f5b627be342d8968697ca1be71fd6eb6040469eef5a5fce1fe58dc4b1ad5
+rule_library_ref: benchmark/rules/canonical/phase0-canonical.yaml
+rule_library_sha256: a9ea1e22478a72d03f024bfc775caa8df65ce993db7381478695942a4275d6bb
+sampling:
+  method: ordered_task_panel_with_deterministic_rule_assignment
+  generator: benchmark/items/generators/assemble_swebench_pilot.py
+  version: '0'
+  sha256: 400221f8fcd3e153efda50635f0029dac34e8f4ecbf7e3c5d2951300a72e3bd7
+pair_count: 20
+pair_ids:
+- swebench-multilingual-pilot-20--redis__redis-13338
+- swebench-multilingual-pilot-20--jqlang__jq-2650
+- swebench-multilingual-pilot-20--fmtlib__fmt-3729
+- swebench-multilingual-pilot-20--nlohmann__json-4237
+- swebench-multilingual-pilot-20--prometheus__prometheus-15142
+- swebench-multilingual-pilot-20--caddyserver__caddy-6370
+- swebench-multilingual-pilot-20--hashicorp__terraform-34900
+- swebench-multilingual-pilot-20--google__gson-2061
+- swebench-multilingual-pilot-20--projectlombok__lombok-3371
+- swebench-multilingual-pilot-20--apache__druid-14136
+- swebench-multilingual-pilot-20--babel__babel-16130
+- swebench-multilingual-pilot-20--facebook__docusaurus-9183
+- swebench-multilingual-pilot-20--preactjs__preact-4182
+- swebench-multilingual-pilot-20--briannesbitt__carbon-2762
+- swebench-multilingual-pilot-20--php-cs-fixer__php-cs-fixer-8256
+- swebench-multilingual-pilot-20--jekyll__jekyll-8167
+- swebench-multilingual-pilot-20--rubocop__rubocop-13627
+- swebench-multilingual-pilot-20--uutils__coreutils-6377
+- swebench-multilingual-pilot-20--tokio-rs__tokio-6551
+- swebench-multilingual-pilot-20--burntsushi__ripgrep-2576
+pairs:
+- pair_id: swebench-multilingual-pilot-20--redis__redis-13338
+  path: benchmark/items/pairs/swebench-multilingual/redis__redis-13338.yaml
+  sha256: b8652751cf1f11b9572147891a42ab57ce2793de7a13eccc34e473c5121112a9
+  task_ref: swebench-multilingual/redis__redis-13338
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--jqlang__jq-2650
+  path: benchmark/items/pairs/swebench-multilingual/jqlang__jq-2650.yaml
+  sha256: 3761f86823ca10916de94f9e8a546cadb6cbd43212a5d575f57f362cfd01d049
+  task_ref: swebench-multilingual/jqlang__jq-2650
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--fmtlib__fmt-3729
+  path: benchmark/items/pairs/swebench-multilingual/fmtlib__fmt-3729.yaml
+  sha256: 0e431604a0312b5687d9edbc65c8ec7db5c0744382cf6f0cd2719afaf3d0fd2d
+  task_ref: swebench-multilingual/fmtlib__fmt-3729
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--nlohmann__json-4237
+  path: benchmark/items/pairs/swebench-multilingual/nlohmann__json-4237.yaml
+  sha256: e818a410d073fa660584f4f8f11c9eae0ceaebbbeb91758c373c2a592330c541
+  task_ref: swebench-multilingual/nlohmann__json-4237
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--prometheus__prometheus-15142
+  path: benchmark/items/pairs/swebench-multilingual/prometheus__prometheus-15142.yaml
+  sha256: b455f51486a4f9edce17c21204e022f37321a8714060223bc43872016605282b
+  task_ref: swebench-multilingual/prometheus__prometheus-15142
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--caddyserver__caddy-6370
+  path: benchmark/items/pairs/swebench-multilingual/caddyserver__caddy-6370.yaml
+  sha256: 15d8c3b7438d17dc271ee60cd3ca485104106d43228061478beeb11286f6c7d4
+  task_ref: swebench-multilingual/caddyserver__caddy-6370
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--hashicorp__terraform-34900
+  path: benchmark/items/pairs/swebench-multilingual/hashicorp__terraform-34900.yaml
+  sha256: 1814d24cdbe6349fd51ea4da4edf365b4320ab43a22a6360a638ca71383cbb85
+  task_ref: swebench-multilingual/hashicorp__terraform-34900
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--google__gson-2061
+  path: benchmark/items/pairs/swebench-multilingual/google__gson-2061.yaml
+  sha256: ba1b4d4e06c56e4f50e250ea1dd090bbef2b8c4216af4159887b61c7910877bf
+  task_ref: swebench-multilingual/google__gson-2061
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--projectlombok__lombok-3371
+  path: benchmark/items/pairs/swebench-multilingual/projectlombok__lombok-3371.yaml
+  sha256: 253d57abcc6b15d1247d0c49e1cfc3d3334e105a68b2fffb8d1c2c50f5a2926e
+  task_ref: swebench-multilingual/projectlombok__lombok-3371
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--apache__druid-14136
+  path: benchmark/items/pairs/swebench-multilingual/apache__druid-14136.yaml
+  sha256: d5051985030018f2b8716102e3747ca4d469fdb5f810b474dd82da39ebe6fe18
+  task_ref: swebench-multilingual/apache__druid-14136
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--babel__babel-16130
+  path: benchmark/items/pairs/swebench-multilingual/babel__babel-16130.yaml
+  sha256: afc9fe318c3875c0ebe7b693f9bf12691fd043e9fc9263d6378c5f0e7485aea3
+  task_ref: swebench-multilingual/babel__babel-16130
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--facebook__docusaurus-9183
+  path: benchmark/items/pairs/swebench-multilingual/facebook__docusaurus-9183.yaml
+  sha256: 8f74a88be8ed8437d9e95f7c67ed4f84affd7c0cfc178c53aa9bc35a1f6004a4
+  task_ref: swebench-multilingual/facebook__docusaurus-9183
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--preactjs__preact-4182
+  path: benchmark/items/pairs/swebench-multilingual/preactjs__preact-4182.yaml
+  sha256: c68cc32781236df2fd9db00595cd57e7ac1d9dfe96644ad133d2289c55c26cd9
+  task_ref: swebench-multilingual/preactjs__preact-4182
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--briannesbitt__carbon-2762
+  path: benchmark/items/pairs/swebench-multilingual/briannesbitt__carbon-2762.yaml
+  sha256: 6d50ae7698e21b05d8d641fef3a78290f62f80e51163f3b62696116a6b665e48
+  task_ref: swebench-multilingual/briannesbitt__carbon-2762
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--php-cs-fixer__php-cs-fixer-8256
+  path: benchmark/items/pairs/swebench-multilingual/php-cs-fixer__php-cs-fixer-8256.yaml
+  sha256: 846fc32360a8f42703a537bb010b029748878e2155844432e67800f68ded9912
+  task_ref: swebench-multilingual/php-cs-fixer__php-cs-fixer-8256
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--jekyll__jekyll-8167
+  path: benchmark/items/pairs/swebench-multilingual/jekyll__jekyll-8167.yaml
+  sha256: f6382ce3a40ee62b4e23f0475765df15bffded18824c7d6cb7de54f33879775b
+  task_ref: swebench-multilingual/jekyll__jekyll-8167
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--rubocop__rubocop-13627
+  path: benchmark/items/pairs/swebench-multilingual/rubocop__rubocop-13627.yaml
+  sha256: 66b6563710c4620333001bf04531539d5ca1e75c83cc841c4c7757170dc0bc65
+  task_ref: swebench-multilingual/rubocop__rubocop-13627
+  binding_count: 2
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--uutils__coreutils-6377
+  path: benchmark/items/pairs/swebench-multilingual/uutils__coreutils-6377.yaml
+  sha256: 52748ac25ab4b92027605196dd1ecf5c03def6bced422ec25d5a4505f503b557
+  task_ref: swebench-multilingual/uutils__coreutils-6377
+  binding_count: 4
+  scored_binding_count: 2
+- pair_id: swebench-multilingual-pilot-20--tokio-rs__tokio-6551
+  path: benchmark/items/pairs/swebench-multilingual/tokio-rs__tokio-6551.yaml
+  sha256: 8afca50681046c290d2e782138a2fd60bed80e9a14f7f225c9bac2fefdc11a93
+  task_ref: swebench-multilingual/tokio-rs__tokio-6551
+  binding_count: 3
+  scored_binding_count: 1
+- pair_id: swebench-multilingual-pilot-20--burntsushi__ripgrep-2576
+  path: benchmark/items/pairs/swebench-multilingual/burntsushi__ripgrep-2576.yaml
+  sha256: b6d108af965267651eae6edd6e37e28e5f169b3646189302eb3465437f9542c6
+  task_ref: swebench-multilingual/burntsushi__ripgrep-2576
+  binding_count: 4
+  scored_binding_count: 2
+surface_vocabulary:
+- system_prompt
+- managed_instruction
+- global_instruction
+- project_file
+- user_message
+- tool_description
+- skill
+role_vocabulary:
+- scored
+- observed
+- distractor
+tool_set_policy: reserved_null_until_backend_capability_contract
+notes:
+- Candidate semantic pair index; no pair is a released benchmark item.
+- The generated baseline is zero injection. Rule-level causal claims require a more controlled design
+  than this multi-rule panel.
+- Pair files contain no rendered rule text and no StepCLI or Harbor configuration.

@@ -26,6 +26,10 @@ statements retain diagnostic detail or proposed workarounds and need an
 explicit release decision; see the task review ledger before using them for a
 scored split.
 
+Candidate Item/Pair records are under [`items/`](items/) and are assembled from
+the task panel and canonical rule draft. They are semantic plans only: no rule
+text is rendered, and no Harbor or StepCLI runtime package is generated.
+
 The repository intentionally has no released benchmark records yet. Use the
 subdirectories according to
 [the layout document](../docs/repository-layout.md).

@@ -39,6 +39,14 @@ The first SWE-bench Multilingual pilot follows this path. It stores references
 and reviewed text in `benchmark/tasks/`; it does not generate Harbor task
 directories or workspaces during curation.
 
+The current next step after task intake is candidate Item assembly. The pilot
+uses one pair file per task under `benchmark/items/pairs/`: a zero-injection
+baseline plus an intervention with multiple rule bindings. The assembly utility
+records static opportunity intersections, binding roles, semantic surfaces,
+authority metadata, and the reserved `tool_set_ref` without importing Harbor or
+StepCLI. These pairs remain outside any released split until verifier and
+surface-capability review is complete.
+
 ### Curation gates
 
 Before an Item can enter a release, check:

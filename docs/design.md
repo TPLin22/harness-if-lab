@@ -198,6 +198,13 @@ The experiment layer should group a baseline and an intervention under a stable
 pair identifier. A pair may later expand to multiple controlled surface
 variants, but each variant must identify its intended difference.
 
+For the first candidate panel, the repository uses one `hif.item_pair` YAML
+file per task under `benchmark/items/pairs/`. The file contains a zero-injection
+baseline and a multi-rule intervention, so their shared TaskSpec reference,
+authority policy, optional tool-set factor, and provenance stay together. This
+is a provisional representation for data bring-up, not the final schema; the
+pair's bindings remain semantic references and are not rendered prompts.
+
 The eventual authored format may be YAML validated by JSON Schema and compiled
 to canonical JSON. This document intentionally does not define those schemas.
 
@@ -354,8 +361,8 @@ The scaffold deliberately leaves these for a later design review:
   directory (clear, preserve, controlled fixture, or fail on unexpected input);
 - the first SWE-bench sample count, randomization/stratification policy, seed,
   and duplicate-repository cap;
-- baseline/intervention representation (one Pair object versus separate Items
-  linked by a pair ID);
+- the formal baseline/intervention schema and release representation (the
+  candidate panel currently uses one Pair object containing two Item variants);
 - the first rule families, task families, and deterministic verifiers;
 - qualification thresholds and release/split policy;
 - Harbor adapter versus a thin independent runner;

@@ -1,0 +1,118 @@
+format: hif.item_pair
+format_version: 0
+status: candidate
+created_at: '2026-08-27'
+pair_id: swebench-multilingual-pilot-20--jqlang__jq-2650
+task_ref: swebench-multilingual/jqlang__jq-2650
+task_spec_sha256: 41d3f1308ffd4627af571182060fa2950feb3d93c6332a7712b0b40e8f137954
+rule_library_ref: benchmark/rules/canonical/phase0-canonical.yaml
+rule_library_sha256: a9ea1e22478a72d03f024bfc775caa8df65ce993db7381478695942a4275d6bb
+authority_policy:
+  id: no_intentional_conflict_v0
+  mode: no_intentional_conflict
+  precedence_held_constant_across_pair: true
+  description: Bindings are exploratory and non-conflicting by design; surface precedence is not inferred
+    from serialization order.
+tool_set_ref: null
+baseline:
+  item_id: swebench-multilingual-pilot-20--jqlang__jq-2650--baseline
+  kind: zero_injection
+  task_ref: swebench-multilingual/jqlang__jq-2650
+  rule_bindings: []
+  difference_from_intervention: omit all intervention rule bindings; keep task, policy, tool_set_ref,
+    and runtime settings fixed
+intervention:
+  item_id: swebench-multilingual-pilot-20--jqlang__jq-2650--intervention
+  kind: rule_injection
+  task_ref: swebench-multilingual/jqlang__jq-2650
+  rule_bindings:
+  - binding_id: rb-01
+    rule_ref: rule-canon-p0-027
+    role: scored
+    target_surface: system_prompt
+    authority_class: general_instruction
+    rendering_ref: null
+    surface_fit: high
+    delivery_order: 1
+    opportunity_match:
+      required:
+      - behavior_change
+      - test_authoring
+      offered:
+      - behavior_change
+      - source_edit
+      - test_authoring
+      - multi_file_change
+      - api_object_definition
+      - behavior_test_change
+      matched:
+      - behavior_change
+      - test_authoring
+      status: full
+      derivation: static_intersection_of_task_hints_and_rule_requirements
+    selection_rationale: full opportunity match for behavior_change and test_authoring
+    verification:
+      status: pending_verifier_implementation
+      scoring_method: cross-file
+      verifiability: deterministic
+      expected_evidence:
+      - test_diff
+      - test_result
+  - binding_id: rb-02
+    rule_ref: rule-canon-p0-001
+    role: distractor
+    target_surface: global_instruction
+    authority_class: general_instruction
+    rendering_ref: null
+    surface_fit: medium
+    delivery_order: 2
+    opportunity_match:
+      required:
+      - run_style_checks
+      offered:
+      - behavior_change
+      - source_edit
+      - test_authoring
+      - multi_file_change
+      - api_object_definition
+      - behavior_test_change
+      matched: []
+      status: none
+      derivation: static_intersection_of_task_hints_and_rule_requirements
+    selection_rationale: fixed attention-load distractor; no run_style_checks hint
+    verification:
+      status: pending_verifier_implementation
+      scoring_method: command-output
+      verifiability: deterministic
+      expected_evidence:
+      - command_exit_status
+      - warning_count
+  difference_from_baseline: rule_bindings_only
+qualification:
+  status: candidate_pending_phase1_and_verifier_review
+  task_review_flags:
+  - workaround_in_statement
+  binding_count: 2
+  scored_binding_count: 1
+  must_scored_binding_count: 0
+  release_floor:
+    require_at_least_one_must_scored_rule: true
+    status: unmet_candidate_warning
+    reason: The current SWE-bench panel exposes behavior/test opportunities but no reliable must-level
+      workflow opportunity; do not promote until a task-specific must rule or an explicit exception is
+      reviewed.
+  surface_support: pending_stepcli_capability_review
+  verifier_coverage: pending_verifier_implementation
+  leakage_check: task_projection_allowlist_passed; pair contains references only and task review flags
+    are propagated
+provenance:
+  task_index: benchmark/tasks/indexes/swebench-multilingual-pilot-20.yaml
+  task_index_sha256: df063bc8421a6cdc0195c4dea31b7aba7995adcd347cf09958cbec6315a88c35
+  task_review: benchmark/tasks/indexes/swebench-multilingual-pilot-20-review.yaml
+  task_review_sha256: b889f5b627be342d8968697ca1be71fd6eb6040469eef5a5fce1fe58dc4b1ad5
+  generator: benchmark/items/generators/assemble_swebench_pilot.py
+  generator_version: '0'
+  generator_sha256: 400221f8fcd3e153efda50635f0029dac34e8f4ecbf7e3c5d2951300a72e3bd7
+notes:
+- This pair is a semantic candidate and is not a rendered prompt or StepCLI configuration.
+- Roles and opportunity matches are curation metadata; runtime verdicts are produced later.

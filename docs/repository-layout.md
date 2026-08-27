@@ -21,6 +21,10 @@ harness-if-lab/
 │   │   ├── fixtures/
 │   │   └── generators/
 │   ├── items/
+│   │   ├── indexes/
+│   │   ├── pairs/
+│   │   │   └── swebench-multilingual/
+│   │   └── generators/
 │   └── splits/
 ├── schemas/
 ├── generators/
@@ -53,7 +57,7 @@ harness-if-lab/
 | `benchmark/tasks/indexes` | Frozen task-panel selections, sampling metadata, and reserve/exclusion records. |
 | `benchmark/tasks/fixtures` | Small, versioned fixtures suitable for the source tree. |
 | `benchmark/tasks/generators` | Future task-generation utilities. |
-| `benchmark/items` | Reviewed experimental Item/Pair definitions or release indexes. |
+| `benchmark/items` | Candidate or reviewed experimental Item/Pair definitions, indexes, and assembly utilities. |
 | `benchmark/splits` | Future split and release metadata. |
 | `schemas` | Future machine-readable validation schemas; no formal specs yet. |
 | `generators` | Cross-cutting candidate and dataset generation programs. |
