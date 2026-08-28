@@ -2,10 +2,10 @@
 
 The compiler copies a task reference into an output directory, projects only
 the cleaned TaskSpec statement into ``instruction.md``, and emits a launch
-configuration using Harbor's existing local-task, extra-instruction, and
-agent-stage upload hook interfaces.  It can also forward an adapter-owned
-StepCLI surface configuration as an agent kwarg.  It does not import Harbor at
-run time.
+configuration using Harbor's existing local-task, extra-instruction, agent
+stage upload hook, and StepCLI instruction-prompt interfaces.  It can also
+forward an adapter-owned StepCLI surface configuration as an agent kwarg.  It
+does not import Harbor at run time.
 """
 
 from __future__ import annotations
@@ -25,6 +25,7 @@ from hif.delivery import (
     load_item_variant,
     load_task_spec,
     safe_relative_path,
+    sha256_bytes,
     sha256_file,
     write_json,
 )
@@ -95,6 +96,53 @@ def _copy_project_files(delivery_dir: Path, task_dir: Path, manifest: dict[str, 
     return uploads
 
 
+def _read_system_prompt(delivery_dir: Path, manifest: dict[str, Any]) -> str | None:
+    """Merge system fragments in semantic delivery order.
+
+    System fragments stay as separate files in the Pack for provenance, while
+    the current Harbor/StepCLI transport accepts one host instruction string.
+    Reading the files here keeps the compiler's payload identical to the
+    materialized delivery files and avoids a second copy of rule text in the
+    Item or manifest.
+    """
+
+    fragments = manifest.get("surfaces", {}).get("system_prompt", {}).get(
+        "fragments", []
+    )
+    if not fragments:
+        return None
+    parts: list[str] = []
+    for fragment in sorted(fragments, key=lambda entry: entry["delivery_order"]):
+        relative = safe_relative_path(
+            str(fragment["pack_relative_path"]).removeprefix("delivery/"),
+            context="system prompt delivery source",
+        )
+        source = delivery_dir / relative
+        if not source.is_file():
+            raise HarborPackError(f"Missing generated system prompt file: {source}")
+        expected_hash = fragment.get("content_sha256")
+        actual_hash = sha256_file(source)
+        if expected_hash != actual_hash:
+            raise HarborPackError(
+                f"System prompt delivery hash mismatch for {source}: "
+                f"expected {expected_hash!r}, got {actual_hash!r}"
+            )
+        text = source.read_text(encoding="utf-8").strip()
+        if not text:
+            raise HarborPackError(f"Generated system prompt file is empty: {source}")
+        parts.append(text)
+    merged = "\n\n".join(parts)
+    expected_merged_hash = manifest["surfaces"]["system_prompt"].get(
+        "merged_content_sha256"
+    )
+    actual_merged_hash = sha256_bytes(merged.encode("utf-8"))
+    if expected_merged_hash != actual_merged_hash:
+        raise HarborPackError(
+            "System prompt merged-content hash does not match the delivery manifest"
+        )
+    return merged
+
+
 def _build_launch_config(
     *,
     output_dir: Path,
@@ -108,10 +156,23 @@ def _build_launch_config(
     disable_verifier: bool,
 ) -> dict[str, Any]:
     user_fragments = manifest["surfaces"]["user_message"]["fragments"]
+    system_prompt = _read_system_prompt(
+        output_dir / "delivery", manifest
+    )
     effective_agent_kwargs = {
         "stepcli_workspace": workspace,
         **(agent_kwargs or {}),
     }
+    if system_prompt is not None:
+        supplied = effective_agent_kwargs.get("stepcli_instruction_prompt")
+        if supplied is not None and (
+            not isinstance(supplied, str) or supplied.strip() != system_prompt
+        ):
+            raise HarborPackError(
+                "agent kwargs stepcli_instruction_prompt disagrees with the "
+                "Item-derived system_prompt delivery"
+            )
+        effective_agent_kwargs["stepcli_instruction_prompt"] = system_prompt
     extension_surface = (
         manifest.get("harness_config", {})
         .get("stepcli", {})

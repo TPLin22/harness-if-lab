@@ -1,0 +1,26 @@
+format: hif.item_pair
+format_version: 0
+status: candidate
+pair_id: smoke-system-surface-v1
+task_ref: smoke/user-project
+authority_policy:
+  id: no_intentional_conflict_v0
+  mode: no_intentional_conflict
+  precedence_held_constant_across_pair: true
+tool_set_ref: null
+baseline:
+  item_id: smoke-system-surface-v1--baseline
+  kind: zero_injection
+  task_ref: smoke/user-project
+  rule_bindings: []
+intervention:
+  item_id: smoke-system-surface-v1--intervention
+  kind: rule_injection
+  task_ref: smoke/user-project
+  rule_bindings:
+  - binding_id: rb-system-style
+    rule_ref: rule-canon-p0-001
+    role: scored
+    target_surface: system_prompt
+    authority_class: general_instruction
+    delivery_order: 1

@@ -1,4 +1,4 @@
-# User-message + project-file smoke
+# Instruction-surface smoke
 
 This fixture is intentionally tiny and is not a benchmark release.  It checks
 that one Item can deliver two independent rule bindings through the first
@@ -6,7 +6,9 @@ implemented StepCLI surfaces:
 
 - `user_message` becomes a Harbor `extra_instruction_paths` fragment;
 - `project_file` becomes a per-binding `.claude/rules/*.md` file uploaded by an
-  agent-stage `upload_files` hook.
+  agent-stage `upload_files` hook;
+- `system_prompt` becomes an independently hashed fragment forwarded through
+  Harbor's `stepcli_instruction_prompt` agent kwarg.
 
 Compile an external Pack from the repository root:
 
@@ -35,3 +37,7 @@ adapter resolves that role to `bash` and writes an `append` description
 override under `agents[0].kwargs.stepcli_extension_surface` in the generated
 launch config. This fixture verifies HIF-side compilation; Harbor support for
 that agent kwarg is deliberately a later integration change.
+
+[`system-surface-item-pair.yaml`](system-surface-item-pair.yaml) is a minimal
+system-prompt-only pair for inspecting the host instruction transport without
+changing the two-surface fixture used by the first live trial.

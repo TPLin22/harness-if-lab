@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -99,7 +100,7 @@ def test_duplicate_delivery_order_is_rejected(tmp_path: Path):
 
 def test_unsupported_surface_is_explicitly_rejected(tmp_path: Path):
     item = yaml.safe_load(ITEM.read_text())
-    item["intervention"]["rule_bindings"][0]["target_surface"] = "system_prompt"
+    item["intervention"]["rule_bindings"][0]["target_surface"] = "managed_instruction"
     item_path = tmp_path / "unsupported.yaml"
     item_path.write_text(yaml.safe_dump(item, sort_keys=False))
 
@@ -109,6 +110,82 @@ def test_unsupported_surface_is_explicitly_rejected(tmp_path: Path):
             rule_library_path=RULES,
             task_spec_path=TASK_SPEC,
             output_dir=tmp_path / "delivery",
+        )
+
+
+def test_system_prompt_fragments_are_materialized_and_ordered(tmp_path: Path):
+    item = yaml.safe_load(ITEM.read_text())
+    bindings = item["intervention"]["rule_bindings"]
+    bindings[0]["target_surface"] = "system_prompt"
+    bindings[0]["delivery_order"] = 20
+    bindings[1]["target_surface"] = "system_prompt"
+    bindings[1]["delivery_order"] = 10
+    item_path = tmp_path / "system-item.yaml"
+    item_path.write_text(yaml.safe_dump(item, sort_keys=False))
+
+    manifest = build_delivery_manifest(
+        item_path=item_path,
+        rule_library_path=RULES,
+        task_spec_path=TASK_SPEC,
+        output_dir=tmp_path / "delivery",
+    )
+
+    fragments = manifest["surfaces"]["system_prompt"]["fragments"]
+    assert [entry["binding_id"] for entry in fragments] == [
+        "rb-project-comments",
+        "rb-user-test",
+    ]
+    assert [entry["delivery_order"] for entry in fragments] == [10, 20]
+    assert [entry["intended_surface"] for entry in manifest["deliveries"]] == [
+        "system_prompt",
+        "system_prompt",
+    ]
+    assert manifest["surfaces"]["system_prompt"]["merge_strategy"] == (
+        "ordered_join_double_newline"
+    )
+    first = (tmp_path / "delivery/system_prompts/rb-project-comments.md").read_text()
+    second = (tmp_path / "delivery/system_prompts/rb-user-test.md").read_text()
+    merged = f"{first.strip()}\n\n{second.strip()}"
+    surface = manifest["surfaces"]["system_prompt"]
+    assert surface["merged_content_sha256"] == hashlib.sha256(
+        merged.encode("utf-8")
+    ).hexdigest()
+    assert surface["merged_content_bytes"] == len(merged.encode("utf-8"))
+
+
+def test_harbor_pack_forwards_merged_system_prompt_and_checks_conflicts(
+    tmp_path: Path,
+):
+    item = yaml.safe_load(ITEM.read_text())
+    item["intervention"]["rule_bindings"][0]["target_surface"] = "system_prompt"
+    item_path = tmp_path / "system-item.yaml"
+    item_path.write_text(yaml.safe_dump(item, sort_keys=False))
+
+    pack = HarborPackCompiler().compile(
+        item_path=item_path,
+        rule_library_path=RULES,
+        task_spec_path=TASK_SPEC,
+        task_dir=TASK,
+        output_root=tmp_path / "pack",
+        model_name="openai/test-model",
+    )
+    launch = yaml.safe_load((pack / "launch.yaml").read_text())
+    kwargs = launch["agents"][0]["kwargs"]
+    expected = (pack / "delivery/system_prompts/rb-user-test.md").read_text().strip()
+    assert kwargs["stepcli_instruction_prompt"] == expected
+    assert launch["extra_instruction_paths"] == []
+    manifest = json.loads((pack / "delivery/manifest.json").read_text())
+    assert manifest["surfaces"]["system_prompt"]["fragments"]
+
+    with pytest.raises(ValueError, match="stepcli_instruction_prompt disagrees"):
+        HarborPackCompiler().compile(
+            item_path=item_path,
+            rule_library_path=RULES,
+            task_spec_path=TASK_SPEC,
+            task_dir=TASK,
+            output_root=tmp_path / "conflict-pack",
+            model_name="openai/test-model",
+            agent_kwargs={"stepcli_instruction_prompt": "different"},
         )
 
 

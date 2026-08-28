@@ -9,8 +9,8 @@ later be expanded or replaced by a companion implementation, but the semantic
 contracts in this repository remain unchanged either way.
 
 An adapter owns the mapping from an Item's backend-neutral surface declaration
-to actual harness inputs. For StepCLI this includes the first-stage project
-instruction file and user-message delivery. The adapter also has a small,
+to actual harness inputs. For StepCLI this includes host system-instruction,
+project instruction file, and user-message delivery. The adapter also has a small,
 explicit projection for the reserved `dsh_minimal` tool set and maps abstract
 Item tool references such as `shell` to the model-visible name `bash` for a
 `tool_description` binding. The mapping is adapter code, not an Item field and
@@ -23,9 +23,11 @@ surface after discovery and precedence, including truncation or an unintended
 surface merge. Unsupported surfaces are rejected by default; they are not
 silently concatenated into one prompt.
 
-For the current two-surface path, `user_message` is delivered through Harbor's
-existing user instruction channel and `project_file` is materialized as a
-`.claude/rules/*.md` file before StepCLI startup. The tool-set path emits a
+For the current path, `system_prompt` is materialized as independent fragments
+and passed as the additive `stepcli_instruction_prompt` host configuration;
+`user_message` is delivered through Harbor's existing user instruction channel
+and `project_file` is materialized as a `.claude/rules/*.md` file before StepCLI
+startup. The tool-set path emits a
 StepCLI `extensions.surface` projection in the manifest and generated launch
 kwargs; it is a configuration handoff, not yet a claim that every backend
 adapter accepts or materializes that field. See the [first-stage delivery

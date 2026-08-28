@@ -26,7 +26,7 @@ SUPPORTED_SURFACES = {
     "tool_description",
     "skill",
 }
-FIRST_STAGE_SURFACES = {"project_file", "user_message"}
+FIRST_STAGE_SURFACES = {"system_prompt", "project_file", "user_message"}
 VARIANTS = {"baseline", "intervention"}
 DELIVERY_FORMAT = "hif.delivery_manifest"
 DELIVERY_FORMAT_VERSION = 1
@@ -327,6 +327,8 @@ def build_delivery_manifest(
     bindings = item.get("rule_bindings", [])
     seen_binding_ids: set[str] = set()
     deliveries: list[dict[str, Any]] = []
+    system_fragments: list[dict[str, Any]] = []
+    system_prompt_parts: dict[str, str] = {}
     user_fragments: list[dict[str, Any]] = []
     project_files: list[dict[str, Any]] = []
     tool_description_overrides: dict[str, dict[str, str]] = {}
@@ -395,7 +397,27 @@ def build_delivery_manifest(
         if description_mode is not None:
             record["description_mode"] = description_mode
 
-        if surface == "user_message":
+        if surface == "system_prompt":
+            relative = f"system_prompts/{binding_id}.md"
+            path = output_dir / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding="utf-8")
+            record.update(
+                {
+                    "transport": "harbor.agents[0].kwargs.stepcli_instruction_prompt",
+                    "pack_relative_path": f"delivery/{relative}",
+                }
+            )
+            system_fragments.append(
+                {
+                    "binding_id": binding_id,
+                    "pack_relative_path": f"delivery/{relative}",
+                    "content_sha256": content_hash,
+                    "delivery_order": delivery_order,
+                }
+            )
+            system_prompt_parts[binding_id] = content.strip()
+        elif surface == "user_message":
             relative = f"user_messages/{binding_id}.md"
             path = output_dir / relative
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -580,6 +602,11 @@ def build_delivery_manifest(
                 )
 
     deliveries.sort(key=lambda entry: entry["delivery_order"])
+    system_fragments.sort(key=lambda entry: entry["delivery_order"])
+    merged_system_prompt = "\n\n".join(
+        system_prompt_parts[fragment["binding_id"]]
+        for fragment in system_fragments
+    )
     user_fragments.sort(key=lambda entry: entry["delivery_order"])
     project_files.sort(key=lambda entry: entry["delivery_order"])
 
@@ -605,6 +632,17 @@ def build_delivery_manifest(
             ),
         },
         "surfaces": {
+            "system_prompt": {
+                "transport": "harbor.agents[0].kwargs.stepcli_instruction_prompt",
+                "merge_strategy": "ordered_join_double_newline",
+                "fragments": system_fragments,
+                "merged_content_sha256": (
+                    sha256_bytes(merged_system_prompt.encode("utf-8"))
+                    if merged_system_prompt
+                    else None
+                ),
+                "merged_content_bytes": len(merged_system_prompt.encode("utf-8")),
+            },
             "user_message": {
                 "base_task_instruction": "task/instruction.md",
                 "transport": "harbor.extra_instruction_paths",

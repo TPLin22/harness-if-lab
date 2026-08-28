@@ -88,11 +88,11 @@ run identities.
 
 The Pack compiler/materializer and the StepCLI adapter have separate jobs. The
 current compiler builds the Harbor package and the current adapter maps
-`user_message` and `project_file` to existing Harbor/StepCLI inputs. It also
-places a resolved `dsh_minimal`/`tool_description` projection in the generated
-agent kwargs; Harbor-side acceptance of that kwarg is a separately gated
-integration task. A live effective-surface snapshot and the remaining surfaces
-are still future work. See [the first-stage delivery contract](first-stage-delivery.md).
+`system_prompt`, `user_message`, and `project_file` to existing Harbor/StepCLI
+inputs. It also places a resolved `dsh_minimal`/`tool_description` projection
+in the generated agent kwargs; Harbor-side acceptance of that kwarg is a
+separately gated integration task. A live effective-surface snapshot and the
+remaining surfaces are still future work. See [the first-stage delivery contract](first-stage-delivery.md).
 
 ## Mode C: verify and analyze
 
