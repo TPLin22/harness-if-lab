@@ -21,8 +21,9 @@ baseline/intervention Item pairs, each with a review ledger. A smoke compiler
 and StepCLI delivery adapter compile the `system_prompt` + `user_message` +
 `project_file` combination into an external Harbor Pack, and the adapter also
 emits a checked, backend-owned projection for the `dsh_minimal` tool set and
-tool-description rules. One real intervention trial has completed; details and
-the remaining backend handoff are in [the first-stage delivery contract](docs/first-stage-delivery.md).
+tool-description rules. Multiple real glibc intervention checks have now
+completed, including a four-surface tool-set run; details and the remaining
+backend handoff are in [the first-stage delivery contract](docs/first-stage-delivery.md).
 Rules, tasks, and Items are still candidates, and paired baselines, normalized
 verifiers, analysis, and release qualification remain unfinished.
 

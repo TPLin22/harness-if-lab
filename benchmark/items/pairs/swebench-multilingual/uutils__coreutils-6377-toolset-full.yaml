@@ -1,0 +1,81 @@
+format: hif.item_pair
+format_version: 0
+status: candidate_toolset_integration
+created_at: '2026-08-29'
+pair_id: swebench-multilingual-toolset-full-1--uutils__coreutils-6377
+task_ref: swebench-multilingual/uutils__coreutils-6377
+task_spec_sha256: 6f89fad74fd1e0bdcf559af1cdc8e68fb283f28808c63fc456b326eeddf4a49a
+rule_library_ref: benchmark/rules/canonical/phase0-canonical.yaml
+rule_library_sha256: a9ea1e22478a72d03f024bfc775caa8df65ce993db7381478695942a4275d6bb
+authority_policy:
+  id: no_intentional_conflict_v0
+  mode: no_intentional_conflict
+  precedence_held_constant_across_pair: true
+  description: Bindings are independent plumbing factors; delivery order is not authority precedence.
+tool_set_ref: dsh_minimal
+baseline:
+  item_id: swebench-multilingual-toolset-full-1--uutils__coreutils-6377--baseline
+  kind: zero_injection
+  task_ref: swebench-multilingual/uutils__coreutils-6377
+  rule_bindings: []
+  difference_from_intervention: omit all rule bindings; keep task, dsh_minimal tool set, harness, and runtime settings fixed
+intervention:
+  item_id: swebench-multilingual-toolset-full-1--uutils__coreutils-6377--intervention
+  kind: rule_injection
+  task_ref: swebench-multilingual/uutils__coreutils-6377
+  rule_bindings:
+  - binding_id: rb-user-test
+    rule_ref: rule-canon-p0-027
+    role: scored
+    target_surface: user_message
+    authority_class: user_request
+    delivery_order: 1
+    selection_rationale: Full static match for behavior_change and test_authoring.
+  - binding_id: rb-project-match
+    rule_ref: rule-canon-p0-041
+    role: scored
+    target_surface: project_file
+    authority_class: project_context
+    delivery_order: 2
+    selection_rationale: Full static match for rust_match_edit.
+  - binding_id: rb-system-api
+    rule_ref: rule-canon-p0-040
+    role: observed
+    target_surface: system_prompt
+    authority_class: general_instruction
+    delivery_order: 3
+    selection_rationale: Full static match for rust_api_edit; system surface is exercised as a delivery factor.
+  - binding_id: rb-tool-comments
+    rule_ref: rule-canon-p0-039
+    role: observed
+    target_surface: tool_description
+    authority_class: general_instruction
+    tool_refs:
+    - shell
+    description_mode: append
+    delivery_order: 4
+    selection_rationale: Full static match for code_comment_edit; tool-description behavior is observed during tool-set bring-up.
+  difference_from_baseline: rule_bindings_only
+qualification:
+  status: plumbing_candidate_pending_live_evidence
+  task_review_flags: []
+  binding_count: 4
+  scored_binding_count: 2
+  must_scored_binding_count: 0
+  release_floor:
+    require_at_least_one_must_scored_rule: true
+    status: unmet_candidate_warning
+    reason: This item is for tool-set and surface plumbing and is not a released benchmark condition.
+  surface_support: adapter_and_harbor_branch_under_test
+  verifier_coverage: task_verifier_available; rule-level verifiers pending
+  leakage_check: task_spec reference only; evaluator fields remain outside the pair
+provenance:
+  task_spec: benchmark/tasks/specs/swebench-multilingual/uutils__coreutils-6377.yaml
+  task_index: benchmark/tasks/indexes/swebench-multilingual-pilot-20.yaml
+  source_dataset_revision: e5c585e008e2cb5eecc7c64192d855c53279d788
+  authoring_method: manual_toolset_integration_smoke_v1
+notes:
+- This pair is an integration/plumbing candidate, not a released score-bearing item.
+- The Item uses abstract tool_refs; the StepCLI adapter resolves shell to the concrete model-visible bash tool.
+- Baseline and intervention intentionally use the same dsh_minimal tool set; this pair isolates rule delivery while the active tool set is held fixed.
+- The companion native-default trial is a transport/tool-set reference, not a paired causal baseline for this item.

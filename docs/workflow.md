@@ -102,7 +102,10 @@ real glibc trial using the separately pinned Harbor branch
 does not consume the kwarg. The trial proves delivery and effective provider
 context, not rule compliance or a causal intervention effect. A normalized
 effective-surface snapshot, rule verifier, and analysis layer remain HIF-owned
-future work. See [the first-stage delivery contract](first-stage-delivery.md).
+future work. The follow-up four-surface glibc run used the same pinned branch
+and runtime, delivered all four payloads on every captured model request, and
+failed only its independent coding-task verifier; it likewise does not support
+a causal estimate. See [the first-stage delivery contract](first-stage-delivery.md).
 
 ## Mode C: verify and analyze
 

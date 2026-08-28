@@ -2,8 +2,9 @@
 
 **Status:** user/project, additive `system_prompt`, and the registered
 `dsh_minimal`/`tool_description` plumbing paths have live glibc evidence
-(2026-08-29). The tool-surface run is an integration checkpoint, not a
-released or rule-scored evaluation.
+(2026-08-29). The latest four-surface run completed delivery successfully but
+did not pass the coding-task verifier. These runs are integration checkpoints,
+not released or rule-scored evaluations.
 
 This document records the first executable delivery path. It is an
 implementation contract for the current StepCLI/Harbor adapter, not the final
@@ -478,6 +479,107 @@ For direct inspection, define `<pack>` as the External Pack above, `<job>` as
 | --- | --- |
 | Worker/job configuration | `<pack>/launch-worker.yaml`, `<pack>/launch.yaml`, `<pack>/pack.json` |
 | Delivery manifest and rendered inputs | `<pack>/delivery/manifest.json`, `<pack>/delivery/project_files/`, `<pack>/delivery/user_messages/` |
+| Harbor job/trial result | `<job>/result.json` and `<trial>/result.json` |
+| Harbor transport/preflight | `<job>/job.log`, `<trial>/agent/stepcli-runtime.pre.json`, `<trial>/agent/pre_agent_run.log` |
+| Provider wire ledger | `<trial>/agent/fastapi_logs/ledger.jsonl` |
+| Effective StepCLI session | `<trial>/agent/stepcli-storage/sessions/harbor-session/session.json` |
+| Native and normalized trajectories | `<trial>/agent/trajectory.json`, `<trial>/agent/fastapi_trajectories/` |
+| Task verifier | `<trial>/verifier/reward.txt`, `<trial>/verifier/test-stdout.txt` |
+| Agent patch/artifacts | `<trial>/artifacts/logs/artifacts/patch.diff`, `<trial>/artifacts/manifest.json` |
+
+## Glibc four-surface tool-set run
+
+The four-binding `candidate_toolset_integration` pair was run after the
+tool-description adapter was pinned. This run combines the existing
+`user_message`, `project_file`, and `system_prompt` deliveries with the
+registered `dsh_minimal` tool-set projection. It is a delivery/plumbing
+checkpoint only: the pair has no matched baseline run, the two scored
+bindings still have no automated rule verifier, and the two tool/system
+bindings are observed rather than released score-bearing factors.
+
+The SWE-bench Multilingual uutils image is glibc-backed. The published glibc
+runtime was therefore sufficient; no musl runtime or musl-specific package was
+needed for this trial.
+
+Run provenance:
+
+| Field | Value |
+| --- | --- |
+| External Pack | `/mnt/ws-jfs/i-panhaoran/harness-if-lab-runs/live-20260829-glibc-toolset-full-0005/swebench-multilingual-toolset-full-1--uutils__coreutils-6377--intervention` |
+| Worker config | `<pack>/launch-worker.yaml` |
+| Harbor job | `hif-live__glibc-toolset-full-0005__uutils-6377-0829` |
+| Trial | `uutils__coreutils-6377__9pCv7BX` |
+| RJob | `ws-a91dbc35128b2329-jlaunch-kd9xv` |
+| Model / environment | `anthropic/deepseek-v4-flash` / StepFun `acs` |
+| Quota and capture | `swift_agent`; FastAPI capture, anti-hack, and `stream_file_transfers` enabled |
+| StepCLI runtime | `v20260829.0003`, SHA-256 `515cb7773dc17f7b24869e468da65241e2a0ef1f69600639939156f5b9d60c56`, source commit `7cd03086dde9b6efb66cecaf92c30fffa0ba4f7c` |
+| Tool set | `dsh_minimal`; abstract `shell` resolved to model-visible `bash` |
+| Harbor adapter | `i-panhaoran/hif-toolset-surface-20260829` at `709cde1ef8177ae789bca2b7350c8ea267e627d3` |
+| Harbor outcome | 1 completed trial, 0 errored trials; no Harbor exception or retry |
+| Verifier | reward `0`; 61 tests passed and 1 failed (`test_env::test_env_arg_ignore_signal_valid_signals`) |
+
+### Delivery evidence
+
+The runtime preflight record at
+`<trial>/agent/stepcli-runtime.pre.json` confirms the exact runtime bundle and
+SHA, the `instructionPrompt`, `extensions.surface.active: dsh_minimal`, the
+`bash` append-mode description override, and the anti-hack hook. The generated
+worker configuration and Harbor job log separately record the project-file
+upload to `/testbed/.claude/rules/hif-rb-project-match.md`.
+
+The wire-level ledger at `<trial>/agent/fastapi_logs/ledger.jsonl` contains 360
+records: 180 `/v1/messages/count_tokens` records and 180 `/v1/messages` records.
+All 360 responses returned HTTP 200. Every one of the 180 model requests
+contains all four intended rule payloads in the following effective locations:
+
+| Binding | Effective location in the provider request |
+| --- | --- |
+| `rb-system-api` | `request.system` (the `instructionPrompt` text) |
+| `rb-user-test` | `request.messages` (the added user-channel fragment) |
+| `rb-project-match` | `request.system`, after the project-file marker `<!-- /testbed/.claude/rules/hif-rb-project-match.md -->` |
+| `rb-tool-comments` | `request.tools`, in the `bash` description appended with `mode: append` |
+
+The StepCLI session at
+`<trial>/agent/stepcli-storage/sessions/harbor-session/session.json`
+independently records a system prompt containing the system and project rules,
+the user rule in memory, and exactly two model-visible tools (`bash` and
+`str_replace_editor`) with the modified `bash` description. The native session
+contains 362 messages, including 150 `bash` calls and 31
+`str_replace_editor` calls. These records establish transport and effective
+context fidelity; they are not rule-compliance judgments.
+
+### Task outcome and interpretation
+
+The agent completed normally and the Harbor job has no exception, but the
+separate SWE-bench verifier returned reward `0`. Its output reports 61 passing
+tests and one failing test:
+
+```text
+test_env::test_env_arg_ignore_signal_valid_signals
+assertion failed: target.is_alive()
+```
+
+The captured native session shows the agent editing and running tests,
+including a test file that separate-mode verifier replay removes before
+applying its evaluator patch. The replayed patch therefore contains only
+`src/uu/env/env.md` and `src/uu/env/src/env.rs`; this is an artifact of the
+verifier's gold-test isolation, not evidence that the agent never touched the
+test file.
+
+This result must be reported as two separate facts: delivery/plumbing
+successful, coding-task verification failed. There was no matched baseline
+trial, so it provides no causal estimate and no released rule score. The
+observed rule bindings may be inspected in the native trace, but their
+provisional behavior labels must not be combined with the task reward.
+
+For direct inspection, define `<pack>` as the External Pack above, `<job>` as
+`jobs/hif-live__glibc-toolset-full-0005__uutils-6377-0829`, and `<trial>` as
+`<job>/uutils__coreutils-6377__9pCv7BX`:
+
+| Evidence | Path |
+| --- | --- |
+| Worker/job configuration | `<pack>/launch-worker.yaml`, `<pack>/launch.yaml`, `<pack>/pack.json` |
+| Delivery manifest and rendered inputs | `<pack>/delivery/manifest.json`, `<pack>/delivery/project_files/`, `<pack>/delivery/system_prompts/`, `<pack>/delivery/user_messages/` |
 | Harbor job/trial result | `<job>/result.json` and `<trial>/result.json` |
 | Harbor transport/preflight | `<job>/job.log`, `<trial>/agent/stepcli-runtime.pre.json`, `<trial>/agent/pre_agent_run.log` |
 | Provider wire ledger | `<trial>/agent/fastapi_logs/ledger.jsonl` |
