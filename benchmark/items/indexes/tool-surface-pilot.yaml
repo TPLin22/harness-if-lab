@@ -1,0 +1,24 @@
+format: hif.item_index
+format_version: 0
+status: candidate_plumbing_smoke
+created_at: '2026-08-28'
+experiment:
+  id: tool-surface-pilot-v1
+  purpose: Exercise StepCLI tool-set replacement, tool-description append, and user/project rule delivery.
+  backend: harbor
+  harness: stepcli
+  tool_set_ref: dsh_minimal
+  score_status: not_released
+pairs:
+- pair_id: swebench-multilingual-tool-surface-1--uutils__coreutils-6377
+  path: benchmark/items/pairs/swebench-multilingual/uutils__coreutils-6377-tool-surface.yaml
+  task_ref: swebench-multilingual/uutils__coreutils-6377
+  sha256: 531b0f00fd65c5073757504255e98a0dae6c8793dc159115ed40a9b5d0f6ff11
+  variants:
+  - baseline
+  - intervention
+checks:
+- The baseline and intervention share task, tool_set_ref, model, runtime, and execution budget.
+- The intervention has exactly one binding per tested semantic surface.
+- Abstract tool_refs are resolved only by the harness adapter.
+- Runtime evidence must prove effective tool names, descriptions, and context placement before any rule score is reported.
