@@ -1,6 +1,6 @@
 # First-Stage Delivery Contract
 
-**Status:** implemented smoke path, 2026-08-28
+**Status:** implemented smoke path; first live StepCLI trial completed, 2026-08-28
 
 This document records the first executable delivery path. It is an
 implementation contract for the current StepCLI/Harbor adapter, not the final
@@ -16,8 +16,8 @@ The current path supports one semantic Item variant with these two surfaces:
 The semantic Item remains backend-neutral. The concrete filenames, Harbor keys,
 and container paths below belong to the StepCLI adapter and Harbor compiler.
 Other surfaces are rejected by default until an adapter is implemented for
-them. The external StepCLI runtime/package publisher is an input to a future
-live run and is outside this repository.
+them. The StepCLI runtime/package publisher is an external input to live runs
+and is outside this repository.
 
 ## Data flow
 
@@ -101,6 +101,62 @@ The compiler refuses to overwrite an existing Pack. Use a new output directory
 for each attempt. The generated `launch.yaml` can be passed to Harbor after
 the model, runtime artifact, and environment settings have been filled in.
 
+## First live trial
+
+The first real model trial for this path completed on 2026-08-28. It used the
+`uutils__coreutils-6377` SWE-bench Multilingual task and the intervention pair
+with both supported bindings (`rb-01` on `user_message` and `rb-02` on
+`project_file`). The two other pair bindings were retained in the manifest as
+`unsupported_surface`; the run used `--allow-unsupported` and is therefore a
+partial-delivery integration run, not a complete four-surface evaluation.
+
+Run provenance:
+
+| Field | Value |
+| --- | --- |
+| External Pack | `/mnt/ws-jfs/i-panhaoran/harness-if-lab-runs/live-20260828-uutils-120254/swebench-multilingual-pilot-20--uutils__coreutils-6377--intervention` |
+| Harbor job | `hif-live__uutils-6377__user-project__intervention-0828` |
+| Trial | `uutils__coreutils-6377__2ACqreh` |
+| Model | `anthropic/deepseek-v4-flash` |
+| StepCLI runtime | `v20260820.0001`, SHA-256 `52a46109879804be45455bbd2f15ee0cc88afa187a4ddd71c2f84a310b105904` |
+| Harbor execution | rlaunch quota group `swift_agent`; FastAPI capture and anti-hack enabled |
+| Agent execution | 2026-08-28 04:12:38Z to 04:30:13Z; 143 StepCLI turns |
+| Verifier | reward `1`; separate verifier test script reported `PASSED` |
+
+The intended delivery was observed in the external evidence. The first
+provider request contained the appended `user_message` text and a system
+context block marked `<!-- /testbed/.claude/rules/hif-rb-02.md -->`; the same
+project-rule text appeared in all 143 captured provider request traces. The
+agent-stage log also records the upload to
+`/testbed/.claude/rules/hif-rb-02.md`.
+
+The task and rule outcomes are separate from the task reward:
+
+- `rb-01` (`A bug fix or feature should include a test ...`): followed in this
+  trial. The native StepCLI trace shows an edit to `tests/by-util/test_env.rs`
+  adding nine behavior tests, followed by the env test run. Separate-mode
+  artifact replay intentionally strips that test file before applying the gold
+  verifier patch.
+- `rb-02` (`When possible, make match statements exhaustive and avoid wildcard
+  arms.`): manual review marks this as not followed. The new implementation
+  adds `match signal.get(..3) { ... _ => signal }` in `env.rs`; an explicit
+  `Some`/`None` arm (or an equivalent conditional) was possible here. This is a
+  rule-level observation, not a failed task fix: the independent verifier
+  still awarded reward `1`.
+
+The Harbor review analyzer labeled the pass as high-risk because it detected
+two `curl` attempts toward external source URLs. Direct inspection of the
+linked native events shows both calls returned
+`BLOCKED_BY_PLUGIN` from the anti-hack hook and no fetched source content was
+returned. The current analyzer does not recognize this exact Harbor wording,
+so its taint label and strict-clean lower bound must not be used without this
+manual correction. The trial is retained as an auditable pass with blocked
+anti-hack attempts, not as evidence of a clean no-cheat score.
+
+No Harbor or StepCLI source files were changed for this trial, and no branch
+was created in either neighboring repository. A baseline counterpart was not
+run; this record therefore does not support a paired causal estimate.
+
 ## Verification completed
 
 The following checks are part of the first-stage gate:
@@ -119,19 +175,21 @@ generated `launch.yaml` with Harbor's `JobConfig`, validates the generated task,
 and runs the current StepCLI `config show --workspace ... --json` against the
 generated `.claude/rules` file.
 
-This environment does not have Docker, so no live container or model trial is
-claimed by this milestone. A real run additionally needs a pinned StepCLI
-runtime from the separate publisher workflow, Harbor credentials/configuration,
-and an external output root.
+The local environment does not have Docker, so the checks above do not replace
+the live container path. The live trial above used a pinned StepCLI runtime from
+the separate publisher workflow, Harbor credentials/configuration, and an
+external output root.
 
 ## Deliberate limits
 
 - `system_prompt`, `managed_instruction`, `global_instruction`,
   `tool_description`, and `skill` bindings remain unsupported in this adapter.
 - No StepCLI or Harbor source files are modified by this path.
-- No effective-surface snapshot is captured from a live StepCLI process yet;
-  the manifest is the intended delivery plan, while the pre-model discovery
-  probe is the next runtime adapter responsibility.
+- The live runtime's raw provider traces now provide an auditable effective
+  prompt excerpt, but the adapter still does not emit a normalized
+  effective-surface snapshot or an automated rule verdict. The manifest remains
+  the intended delivery plan; normalized capture and deterministic rule
+  verifiers are the next HIF-owned layer.
 - Ambient instructions from the process home and task workspace must be checked
   before a scored run. The current smoke fixture is clean; this is not yet a
   general isolation policy for external benchmark tasks.
