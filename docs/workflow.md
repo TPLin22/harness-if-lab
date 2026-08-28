@@ -86,13 +86,23 @@ The runner should support independent baseline and intervention trials while
 keeping all unrelated variables fixed. Replicates and retries receive distinct
 run identities.
 
+An intervention-only plumbing run is useful for validating surface transport,
+but it must be labeled as such. Without a matched baseline, do not report its
+rule observations as a causal estimate; without provider/effective-context
+evidence, do not interpret a task reward as proof that a rule was delivered.
+
 The Pack compiler/materializer and the StepCLI adapter have separate jobs. The
 current compiler builds the Harbor package and the current adapter maps
 `system_prompt`, `user_message`, and `project_file` to existing Harbor/StepCLI
 inputs. It also places a resolved `dsh_minimal`/`tool_description` projection
-in the generated agent kwargs; Harbor-side acceptance of that kwarg is a
-separately gated integration task. A live effective-surface snapshot and the
-remaining surfaces are still future work. See [the first-stage delivery contract](first-stage-delivery.md).
+in the generated agent kwargs. That projection has now been exercised in a
+real glibc trial using the separately pinned Harbor branch
+`i-panhaoran/hif-toolset-surface-20260829` at commit
+`709cde1ef8177ae789bca2b7350c8ea267e627d3`; the base Harbor checkout still
+does not consume the kwarg. The trial proves delivery and effective provider
+context, not rule compliance or a causal intervention effect. A normalized
+effective-surface snapshot, rule verifier, and analysis layer remain HIF-owned
+future work. See [the first-stage delivery contract](first-stage-delivery.md).
 
 ## Mode C: verify and analyze
 

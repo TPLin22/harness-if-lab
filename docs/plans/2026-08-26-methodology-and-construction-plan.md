@@ -571,6 +571,29 @@ is a runner/preflight that captures effective instruction files and native
 events before invoking verification; only an interface gap there should lead to
 changes in Harbor or StepCLI.
 
+**Live checkpoint 2026-08-29:** the additive `system_prompt` path and the
+`dsh_minimal`/`tool_description` projection were exercised with real glibc
+runtime bundles. The tool-surface run used Harbor branch
+`i-panhaoran/hif-toolset-surface-20260829` at commit
+`709cde1ef8177ae789bca2b7350c8ea267e627d3`, and StepCLI runtime
+`v20260829.0003` with SHA-256
+`515cb7773dc17f7b24869e468da65241e2a0ef1f69600639939156f5b9d60c56`.
+Provider-wire inspection found the project, user, and tool-description
+fragments in their intended `system`, `messages`, and `tools` locations across
+166 requests. The independent task verifier returned reward `1`. This is
+delivery/plumbing evidence only: the item was intervention-only, the tool rule
+was `observed`, no paired baseline was run, and no causal or aggregate rule
+score is claimed. The external Pack and all runtime artifacts remain outside
+the repository; the SWE-bench Multilingual glibc image did not require a musl
+bundle.
+
+The interface gap identified in the preceding checkpoint was therefore
+resolved in the separately pinned Harbor adapter branch, without changing the
+base Harbor checkout. The next construction action is HIF-owned normalized
+capture, deterministic rule verification, and analysis; future Harbor or
+StepCLI changes are opened only when a new surface or tool-set capability
+requires them.
+
 ## 10. Open decisions
 
 | Decision | Blocks | Notes |
@@ -580,7 +603,7 @@ changes in Harbor or StepCLI.
 | SWE-bench sample revision/count/sampling policy | Phase 0B | See [`task-sourcing.md`](../task-sourcing.md); final IDs and revision must be frozen before specs are promoted. |
 | TaskSpec inline text versus external blob | Phase 1 | Inline cleaned text is recommended for the 20-task pilot; evaluator data remains external either way. |
 | Evaluator cache provider/location | Phase 1 | Must be external and addressable by revision/hash; never a repository-local runtime dependency. |
-| Rule binding surface cardinality and v1 vocabulary | Phase 1 | One surface per binding is recommended; the first adapter maps only `user_message` and `project_file`. |
+| Rule binding surface cardinality and v1 vocabulary | Phase 1 | One surface per binding is recommended; the current adapter has live evidence for `system_prompt`, `user_message`, `project_file`, and the gated `dsh_minimal`/`tool_description` projection. Other surfaces remain open. |
 | Authority/precedence policy vocabulary | Phase 1 | Keep policy explicit and separate from text ordering; conflict experiments get their own condition label. |
 | Ambient instruction isolation policy | Phase 4 | Unexpected global/project instructions must be detected and classified before a run is valid. |
 | `tool_set_ref` semantics and independence from rule surfaces | Phase 1 | Reserve the reference now; define complete tool-set capabilities only when StepCLI supports them. |
