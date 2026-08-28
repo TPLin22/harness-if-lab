@@ -1,10 +1,9 @@
 # First-Stage Delivery Contract
 
-**Status:** user/project smoke path is live and re-verified with the published
-glibc runtime; `system_prompt` is now compiled into the existing StepCLI host
-instruction channel and is ready for a live regression run; the tool-set/
-description projection is compiled and tested, but its Harbor runtime
-acceptance is still pending (2026-08-28)
+**Status:** user/project smoke path and the additive `system_prompt` path are
+live and re-verified with the published glibc runtime; the tool-set/description
+projection is compiled and tested, but its Harbor runtime acceptance is still
+pending (2026-08-29)
 
 This document records the first executable delivery path. It is an
 implementation contract for the current StepCLI/Harbor adapter, not the final
@@ -288,6 +287,106 @@ directory above. Define `<job>` as
 | Runtime preflight record | `<trial>/agent/stepcli-runtime.pre.json` |
 | Verifier result and output | `<trial>/verifier/reward.txt` and `<trial>/verifier/test-stdout.txt` |
 | Replayed source patch | `<trial>/artifacts/logs/artifacts/patch.diff` |
+
+## Glibc system-prompt regression run
+
+The supported three-surface intervention pair was run with the published glibc
+StepCLI runtime. This is the first live check that the HIF `system_prompt`
+binding reaches the provider's `system` field while the existing
+`user_message` and `project_file` paths remain intact. The skill binding was
+kept in the Item manifest as `unsupported_surface`, so this remains a
+partial-delivery integration run rather than a four-surface evaluation.
+
+Run provenance:
+
+| Field | Value |
+| --- | --- |
+| External Pack | `/mnt/ws-jfs/i-panhaoran/harness-if-lab-runs/live-20260828-glibc-system-v0004-2330/swebench-multilingual-pilot-20--uutils__coreutils-6377--intervention` |
+| Harbor job | `hif-live__glibc-system-v0004__uutils-6377-0828` |
+| Trial | `uutils__coreutils-6377__SuXuYDd` |
+| Model | `anthropic/deepseek-v4-flash` |
+| StepCLI runtime | `v20260828.0004`, SHA-256 `09c1890995ff71bfd51f0eab7f52452e2347a3d358b06b617c432bbf0db2434b` (source commit `f61c44932eb02848c349b8577498a04c4bb5ddd6`) |
+| Harbor execution | rlaunch quota group `swift_agent`; StepFun `acs`; `stream_file_transfers`, FastAPI capture, and anti-hack enabled |
+| Provider trace | 351 HTTP 200 ledger records, including 117 `anthropic_messages` requests; all 117 carried the intervention context |
+| Agent execution | 2026-08-28 15:58:48Z to 16:13:26Z |
+| Verifier | reward `1`; 62 tests passed, 0 failed; SWE-bench Multilingual verifier reported `PASSED` |
+
+The earlier `v20260828.0003` glibc distribution was found to contain stale
+compiled distribution output and cannot establish system-surface delivery.
+The `v20260828.0004` bundle was independently hash-checked in the task image,
+its required runtime files and Node version were validated, and its source
+commit is recorded above. The Harbor transport itself was unchanged.
+
+### Effective context evidence
+
+The wire-level source of truth is
+`<trial>/agent/fastapi_logs/ledger.jsonl`:
+
+- The first provider request has one Anthropic `system` block containing the
+  host instruction text from `rb-03`, followed by the project-file marker
+  `<!-- /testbed/.claude/rules/hif-rb-02.md -->` and the `rb-02` text.
+- The same request has `messages[0]` with the `rb-01` user fragment. The
+  request payload contains the benchmark task in the same user-channel
+  history, but the HIF fragment remains identifiable by its exact text and
+  manifest hash.
+- All 117 provider requests contain the `rb-03` text, the `rb-02` marker/text,
+  and the `rb-01` text. The serialized system prompt has one stable hash across
+  those requests, while the user message history grows as the agent works.
+- `<trial>/agent/stepcli-storage/sessions/harbor-session/session.json`
+  independently records the merged system prompt (`systemPrompt`, 12,379
+  bytes), the project-file instruction, and the current user-turn memory.
+- The agent-stage log records the upload to
+  `/testbed/.claude/rules/hif-rb-02.md`; `stepcli-runtime.pre.json` records the
+  runtime path, version, and SHA used by the process.
+
+These observations establish delivery fidelity. They do not by themselves
+establish that a rule changed behavior; that is the separate rule-level review
+below.
+
+### Task and rule observations
+
+The independent verifier accepted the task, but the rule verdicts are manual
+and provisional:
+
+- `rb-01` (`A bug fix or feature should include a test ...`) was followed. The
+  native StepCLI session records additions to `tests/by-util/test_env.rs` and
+  repeated successful env test runs. Harbor's verifier replay treats
+  `tests/by-util/test_env.rs` as a gold-test path, so the collected source patch
+  intentionally contains only the implementation/docs files; the native trace
+  is the evidence for this rule opportunity.
+- `rb-02` (`When possible, make match statements exhaustive and avoid wildcard
+  arms.`) was followed in the submitted implementation: the new implementation
+  path does not add a wildcard match arm. This is a source review, not an
+  automated semantic proof.
+- `rb-03` (`Avoid boolean or ambiguous option parameters ...`) was not
+  followed. The implementation introduces `ignore_all_signals: bool` and a
+  boolean return component from `parse_ignore_signal_args`, where an enum or
+  named state could have represented the mode more explicitly.
+
+The task reward and these rule observations must remain separate. No baseline
+counterpart was run, so this trial cannot provide a paired causal estimate.
+
+### Anti-hack note
+
+The anti-hack hook blocked one attempted upstream raw-GitHub fetch with
+`BLOCKED_BY_PLUGIN` (`fetch_raw_github`). No upstream source content was
+returned. The run is therefore auditable as a task pass with a blocked
+external-source attempt, not as evidence of a clean no-cheat score.
+
+For direct inspection, define `<job>` as
+`jobs/hif-live__glibc-system-v0004__uutils-6377-0828` and `<trial>` as
+`<job>/uutils__coreutils-6377__SuXuYDd` under the Pack root:
+
+| Evidence | Path |
+| --- | --- |
+| Job/trial result | `<job>/result.json` and `<trial>/result.json` |
+| Wire-level provider ledger | `<trial>/agent/fastapi_logs/ledger.jsonl` |
+| Effective StepCLI session | `<trial>/agent/stepcli-storage/sessions/harbor-session/session.json` |
+| Runtime preflight | `<trial>/agent/stepcli-runtime.pre.json` |
+| Native trajectory | `<trial>/agent/trajectory.json` |
+| Normalized FastAPI trajectory | `<trial>/agent/fastapi_trajectories/all.trajectory.json` |
+| Verifier result | `<trial>/verifier/reward.txt` and `<trial>/verifier/test-stdout.txt` |
+| Agent source patch | `<trial>/artifacts/logs/artifacts/patch.diff` |
 
 ## Verification completed
 
