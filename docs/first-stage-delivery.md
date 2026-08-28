@@ -128,10 +128,12 @@ To inspect the tool-set projection without launching a job:
 ```
 
 The resulting `launch.yaml` contains the semantic-to-StepCLI projection under
-`agents[0].kwargs.stepcli_extension_surface`. It is expected to fail Harbor
-schema validation until the Harbor adapter has an explicit corresponding
-parameter; that failure is a known integration boundary, not a rule-delivery
-verdict.
+`agents[0].kwargs.stepcli_extension_surface`. On the currently inspected
+Harbor revision, `StepCli` accepts arbitrary extra kwargs but does not consume
+this one, so the field would be silently ignored rather than rejected by schema
+validation. Do not use this launch file for a scored tool-surface run until the
+Harbor adapter has an explicit corresponding parameter; silent omission is a
+delivery failure, not a rule-delivery verdict.
 
 ## First live trial
 
