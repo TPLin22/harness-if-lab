@@ -1,7 +1,8 @@
 # First-Stage Delivery Contract
 
-**Status:** user/project smoke path is live; tool-set/description projection is
-compiled and tested, with Harbor runtime acceptance still pending (2026-08-28)
+**Status:** user/project smoke path is live and re-verified with the published
+glibc runtime; the tool-set/description projection is compiled and tested, but
+its Harbor runtime acceptance is still pending (2026-08-28)
 
 This document records the first executable delivery path. It is an
 implementation contract for the current StepCLI/Harbor adapter, not the final
@@ -190,6 +191,92 @@ anti-hack attempts, not as evidence of a clean no-cheat score.
 No Harbor or StepCLI source files were changed for this trial, and no branch
 was created in either neighboring repository. A baseline counterpart was not
 run; this record therefore does not support a paired causal estimate.
+
+## Glibc runtime re-run
+
+The same intervention pair was run again with the published glibc StepCLI
+runtime. This is a runtime and delivery regression check for the standard
+`user_message` plus `project_file` path; it is not a new Item or a paired
+baseline experiment. The SWE-bench Multilingual uutils image is glibc-backed,
+so no musl package was required for this run.
+
+Run provenance:
+
+| Field | Value |
+| --- | --- |
+| External Pack | `/mnt/ws-jfs/i-panhaoran/harness-if-lab-runs/live-20260828-glibc-user-project-203000/swebench-multilingual-pilot-20--uutils__coreutils-6377--intervention` |
+| Harbor job | `hif-live__glibc-user-project__uutils-6377-0828` |
+| Trial | `uutils__coreutils-6377__vgyaro6` |
+| Model | `anthropic/deepseek-v4-flash` |
+| StepCLI runtime | `v20260828.0002`, SHA-256 `ba40ff36b3e8a5108179a4927ac22c746f0115dec8dbdcb4a0a6cdf9a29b9158` (source commit `b6fcfbb8`) |
+| Harbor execution | rlaunch quota group `swift_agent`; FastAPI capture, anti-hack, and `stream_file_transfers` enabled |
+| Provider trace | 151 `/v1/messages` requests, all HTTP 200 |
+| Agent execution | 2026-08-28 12:03:32Z to 12:27:08Z |
+| Verifier | reward `1`; SWE-bench verifier output `PASSED` |
+
+The runtime was accepted inside the task image: Harbor verified the bundle
+hash, unpacked it, checked the required StepCLI files and Node version, and ran
+the StepCLI help command before the agent started. The agent-stage log records
+the project file upload to `/testbed/.claude/rules/hif-rb-02.md`.
+
+### Effective context evidence
+
+The external `agent/fastapi_logs/ledger.jsonl` is the wire-level source of
+truth for this run. In the first non-empty provider request:
+
+- `rb-01` appears in `request.messages[0].content[0].text` with role `user`;
+- `rb-02` appears in `request.system[0].text`, immediately after the loaded
+  project-file instruction marker.
+
+The same placement is present in all 151 provider requests. The captured
+StepCLI `session.json` independently records `rb-02` in `systemPrompt` and
+`rb-01` in the current user-turn memory. This confirms that the glibc runtime
+preserved the existing Harbor transport and that the project rule reached the
+model's effective system context. The run used the native default tool set and
+did not exercise `dsh_minimal`.
+
+### Task and rule observations
+
+The independent verifier ran 62 tests with 0 failures and wrote reward `1`.
+The native StepCLI trace also shows edits to `tests/by-util/test_env.rs` and a
+successful 71-test `env` test run; separate-mode verifier replay strips the
+agent's test-file changes before applying the evaluator's gold test patch.
+
+- `rb-01` (`A bug fix or feature should include a test ...`): manual review
+  marks this opportunity as followed because the agent added behavior tests and
+  exercised them during its run.
+- `rb-02` (`When possible, make match statements exhaustive and avoid wildcard
+  arms.`): manual review marks this opportunity as not followed. The delivered
+  source contains a new `match signal_by_name_or_value(...)` with a wildcard
+  fallback arm (`_ =>`), although explicit `Some`/`None` alternatives were
+  available. This is a rule-level observation; the task fix still received
+  reward `1`.
+
+These are provisional manual verdicts, not an automated rule scorer. Because no
+baseline counterpart was run, the trial cannot support a causal estimate of
+either rule's effect.
+
+### Anti-hack note
+
+The agent made one attempted `curl` request for the upstream raw `env.c` file.
+The linked tool result was `BLOCKED_BY_PLUGIN` from Harbor's anti-hack policy;
+no upstream source content was returned. This run is therefore auditable as a
+task pass with a blocked external-source attempt, but it is not evidence of a
+fully clean no-cheat score until the analyzer and manual policy labels agree.
+
+For direct inspection, all paths below are relative to the external trial
+directory above. Define `<job>` as
+`jobs/hif-live__glibc-user-project__uutils-6377-0828` and `<trial>` as
+`<job>/uutils__coreutils-6377__vgyaro6`:
+
+| Evidence | Path |
+| --- | --- |
+| Harbor job/trial result | `<job>/result.json` and `<trial>/result.json` |
+| Wire-level provider ledger | `<trial>/agent/fastapi_logs/ledger.jsonl` |
+| Effective StepCLI session | `<trial>/agent/stepcli-storage/sessions/harbor-session/session.json` |
+| Runtime preflight record | `<trial>/agent/stepcli-runtime.pre.json` |
+| Verifier result and output | `<trial>/verifier/reward.txt` and `<trial>/verifier/test-stdout.txt` |
+| Replayed source patch | `<trial>/artifacts/logs/artifacts/patch.diff` |
 
 ## Verification completed
 
