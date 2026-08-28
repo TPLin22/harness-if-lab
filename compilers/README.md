@@ -15,7 +15,10 @@ copies a small task fixture or externally materialized task into an external
 Pack, projects the cleaned TaskSpec statement into `instruction.md`, invokes
 the StepCLI delivery adapter, and emits a Harbor `launch.yaml` plus provenance
 metadata. It uses Harbor's existing `extra_instruction_paths` and agent-stage
-`upload_files` interfaces; it does not import or modify Harbor.
+`upload_files` interfaces. When an Item requests a registered StepCLI tool-set
+projection, it forwards the adapter-produced `extension_surface` as an agent
+kwarg; accepting and materializing that kwarg is a separate Harbor integration
+boundary. The compiler does not import, modify, or package Harbor.
 
 The Harbor compiler may resolve evaluator-only SWE-bench data from the external
 task cache. It must not make Harbor's `instruction.md` or

@@ -25,3 +25,13 @@ under the external output root.  It never writes a Pack into this repository.
 Edit the generated model/runtime settings before launching Harbor.  For a real
 StepCLI run, supply the runtime artifact/configuration available in the
 separate StepCLI publisher workflow; this fixture does not build binaries.
+
+## Tool-set projection smoke
+
+[`tool-surface-item-pair.yaml`](tool-surface-item-pair.yaml) keeps the same
+task but requests the backend-neutral `tool_set_ref: dsh_minimal` and adds one
+`tool_description` binding targeting the abstract `shell` role. The StepCLI
+adapter resolves that role to `bash` and writes an `append` description
+override under `agents[0].kwargs.stepcli_extension_surface` in the generated
+launch config. This fixture verifies HIF-side compilation; Harbor support for
+that agent kwarg is deliberately a later integration change.

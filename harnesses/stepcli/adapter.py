@@ -1,4 +1,4 @@
-"""StepCLI-specific rendering for the first two semantic surfaces."""
+"""StepCLI-specific rendering for semantic surfaces and tool factors."""
 
 from __future__ import annotations
 
@@ -7,16 +7,30 @@ from typing import Any
 
 from hif.delivery import build_delivery_manifest
 
+# The semantic Item names stable roles (``shell``, ``editor``); this adapter
+# owns the translation to concrete StepCLI model-visible tool names.  A later
+# harness adapter can provide a different projection for the same Item.
+STEPCLI_TOOL_SET_PROJECTIONS: dict[str, dict[str, Any]] = {
+    "dsh_minimal": {
+        "active": "dsh_minimal",
+        "tool_refs": {
+            "shell": "bash",
+            "editor": "str_replace_editor",
+        },
+    }
+}
+
 
 class StepCliDeliveryAdapter:
     """Compile semantic Item bindings into external delivery files.
 
-    The adapter owns concrete StepCLI-facing paths.  The Item itself remains
-    backend-neutral and only names ``project_file`` or ``user_message``.
+    The adapter owns concrete StepCLI-facing paths and tool-name projections.
+    The Item itself remains backend-neutral and only names semantic surfaces
+    and abstract tool references.
     """
 
     name = "stepcli"
-    version = "0.1.0"
+    version = "0.2.0"
 
     def compile(
         self,
@@ -38,4 +52,6 @@ class StepCliDeliveryAdapter:
             variant=variant,
             workspace=workspace,
             allow_unsupported=allow_unsupported,
+            tool_set_projections=STEPCLI_TOOL_SET_PROJECTIONS,
+            adapter_version=self.version,
         )

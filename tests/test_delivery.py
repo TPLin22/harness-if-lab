@@ -7,6 +7,7 @@ import pytest
 import yaml
 
 from compilers.harbor.compiler import HarborPackCompiler
+from harnesses.stepcli.adapter import StepCliDeliveryAdapter
 from hif.delivery import DeliveryError, build_delivery_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,6 +15,7 @@ ITEM = ROOT / "examples/smoke/item-pair.yaml"
 RULES = ROOT / "benchmark/rules/canonical/phase0-canonical.yaml"
 TASK_SPEC = ROOT / "examples/smoke/task-spec.yaml"
 TASK = ROOT / "examples/smoke/task"
+TOOL_ITEM = ROOT / "examples/smoke/tool-surface-item-pair.yaml"
 
 
 def test_stepcli_manifest_keeps_user_and_project_bindings_separate(tmp_path: Path):
@@ -145,3 +147,78 @@ def test_harbor_pack_projects_clean_task_text_and_upload_hook(tmp_path: Path):
 
     metadata = json.loads((pack / "pack.json").read_text())
     assert metadata["paths"]["delivery_manifest"] == "delivery/manifest.json"
+    assert metadata["compiler_version"] == "0.2.0"
+
+
+def test_stepcli_adapter_projects_tool_set_and_description_binding(tmp_path: Path):
+    manifest = StepCliDeliveryAdapter().compile(
+        item_path=TOOL_ITEM,
+        rule_library_path=RULES,
+        task_spec_path=TASK_SPEC,
+        output_dir=tmp_path / "delivery",
+        variant="intervention",
+    )
+
+    rules = yaml.safe_load(RULES.read_text())["records"]
+    statement = next(
+        record["statement"]
+        for record in rules
+        if record["id"] == "rule-canon-p0-038"
+    ).strip()
+    assert manifest["item"]["tool_set_ref"] == "dsh_minimal"
+    assert manifest["tool_set"] == {
+        "requested_ref": "dsh_minimal",
+        "status": "planned",
+        "adapter_projection": "harnesses/stepcli/adapter.py",
+        "active_surface": "dsh_minimal",
+        "resolved_tool_refs": {
+            "editor": "str_replace_editor",
+            "shell": "bash",
+        },
+        "resolved_tool_names": ["bash", "str_replace_editor"],
+        "description_override_tool_names": ["bash"],
+    }
+    assert manifest["harness_config"]["stepcli"]["extension_surface"] == {
+        "active": "dsh_minimal",
+        "surfaces": {
+            "dsh_minimal": {
+                "tools": {
+                    "descriptionOverrides": {
+                        "bash": {"mode": "append", "text": statement}
+                    }
+                }
+            }
+        },
+    }
+    tool_binding = next(
+        entry
+        for entry in manifest["deliveries"]
+        if entry["binding_id"] == "rb-tool-description"
+    )
+    assert tool_binding["resolved_tool_names"] == ["bash"]
+    assert tool_binding["status"] == "planned"
+    assert manifest["provenance"]["adapter_version"] == "0.2.0"
+
+
+def test_harbor_pack_forwards_stepcli_surface_config_without_flattening(tmp_path: Path):
+    pack = HarborPackCompiler().compile(
+        item_path=TOOL_ITEM,
+        rule_library_path=RULES,
+        task_spec_path=TASK_SPEC,
+        task_dir=TASK,
+        output_root=tmp_path,
+        model_name="openai/test-model",
+    )
+
+    launch = yaml.safe_load((pack / "launch.yaml").read_text())
+    kwargs = launch["agents"][0]["kwargs"]
+    assert kwargs["stepcli_extension_surface"]["active"] == "dsh_minimal"
+    assert "descriptionOverrides" in kwargs["stepcli_extension_surface"]["surfaces"][
+        "dsh_minimal"
+    ]["tools"]
+    manifest = json.loads((pack / "delivery/manifest.json").read_text())
+    assert [entry["intended_surface"] for entry in manifest["deliveries"]] == [
+        "user_message",
+        "project_file",
+        "tool_description",
+    ]

@@ -10,9 +10,11 @@ contracts in this repository remain unchanged either way.
 
 An adapter owns the mapping from an Item's backend-neutral surface declaration
 to actual harness inputs. For StepCLI this includes the first-stage project
-instruction file and user-message delivery; system-prompt configuration, tool
-descriptions, and skills remain future surfaces. The mapping is adapter code,
-not an Item field and not the Harbor Pack compiler's responsibility.
+instruction file and user-message delivery. The adapter also has a small,
+explicit projection for the reserved `dsh_minimal` tool set and maps abstract
+Item tool references such as `shell` to the model-visible name `bash` for a
+`tool_description` binding. The mapping is adapter code, not an Item field and
+not the Harbor Pack compiler's responsibility.
 
 Each rule binding must remain independently traceable. The current adapter
 records the intended target, the concrete transport/path, content hash, and a
@@ -23,12 +25,16 @@ silently concatenated into one prompt.
 
 For the current two-surface path, `user_message` is delivered through Harbor's
 existing user instruction channel and `project_file` is materialized as a
-`.claude/rules/*.md` file before StepCLI startup. See the
-[first-stage delivery contract](../docs/first-stage-delivery.md) for the exact
-mapping and preflight expectations.
+`.claude/rules/*.md` file before StepCLI startup. The tool-set path emits a
+StepCLI `extensions.surface` projection in the manifest and generated launch
+kwargs; it is a configuration handoff, not yet a claim that every backend
+adapter accepts or materializes that field. See the [first-stage delivery
+contract](../docs/first-stage-delivery.md) for the exact mapping and status.
 
-The adapter also exposes a capability boundary for the optional Item-level
-`tool_set_ref`. A future implementation may replace a complete tool registry,
-schema/presentation, implementation, and permission policy; the current
-scaffold only reserves the reference and requires unsupported capabilities to be
-reported.
+The adapter exposes a capability boundary for the optional Item-level
+`tool_set_ref`. `dsh_minimal` is currently the only registered projection; it
+selects the complete DSH tool surface and can carry model-facing description
+overrides. A future implementation may replace a complete tool registry,
+schema/presentation, implementation, and permission policy. Unsupported or
+unresolved references are reported in the manifest instead of being silently
+flattened into another surface.

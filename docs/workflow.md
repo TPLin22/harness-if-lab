@@ -45,8 +45,10 @@ uses one pair file per task under `benchmark/items/pairs/`: a zero-injection
 baseline plus an intervention with multiple rule bindings. The assembly utility
 records static opportunity intersections, binding roles, semantic surfaces,
 authority metadata, and the reserved `tool_set_ref` without importing Harbor or
-StepCLI. These pairs remain outside any released split until verifier and
-surface-capability review is complete.
+StepCLI. A separate StepCLI adapter test fixture now exercises the optional
+`dsh_minimal` projection and abstract `tool_refs`; this does not change the
+semantic pilot pairs. These pairs remain outside any released split until
+verifier and surface-capability review is complete.
 
 ### Curation gates
 
@@ -86,9 +88,11 @@ run identities.
 
 The Pack compiler/materializer and the StepCLI adapter have separate jobs. The
 current compiler builds the Harbor package and the current adapter maps
-`user_message` and `project_file` to existing Harbor/StepCLI inputs. A live
-effective-surface snapshot, tool-set resolution, and the remaining surfaces are
-still future work. See [the first-stage delivery contract](first-stage-delivery.md).
+`user_message` and `project_file` to existing Harbor/StepCLI inputs. It also
+places a resolved `dsh_minimal`/`tool_description` projection in the generated
+agent kwargs; Harbor-side acceptance of that kwarg is a separately gated
+integration task. A live effective-surface snapshot and the remaining surfaces
+are still future work. See [the first-stage delivery contract](first-stage-delivery.md).
 
 ## Mode C: verify and analyze
 

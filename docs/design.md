@@ -267,7 +267,11 @@ The adapter needs a pre-run materialization boundary: for a fresh workspace, it
 prepares the requested surfaces and optional tool set before the StepCLI process
 starts or its first model call is made, then returns a delivery manifest. The
 first implementation uses Harbor's existing `extra_instruction_paths` and
-agent-stage `upload_files` hook for the two supported surfaces. A live
+agent-stage `upload_files` hook for the two fully materialized surfaces. The
+StepCLI adapter also resolves the reserved `dsh_minimal` tool-set reference and
+emits a model-facing tool-description override in the generated surface
+configuration. That configuration is a handoff artifact; runtime acceptance
+by the Harbor agent adapter is a separate integration step. A live
 effective-surface snapshot and the remaining surfaces are still future work.
 
 Before the first model call, the adapter should emit an effective-surface
@@ -285,8 +289,10 @@ backend-specific resolution recorded in the run lock). This is separate from a
 tool-set capability, while the latter is a rule about what a tool description
 should say or do. A future adapter may materialize a complete registry,
 schemas/presentations, implementations, and permission policy from the
-reference. The default reference means the harness-native tool set; current
-work only reserves the field and records unsupported capability.
+reference. The default reference means the harness-native tool set. The current
+StepCLI adapter registers `dsh_minimal` as one concrete projection and records
+unresolved or unsupported capabilities in the manifest; the full replacement
+semantics and other harness projections remain open.
 
 The adapter also preserves native StepCLI events. A normalized trajectory format
 can be derived later, but must not replace raw evidence.

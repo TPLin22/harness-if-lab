@@ -3,7 +3,9 @@
 The compiler copies a task reference into an output directory, projects only
 the cleaned TaskSpec statement into ``instruction.md``, and emits a launch
 configuration using Harbor's existing local-task, extra-instruction, and
-agent-stage upload hook interfaces.  It does not import Harbor at run time.
+agent-stage upload hook interfaces.  It can also forward an adapter-owned
+StepCLI surface configuration as an agent kwarg.  It does not import Harbor at
+run time.
 """
 
 from __future__ import annotations
@@ -106,6 +108,23 @@ def _build_launch_config(
     disable_verifier: bool,
 ) -> dict[str, Any]:
     user_fragments = manifest["surfaces"]["user_message"]["fragments"]
+    effective_agent_kwargs = {
+        "stepcli_workspace": workspace,
+        **(agent_kwargs or {}),
+    }
+    extension_surface = (
+        manifest.get("harness_config", {})
+        .get("stepcli", {})
+        .get("extension_surface")
+    )
+    if extension_surface is not None:
+        supplied = effective_agent_kwargs.get("stepcli_extension_surface")
+        if supplied is not None and supplied != extension_surface:
+            raise HarborPackError(
+                "agent kwargs stepcli_extension_surface disagrees with the "
+                "Item-derived surface configuration"
+            )
+        effective_agent_kwargs["stepcli_extension_surface"] = extension_surface
     config: dict[str, Any] = {
         "jobs_dir": str((output_dir / "jobs").resolve()),
         "job_name": _job_name(
@@ -129,8 +148,7 @@ def _build_launch_config(
                 "name": agent_name,
                 "model_name": model_name,
                 "kwargs": {
-                    "stepcli_workspace": workspace,
-                    **(agent_kwargs or {}),
+                    **effective_agent_kwargs,
                 },
             }
         ],
@@ -162,7 +180,7 @@ def _build_upload_entries(project_files: list[dict[str, Any]]) -> list[dict[str,
 class HarborPackCompiler:
     """Create one immutable-once-referenced Harbor Pack directory."""
 
-    version = "0.1.0"
+    version = "0.2.0"
 
     def compile(
         self,

@@ -1,8 +1,9 @@
 """Shared loading and validation helpers for generated delivery plans.
 
 The source benchmark records are semantic data.  This module only turns a
-selected Item variant into a concrete, auditable set of files and message
-fragments.  It deliberately has no Harbor or StepCLI dependency.
+selected Item variant into a concrete, auditable set of files, message
+fragments, and adapter-owned configuration records.  It deliberately has no
+Harbor or StepCLI dependency.
 """
 
 from __future__ import annotations
@@ -29,6 +30,8 @@ FIRST_STAGE_SURFACES = {"project_file", "user_message"}
 VARIANTS = {"baseline", "intervention"}
 DELIVERY_FORMAT = "hif.delivery_manifest"
 DELIVERY_FORMAT_VERSION = 1
+TOOL_DESCRIPTION_MODES = {"append", "prepend", "replace"}
+_SAFE_REF_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]*$")
 
 
 class DeliveryError(ValueError):
@@ -186,6 +189,111 @@ def _delivery_order(binding: dict[str, Any], ordinal: int, context: str) -> int:
     return value
 
 
+def _optional_safe_ref(raw: Any, *, context: str) -> str | None:
+    if raw is None:
+        return None
+    if not isinstance(raw, str) or not _SAFE_REF_RE.fullmatch(raw.strip()):
+        raise DeliveryError(
+            f"{context} must be a non-empty reference using letters, digits, '.', '_', '/', or '-': {raw!r}"
+        )
+    return raw.strip()
+
+
+def _binding_tool_refs(binding: dict[str, Any], *, context: str) -> list[str]:
+    raw = binding.get("tool_refs")
+    if raw is None:
+        return []
+    if not isinstance(raw, list) or not raw:
+        raise DeliveryError(f"{context}.tool_refs must be a non-empty list")
+    result: list[str] = []
+    for index, value in enumerate(raw):
+        result.append(
+            _optional_safe_ref(value, context=f"{context}.tool_refs[{index}]")
+            or ""
+        )
+    if any(not value for value in result) or len(result) != len(set(result)):
+        raise DeliveryError(f"{context}.tool_refs must contain unique references")
+    return result
+
+
+def _description_mode(binding: dict[str, Any], *, context: str) -> str:
+    value = binding.get("description_mode", "append")
+    if not isinstance(value, str) or value.strip().lower() not in TOOL_DESCRIPTION_MODES:
+        raise DeliveryError(
+            f"{context}.description_mode must be append, prepend, or replace"
+        )
+    return value.strip().lower()
+
+
+def _stepcli_surface_config(
+    *,
+    tool_set_ref: str | None,
+    tool_description_overrides: dict[str, dict[str, str]],
+    tool_set_projections: dict[str, dict[str, Any]],
+) -> tuple[dict[str, Any] | None, dict[str, Any]]:
+    """Resolve the adapter-owned StepCLI projection and its audit record."""
+
+    if tool_set_ref is None:
+        if tool_description_overrides:
+            return None, {
+                "requested_ref": None,
+                "status": "unsupported",
+                "reason": "tool_description bindings require an explicit tool_set_ref",
+            }
+        return None, {"requested_ref": None, "status": "native_default"}
+
+    projection = tool_set_projections.get(tool_set_ref)
+    if projection is None:
+        return None, {
+            "requested_ref": tool_set_ref,
+            "status": "unsupported",
+            "reason": "no StepCLI adapter projection is registered for this tool set",
+        }
+
+    surface_name = projection.get("active")
+    projected_refs = projection.get("tool_refs")
+    if (
+        not isinstance(surface_name, str)
+        or not surface_name.strip()
+        or not isinstance(projected_refs, dict)
+    ):
+        raise DeliveryError(
+            f"Malformed StepCLI tool-set projection for {tool_set_ref!r}"
+        )
+    surface_name = surface_name.strip()
+    resolved_tool_refs = {
+        str(ref): str(model_name)
+        for ref, model_name in sorted(projected_refs.items())
+        if isinstance(ref, str) and isinstance(model_name, str)
+    }
+    if len(resolved_tool_refs) != len(projected_refs):
+        raise DeliveryError(
+            f"Malformed tool reference mapping for StepCLI tool set {tool_set_ref!r}"
+        )
+    tools: dict[str, Any] = {}
+    if tool_description_overrides:
+        tools["descriptionOverrides"] = {
+            name: dict(override)
+            for name, override in tool_description_overrides.items()
+        }
+    selection: dict[str, Any] = {}
+    if tools:
+        selection["tools"] = tools
+    config: dict[str, Any] = {
+        "active": surface_name,
+        "surfaces": {surface_name: selection},
+    }
+    return config, {
+        "requested_ref": tool_set_ref,
+        "status": "planned",
+        "adapter_projection": "harnesses/stepcli/adapter.py",
+        "active_surface": surface_name.strip(),
+        "resolved_tool_refs": resolved_tool_refs,
+        "resolved_tool_names": sorted(set(resolved_tool_refs.values())),
+        "description_override_tool_names": sorted(tool_description_overrides),
+    }
+
+
 def build_delivery_manifest(
     *,
     item_path: Path,
@@ -195,6 +303,8 @@ def build_delivery_manifest(
     variant: str = "intervention",
     workspace: str = "/testbed",
     allow_unsupported: bool = False,
+    tool_set_projections: dict[str, dict[str, Any]] | None = None,
+    adapter_version: str = "0.1.0",
 ) -> dict[str, Any]:
     """Render first-stage surfaces and return the written delivery manifest.
 
@@ -219,8 +329,13 @@ def build_delivery_manifest(
     deliveries: list[dict[str, Any]] = []
     user_fragments: list[dict[str, Any]] = []
     project_files: list[dict[str, Any]] = []
+    tool_description_overrides: dict[str, dict[str, str]] = {}
     unsupported: list[dict[str, Any]] = []
     seen_delivery_orders: dict[int, str] = {}
+    tool_set_ref = _optional_safe_ref(
+        pair.get("tool_set_ref"),
+        context=f"Item pair {pair.get('pair_id', item_path)}.tool_set_ref",
+    )
 
     for ordinal, raw_binding in enumerate(bindings, start=1):
         if not isinstance(raw_binding, dict):
@@ -237,6 +352,24 @@ def build_delivery_manifest(
         surface = _binding_surface(raw_binding, context)
         role = _required_string(raw_binding, "role", context)
         delivery_order = _delivery_order(raw_binding, ordinal, context)
+        tool_refs = _binding_tool_refs(raw_binding, context=context)
+        description_mode = (
+            _description_mode(raw_binding, context=context)
+            if surface == "tool_description"
+            else None
+        )
+        if surface != "tool_description" and "tool_refs" in raw_binding:
+            raise DeliveryError(
+                f"{context}.tool_refs is only valid for tool_description bindings"
+            )
+        if surface != "tool_description" and "description_mode" in raw_binding:
+            raise DeliveryError(
+                f"{context}.description_mode is only valid for tool_description bindings"
+            )
+        if surface == "tool_description" and not tool_refs:
+            raise DeliveryError(
+                f"{context} targeting tool_description requires tool_refs"
+            )
         previous_binding = seen_delivery_orders.get(delivery_order)
         if previous_binding is not None:
             raise DeliveryError(
@@ -257,6 +390,10 @@ def build_delivery_manifest(
             "content_bytes": len(content.encode("utf-8")),
             "delivery_order": delivery_order,
         }
+        if tool_refs:
+            record["tool_refs"] = tool_refs
+        if description_mode is not None:
+            record["description_mode"] = description_mode
 
         if surface == "user_message":
             relative = f"user_messages/{binding_id}.md"
@@ -302,6 +439,13 @@ def build_delivery_manifest(
                     "delivery_order": delivery_order,
                 }
             )
+        elif surface == "tool_description":
+            # The actual model-visible names are resolved below once the
+            # selected tool-set projection is known.  Keep this record
+            # independent so an unsupported projection is auditable.
+            record["transport"] = (
+                "stepcli.extensions.surface.surfaces.<active>.tools.descriptionOverrides"
+            )
         else:
             unsupported.append(
                 {
@@ -319,6 +463,122 @@ def build_delivery_manifest(
 
         deliveries.append(record)
 
+    # Resolve the semantic tool references only in the backend adapter.  The
+    # Item never stores StepCLI names such as ``bash`` or ``str_replace_editor``.
+    projections = tool_set_projections or {}
+    projection = (
+        projections.get(tool_set_ref)
+        if tool_set_ref is not None
+        else None
+    )
+    tool_description_records = [
+        record
+        for record in deliveries
+        if record["intended_surface"] == "tool_description"
+    ]
+    for record in tool_description_records:
+        refs = list(record.get("tool_refs", []))
+        if projection is None:
+            record["status"] = "unsupported_surface"
+            unsupported.append(
+                {
+                    "binding_id": record["binding_id"],
+                    "rule_ref": record["rule_ref"],
+                    "intended_surface": "tool_description",
+                    "status": "unsupported_surface",
+                    "reason": (
+                        "tool_description requires a registered StepCLI tool-set "
+                        "projection"
+                    ),
+                }
+            )
+            continue
+
+        resolved_names: list[str] = []
+        unresolved = []
+        for ref in refs:
+            model_name = projection.get("tool_refs", {}).get(ref)
+            if not isinstance(model_name, str):
+                unresolved.append(ref)
+            else:
+                resolved_names.append(model_name)
+        if unresolved:
+            record["status"] = "unsupported_surface"
+            unsupported.append(
+                {
+                    "binding_id": record["binding_id"],
+                    "rule_ref": record["rule_ref"],
+                    "intended_surface": "tool_description",
+                    "status": "unsupported_surface",
+                    "reason": f"unknown tool_refs for selected tool set: {unresolved}",
+                }
+            )
+            continue
+
+        if len(resolved_names) != len(set(resolved_names)):
+            raise DeliveryError(
+                f"Item {item['item_id']} maps multiple tool_refs to the same "
+                f"model tool in binding {record['binding_id']}: {resolved_names}"
+            )
+
+        duplicate_names = [
+            name for name in resolved_names if name in tool_description_overrides
+        ]
+        if duplicate_names:
+            raise DeliveryError(
+                f"Item {item['item_id']} targets the same model tool more than once "
+                f"in tool_description bindings: {duplicate_names}"
+            )
+        mode = str(record["description_mode"])
+        tool_description_records_for_rule = {
+            name: {"mode": mode, "text": rules[record["rule_ref"]]["statement"].strip()}
+            for name in resolved_names
+        }
+        tool_description_overrides.update(tool_description_records_for_rule)
+        record["actual_surface"] = "tool_description"
+        record["status"] = "planned"
+        record["resolved_tool_names"] = resolved_names
+
+    stepcli_surface_config, tool_set_record = _stepcli_surface_config(
+        tool_set_ref=tool_set_ref,
+        tool_description_overrides=tool_description_overrides,
+        tool_set_projections=projections,
+    )
+    unresolved_tool_description = [
+        entry
+        for entry in unsupported
+        if entry.get("intended_surface") == "tool_description"
+    ]
+    if unresolved_tool_description and not allow_unsupported:
+        first = unresolved_tool_description[0]
+        raise DeliveryError(
+            f"Item {item['item_id']} binding {first['binding_id']} targets an "
+            f"unsupported tool_description mapping: {first.get('reason', 'unknown reason')}"
+        )
+    if tool_set_record["status"] == "unsupported":
+        if not allow_unsupported:
+            raise DeliveryError(
+                f"Item {item['item_id']} requests unsupported StepCLI tool set "
+                f"{tool_set_ref!r}: {tool_set_record.get('reason', 'unknown reason')}"
+            )
+        for record in deliveries:
+            if record["intended_surface"] == "tool_description":
+                record["status"] = "unsupported_surface"
+        for entry in tool_description_records:
+            if not any(
+                item.get("binding_id") == entry["binding_id"]
+                for item in unsupported
+            ):
+                unsupported.append(
+                    {
+                        "binding_id": entry["binding_id"],
+                        "rule_ref": entry["rule_ref"],
+                        "intended_surface": "tool_description",
+                        "status": "unsupported_surface",
+                        "reason": tool_set_record.get("reason"),
+                    }
+                )
+
     deliveries.sort(key=lambda entry: entry["delivery_order"])
     user_fragments.sort(key=lambda entry: entry["delivery_order"])
     project_files.sort(key=lambda entry: entry["delivery_order"])
@@ -333,6 +593,7 @@ def build_delivery_manifest(
             "pair_id": _required_string(pair, "pair_id", f"Item pair {item_path}"),
             "item_id": item["item_id"],
             "task_ref": pair_task_ref,
+            "tool_set_ref": tool_set_ref,
         },
         "task": {
             "task_spec_path": str(task_spec_path),
@@ -354,6 +615,23 @@ def build_delivery_manifest(
                 "discovery_expectation": "StepCLI project instruction discovery",
                 "files": project_files,
             },
+            "tool_description": {
+                "transport": (
+                    "stepcli.extensions.surface.surfaces.<active>.tools."
+                    "descriptionOverrides"
+                ),
+                "bindings": [
+                    entry
+                    for entry in deliveries
+                    if entry["intended_surface"] == "tool_description"
+                ],
+            },
+        },
+        "tool_set": tool_set_record,
+        "harness_config": {
+            "stepcli": {
+                "extension_surface": stepcli_surface_config,
+            }
         },
         "deliveries": deliveries,
         "unsupported": unsupported,
@@ -363,7 +641,7 @@ def build_delivery_manifest(
             "rule_library_path": str(rule_library_path),
             "rule_library_sha256": sha256_file(rule_library_path),
             "adapter": "harnesses/stepcli/adapter.py",
-            "adapter_version": "0.1.0",
+            "adapter_version": adapter_version,
         },
     }
     write_json(output_dir / "manifest.json", manifest)

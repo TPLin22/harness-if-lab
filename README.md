@@ -19,8 +19,10 @@ agent-reviewed draft canonical rule library. It also contains a 20-task,
 source-pinned SWE-bench Multilingual candidate panel and 20 multi-rule
 baseline/intervention Item pairs, each with a review ledger. A smoke compiler
 and StepCLI delivery adapter compile the `user_message` + `project_file`
-combination into an external Harbor Pack, and one real intervention trial has
-completed; details are in [the first-stage delivery contract](docs/first-stage-delivery.md).
+combination into an external Harbor Pack, and the adapter now also emits a
+checked, backend-owned projection for the `dsh_minimal` tool set and
+tool-description rules. One real intervention trial has completed; details and
+the remaining backend handoff are in [the first-stage delivery contract](docs/first-stage-delivery.md).
 Rules, tasks, and Items are still candidates, and paired baselines, normalized
 verifiers, analysis, and release qualification remain unfinished.
 

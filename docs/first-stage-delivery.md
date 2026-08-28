@@ -1,6 +1,7 @@
 # First-Stage Delivery Contract
 
-**Status:** implemented smoke path; first live StepCLI trial completed, 2026-08-28
+**Status:** user/project smoke path is live; tool-set/description projection is
+compiled and tested, with Harbor runtime acceptance still pending (2026-08-28)
 
 This document records the first executable delivery path. It is an
 implementation contract for the current StepCLI/Harbor adapter, not the final
@@ -8,16 +9,22 @@ Item or schema specification.
 
 ## Scope
 
-The current path supports one semantic Item variant with these two surfaces:
+The current path has two levels of support for one semantic Item variant:
 
 - `user_message`: an additional user-channel instruction fragment;
 - `project_file`: a project instruction file discovered by StepCLI.
+- `tool_set_ref: dsh_minimal` plus a `tool_description` binding: the HIF adapter
+  resolves abstract tool references and emits a StepCLI extension-surface
+  configuration. This is currently a compile-time/configuration handoff; the
+  Harbor `StepCli` agent must explicitly accept that kwarg before it can be a
+  live evaluation surface.
 
 The semantic Item remains backend-neutral. The concrete filenames, Harbor keys,
 and container paths below belong to the StepCLI adapter and Harbor compiler.
 Other surfaces are rejected by default until an adapter is implemented for
 them. The StepCLI runtime/package publisher is an external input to live runs
-and is outside this repository.
+and is outside this repository. Harbor is used as an execution backend but is
+not packaged or modified by this HIF stage.
 
 ## Data flow
 
@@ -30,6 +37,7 @@ Item pair + rule library + TaskSpec
               +--> delivery/manifest.json
               +--> delivery/user_messages/<binding>.md
               +--> delivery/project_files/<binding>.md
+              +--> harness_config.stepcli.extension_surface
               |
               v
        HarborPackCompiler
@@ -55,6 +63,7 @@ The Pack and all runtime state are written below the caller-provided external
 | --- | --- | --- | --- |
 | `user_message` | `delivery/user_messages/<binding>.md` | `extra_instruction_paths` | Content is appended to Harbor's task/user instruction channel before the agent starts. It is intentionally not claimed to be an independent system surface. |
 | `project_file` | `delivery/project_files/<binding>.md` | agent-stage `upload_files`; source is relative to task `environment/` | `/testbed/.claude/rules/hif-<binding>.md`, discovered as `source=project`, `format=rule`, `activation=startup`. |
+| `tool_description` with `tool_set_ref: dsh_minimal` | no standalone file; adapter projection in `manifest.json` | `agents[0].kwargs.stepcli_extension_surface` in generated launch config | `extensions.surface.active=dsh_minimal`; abstract refs such as `shell` resolve to model-visible names such as `bash` and receive `descriptionOverrides`. Runtime support is pending Harbor kwarg plumbing. |
 
 The compiler copies each project file into the generated task's
 `environment/.claude/rules/` directory. Harbor's `upload_files` hook then
@@ -72,14 +81,18 @@ unique integers within an Item. Authority remains an explicit Item policy.
 execution. For every binding it records, at minimum:
 
 - the rule and binding IDs, role, and intended surface;
-- actual surface and delivery status (`planned` for the two supported surfaces,
-  `unsupported_surface` otherwise);
+- actual surface and delivery status (`planned` for compiled surfaces,
+  `unsupported_surface` for unsupported or unresolved requests);
 - transport, Pack-relative path, target path, delivery order, and content hash;
+- selected tool-set status, abstract-to-model tool mapping, and the subset of
+  tools receiving description overrides when a tool-set projection is present;
 - Item, TaskSpec, rule-library, adapter, and task-instruction provenance.
 
 The Harbor compiler rewrites the manifest after adding the generated task
-environment path for project files. `pack.json` additionally hashes the source
-Item, rule library, TaskSpec, manifest, and launch configuration.
+environment path for project files. For a registered tool-set projection it
+also forwards the adapter-owned config into `launch.yaml`; it does not interpret
+the StepCLI config. `pack.json` additionally hashes the source Item, rule
+library, TaskSpec, manifest, and launch configuration.
 
 ## Reproduce the smoke Pack
 
@@ -100,6 +113,25 @@ YAML and test dependencies):
 The compiler refuses to overwrite an existing Pack. Use a new output directory
 for each attempt. The generated `launch.yaml` can be passed to Harbor after
 the model, runtime artifact, and environment settings have been filled in.
+
+To inspect the tool-set projection without launching a job:
+
+```sh
+/home/i-panhaoran/codingspace/harbor/.venv/bin/python \
+  -m compilers.harbor.compiler \
+  --item examples/smoke/tool-surface-item-pair.yaml \
+  --rules benchmark/rules/canonical/phase0-canonical.yaml \
+  --task-spec examples/smoke/task-spec.yaml \
+  --task-dir examples/smoke/task \
+  --output-root /tmp/hif-tool-surface-output \
+  --model openai/REPLACE_ME
+```
+
+The resulting `launch.yaml` contains the semantic-to-StepCLI projection under
+`agents[0].kwargs.stepcli_extension_surface`. It is expected to fail Harbor
+schema validation until the Harbor adapter has an explicit corresponding
+parameter; that failure is a known integration boundary, not a rule-delivery
+verdict.
 
 ## First live trial
 
@@ -169,11 +201,14 @@ The following checks are part of the first-stage gate:
 ```
 
 The tests cover separate user/project bindings, baseline omission, unsupported
-surface rejection, explicit delivery ordering, duplicate-order rejection, and
-Harbor launch/hook materialization. A separate static probe also validates the
-generated `launch.yaml` with Harbor's `JobConfig`, validates the generated task,
-and runs the current StepCLI `config show --workspace ... --json` against the
-generated `.claude/rules` file.
+surface rejection, explicit delivery ordering, duplicate-order rejection,
+Harbor launch/hook materialization, and the `dsh_minimal` tool-set plus
+tool-description projection. A separate static probe validates the generated
+task and, for the two live surfaces, validates the generated `launch.yaml` with
+Harbor's `JobConfig` and runs the current StepCLI `config show --workspace ...
+--json` against the generated `.claude/rules` file. The tool-surface launch
+config is intentionally held at the HIF side until Harbor kwarg support is
+implemented.
 
 The local environment does not have Docker, so the checks above do not replace
 the live container path. The live trial above used a pinned StepCLI runtime from
@@ -182,8 +217,10 @@ external output root.
 
 ## Deliberate limits
 
-- `system_prompt`, `managed_instruction`, `global_instruction`,
-  `tool_description`, and `skill` bindings remain unsupported in this adapter.
+- `system_prompt`, `managed_instruction`, `global_instruction`, and `skill`
+  bindings remain unsupported in this adapter.
+- `tool_description` is supported only as a resolved `dsh_minimal` projection;
+  it is not yet a live Harbor/StepCLI run surface.
 - No StepCLI or Harbor source files are modified by this path.
 - The live runtime's raw provider traces now provide an auditable effective
   prompt excerpt, but the adapter still does not emit a normalized
@@ -198,5 +235,7 @@ external output root.
 
 The next implementation boundary is a runner/preflight layer that consumes this
 Pack, records the effective StepCLI instruction snapshot and native events, and
-then invokes deterministic verification. Only a demonstrated interface gap in
-that layer should trigger a change to Harbor or StepCLI.
+then invokes deterministic verification. Once that preflight confirms the
+generated `stepcli_extension_surface` cannot be passed through Harbor's current
+`StepCli` kwargs, the minimal Harbor adapter change can be made on a separate
+branch. No Harbor packaging work is part of this step.
