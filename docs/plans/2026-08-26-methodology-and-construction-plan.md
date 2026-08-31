@@ -15,6 +15,11 @@ change any boundary in [AGENTS.md](../../AGENTS.md); where a boundary's wording 
 longer matches the adopted methodology, this document says so and leaves the
 edit to a review decision.
 
+Its field tables are planning context rather than the current storage
+reference. For the fields and nesting that exist in the checked-in Rule and
+Item files, use the maintained [Rule and Item data contract](../data-contracts.md);
+that document records which planned fields are actually consumed today.
+
 Read [AGENTS.md](../../AGENTS.md), [the overall design](../design.md), and [the
 constraints](../constraints.md) first. Those remain authoritative. This document is
 subordinate to them.

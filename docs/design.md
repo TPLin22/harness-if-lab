@@ -248,8 +248,10 @@ The first Harbor compiler implementation is a deliberately narrow smoke path:
 it projects a cleaned TaskSpec into a generated task, invokes the StepCLI
 adapter for `user_message` and `project_file`, and emits a Harbor launch
 configuration under an external output root. The generated files are a Pack
-projection, not a replacement for the semantic Item or TaskSpec. See
-[First-Stage Delivery Contract](first-stage-delivery.md).
+projection, not a replacement for the semantic Item or TaskSpec. The maintained
+current Rule and Item storage reference is [the data contract](data-contracts.md);
+the first-stage execution details are retained as a [completed historical
+record](plans/completed/2026-08-29-first-stage-delivery.md).
 
 Packs are generated inputs and should be immutable once referenced by a run.
 They are stored outside the source repository and identified by a hash.

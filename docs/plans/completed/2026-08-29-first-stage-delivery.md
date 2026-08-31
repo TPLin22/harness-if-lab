@@ -1,4 +1,13 @@
-# First-Stage Delivery Contract
+---
+title: First-stage delivery record
+description: Historical record of the first StepCLI/Harbor delivery checkpoint and its live evidence.
+status: completed
+---
+
+# First-Stage Delivery Record
+
+> Historical stage record. The maintained description of the current Rule and
+> Item storage format is [the data contract](../../data-contracts.md).
 
 **Status:** user/project, additive `system_prompt`, and the registered
 `dsh_minimal`/`tool_description` plumbing paths have live glibc evidence

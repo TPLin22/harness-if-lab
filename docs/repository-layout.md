@@ -36,6 +36,7 @@ harness-if-lab/
 ├── analysis/
 ├── configs/
 ├── docs/
+│   ├── data-contracts.md
 │   ├── source-shortlist.md
 │   ├── task-sourcing.md
 │   └── plans/
@@ -66,7 +67,7 @@ harness-if-lab/
 | `verifiers` | Single-trial rule/task evidence checks. |
 | `analysis` | Cross-trial ingestion, normalization, statistics, and report code. |
 | `configs` | Future experiment and backend configuration templates. |
-| `docs` | Durable documents: design, constraints, workflow, and layout. |
+| `docs` | Durable documents: design, constraints, workflow, layout, and the current data contracts. |
 | `docs/plans` | Dated execution plans; superseded rather than maintained. See `AGENTS.md`. |
 | `examples/smoke` | Tiny, versioned fixture for the first delivery contract and adapter tests. |
 | `tests` | Tests for the contracts and current/future implementations. |

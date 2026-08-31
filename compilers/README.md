@@ -30,6 +30,7 @@ benchmark representation.
 
 Keep compilation deterministic and record the source and renderer hashes in the
 generated Pack metadata. A generated Pack is an input package, not a live
-workspace. The first-stage scope and verification commands are recorded in
-[`docs/first-stage-delivery.md`](../docs/first-stage-delivery.md). Verifiers and
-the live runner are intentionally not part of this compiler milestone.
+workspace. The first-stage scope and verification commands are recorded in the
+historical [delivery record](../docs/plans/completed/2026-08-29-first-stage-delivery.md).
+Verifiers and the live runner are intentionally not part of this compiler
+milestone.

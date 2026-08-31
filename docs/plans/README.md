@@ -1,11 +1,13 @@
 # Plans
 
 This directory holds execution plans: construction schedules, adopted
-methodologies, migration steps, and other documents that describe what someone
-intends to do.
+methodologies, migration steps, and historical stage records that describe what
+someone intended to do or what an implementation checkpoint established.
 
 It is separate from the documents in `docs/`, which describe what is true about
-the project and are maintained. A plan is superseded rather than maintained.
+the project and are maintained. An `active` plan is maintained only as an
+execution plan; completed or superseded plans are historical records and are
+not silently rewritten.
 
 ## Convention
 
@@ -13,9 +15,14 @@ the project and are maintained. A plan is superseded rather than maintained.
   written.
 - YAML frontmatter with `title`, `description`, and `status`
   (`active`, `completed`, or `superseded`).
-- A completed or abandoned plan moves to `completed/` with its `status` updated.
-  It is not deleted; a superseded plan is the record of why the current approach
-  was chosen.
+- A completed or abandoned plan, or a historical stage record, moves to
+  `completed/` with its `status` updated. It is not deleted; a superseded plan
+  is the record of why the current approach was chosen.
+
+The active methodology remains at
+[`2026-08-26-methodology-and-construction-plan.md`](2026-08-26-methodology-and-construction-plan.md).
+The completed directory contains the historical
+[first-stage delivery record](completed/2026-08-29-first-stage-delivery.md).
 
 ## Authority
 

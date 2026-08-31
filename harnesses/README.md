@@ -30,8 +30,9 @@ and `project_file` is materialized as a `.claude/rules/*.md` file before StepCLI
 startup. The tool-set path emits a
 StepCLI `extensions.surface` projection in the manifest and generated launch
 kwargs; it is a configuration handoff, not yet a claim that every backend
-adapter accepts or materializes that field. See the [first-stage delivery
-contract](../docs/first-stage-delivery.md) for the exact mapping and status.
+adapter accepts or materializes that field. See the [completed first-stage
+delivery record](../docs/plans/completed/2026-08-29-first-stage-delivery.md) for
+the exact mapping and status.
 
 The adapter exposes a capability boundary for the optional Item-level
 `tool_set_ref`. `dsh_minimal` is currently the only registered projection; it

@@ -22,8 +22,8 @@ and StepCLI delivery adapter compile the `system_prompt` + `user_message` +
 `project_file` combination into an external Harbor Pack, and the adapter also
 emits a checked, backend-owned projection for the `dsh_minimal` tool set and
 tool-description rules. Multiple real glibc intervention checks have now
-completed, including a four-surface tool-set run; details and the remaining
-backend handoff are in [the first-stage delivery contract](docs/first-stage-delivery.md).
+completed, including a four-surface tool-set run; the historical execution
+record is in [the completed first-stage delivery record](docs/plans/completed/2026-08-29-first-stage-delivery.md).
 Rules, tasks, and Items are still candidates, and paired baselines, normalized
 verifiers, analysis, and release qualification remain unfinished.
 
@@ -63,7 +63,8 @@ belong under an external `output_root`; see [the repository layout](docs/reposit
 - [Overall design](docs/design.md)
 - [Repository and execution constraints](docs/constraints.md)
 - [Curation and experiment workflow](docs/workflow.md)
-- [First-stage delivery contract](docs/first-stage-delivery.md)
+- [Current Rule and Item data contracts](docs/data-contracts.md)
+- [Historical first-stage delivery record](docs/plans/completed/2026-08-29-first-stage-delivery.md)
 - [Phase 0 source shortlist](docs/source-shortlist.md)
 - [Task sourcing and representation](docs/task-sourcing.md)
 - [Repository layout and output boundary](docs/repository-layout.md)

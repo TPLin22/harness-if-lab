@@ -105,7 +105,7 @@ effective-surface snapshot, rule verifier, and analysis layer remain HIF-owned
 future work. The follow-up four-surface glibc run used the same pinned branch
 and runtime, delivered all four payloads on every captured model request, and
 failed only its independent coding-task verifier; it likewise does not support
-a causal estimate. See [the first-stage delivery contract](first-stage-delivery.md).
+a causal estimate. See [the completed first-stage delivery record](plans/completed/2026-08-29-first-stage-delivery.md).
 
 ## Mode C: verify and analyze
 

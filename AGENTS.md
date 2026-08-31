@@ -75,8 +75,13 @@ is an execution backend/reference, not the research data model.
 Documents are separated by whether they are maintained or superseded.
 
 - `docs/` holds durable documents: overall design, constraints, workflow,
-  repository layout, source shortlist, and task-sourcing decisions. They
-  describe what is true about the project and are kept current.
+  repository layout, source shortlist, task-sourcing decisions, and the
+  current Rule/Item data contract. They describe what is true about the project
+  and are kept current.
+- [`docs/data-contracts.md`](docs/data-contracts.md) is the maintained
+  human-readable reference for the current Rule and Item storage shape. It
+  explicitly labels fields as runtime, assembly, recorded, or planned; it is
+  not a substitute for a future machine-readable schema.
 - `docs/plans/` holds execution plans: construction orders, adopted
   methodologies, migration steps. They describe what someone intends to do, and
   are superseded rather than maintained.
@@ -98,6 +103,13 @@ Documents are separated by whether they are maintained or superseded.
   required review of those contracts.
 - Update documentation when a lifecycle, ownership boundary, or artifact
   contract changes.
+- Any change to the Rule or Item storage format must update
+  [`docs/data-contracts.md`](docs/data-contracts.md) in the same change. This
+  includes field names, nesting, types, requiredness, enum values, meanings,
+  surface/tool semantics, and representative generator/example output. Append
+  a dated `YYYY-MM-DD` entry to that document's change log; do not rewrite or
+  remove earlier entries. Update affected loaders, generators, examples, and
+  tests as part of the same change.
 - Keep changes scoped. Do not revert unrelated work in neighboring repositories.
 - Before broad implementation or released benchmark curation begins, review and
   approve the future contracts for `RuleSpec`, `TaskSpec`, `Item/Pair`, `Pack`,
