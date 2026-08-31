@@ -68,6 +68,7 @@ belong under an external `output_root`; see [the repository layout](docs/reposit
 - [Phase 0 source shortlist](docs/source-shortlist.md)
 - [Task sourcing and representation](docs/task-sourcing.md)
 - [Repository layout and output boundary](docs/repository-layout.md)
+- [Relevant repositories and coupled commits](docs/relevant-repositories.md)
 - [Execution plans](docs/plans/README.md), currently
   [methodology and construction plan](docs/plans/2026-08-26-methodology-and-construction-plan.md)
 - [Benchmark area](benchmark/README.md), including the current [rule candidates](benchmark/rules/candidates/README.md), [canonical draft](benchmark/rules/canonical/README.md), [task panel](benchmark/tasks/README.md), and [Item candidates](benchmark/items/README.md)
